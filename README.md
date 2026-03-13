@@ -3,6 +3,7 @@
 Alchemind is an AI system that turns raw ideas into structured execution plans.
 
 It converts an idea into:
+
 - Problem
 - Solution
 - Tech stack
@@ -13,31 +14,33 @@ It converts an idea into:
 
 ## Architecture
 
-Frontend  
+**Frontend**
+
 Next.js
 
-Backend  
+**Backend**
+
 FastAPI
 
-AI  
+**AI**
+
 OpenAI API
 
 ---
 
 ## Project Structure
-
 alchemind
 │
 ├── backend
-│   └── app
-│       ├── api
-│       ├── services
-│       ├── llm
-│       └── main.py
+│ └── app
+│ ├── api
+│ ├── services
+│ ├── llm
+│ └── main.py
 │
 ├── frontend
-│   └── app
-│       └── page.tsx
+│ └── app
+│ └── page.tsx
 │
 └── README.md
 
@@ -45,8 +48,7 @@ alchemind
 
 ## Running Locally
 
-Backend
-
+### Backend
 cd backend
 py -m venv .venv
 .venv\Scripts\Activate
@@ -54,27 +56,26 @@ pip install fastapi uvicorn openai python-dotenv
 uvicorn app.main:app --reload
 
 Backend runs on:
+http://127.0.0.1:8000/
+---
 
-http://127.0.0.1:8000
-
-
-Frontend
-
+### Frontend
 cd frontend
 npm install
 npm run dev
 
 Frontend runs on:
-
-http://localhost:3000
+http://localhost:3000/
 
 ---
 
 ## Environment Variables
 
-Create a file called `.env` inside backend:
+Create a `.env` file inside the **backend** folder.
+
 
 OPENAI_API_KEY=your_openai_api_key
+
 
 ---
 
