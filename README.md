@@ -1,52 +1,54 @@
-# Alchemind
+# Veridex
 
-Alchemind is an AI system that turns raw ideas into structured execution plans.
+An AI-powered strategy red-team. Paste a strategy document and four independent critics return a structured critique in parallel.
 
-It converts an idea into:
+Live at [veridex.fyi](https://veridex.fyi).
 
-- Problem
-- Solution
-- Tech stack
-- Roadmap
-- Risks
+---
+
+## The four lenses
+
+- **Pre-Mortem** — It's 18 months from now and the strategy failed. Why?
+- **Unit Economics** — Does the math work at every stage?
+- **Adversarial Competitor** — A well-funded rival wants to kill this. How?
+- **Execution Risk** — Assume the strategy is directionally right. What breaks in shipping?
+
+Each lens returns a short synthesis and 2–7 ranked flaws. Each flaw has a title, severity (low/medium/high/critical), a concrete description, and the sharpest question the author must answer next.
+
+Output is streamed over Server-Sent Events so the four passes surface as soon as each one completes.
 
 ---
 
 ## Architecture
 
-### Frontend
-Next.js
+**Frontend** — Next.js on Vercel. Single page. Textarea, live progress panel, structured results view, copy-to-clipboard, download-as-Markdown.
 
-### Backend
-FastAPI
+**Backend** — FastAPI on Render. One endpoint: `POST /api/v1/critique/stream`. Runs all four critic passes in parallel via `asyncio.gather` and streams `pass_started` / `pass_completed` / `error` / `done` events.
 
-### AI
-OpenAI API
+**Model** — OpenAI `gpt-5-mini` via a provider-agnostic wrapper (`run_critic_pass(lens, input_text, model="openai:gpt-5-mini")`).
+
+**Validation** — Every pass is validated against a strict Pydantic schema. One retry on schema failure with a corrective nudge, then `CriticValidationError` — no silent fallback.
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
-alchemind
-│
+veridex
 ├── backend
 │   └── app
-│       ├── api
-│       ├── services
-│       ├── llm
-│       └── main.py
-│
+│       ├── api/v1/routes_critique.py    # SSE endpoint + rate limiter
+│       ├── services/critics.py           # Lens prompts, schema, runner
+│       ├── llm/client.py                 # OpenAI client
+│       └── main.py                       # FastAPI app, CORS
 ├── frontend
-│   └── app
-│       └── page.tsx
-│
+│   └── app/page.tsx                      # Single-page UI
 └── README.md
 ```
 
 ---
 
-## Running Locally
+## Running locally
 
 ### Backend
 
@@ -54,17 +56,11 @@ alchemind
 cd backend
 py -m venv .venv
 .venv\Scripts\Activate
-pip install fastapi uvicorn openai python-dotenv
+pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Backend runs on:
-
-```
-http://127.0.0.1:8000
-```
-
----
+Backend runs on `http://127.0.0.1:8000`.
 
 ### Frontend
 
@@ -74,21 +70,41 @@ npm install
 npm run dev
 ```
 
-Frontend runs on:
-
-```
-http://localhost:3000
-```
+Frontend runs on `http://localhost:3000`.
 
 ---
 
-## Environment Variables
+## Environment variables
 
-Create a `.env` file inside the **backend** folder.
+### Backend (`backend/.env`)
 
 ```
-OPENAI_API_KEY=your_openai_api_key
+OPENAI_API_KEY=sk-...
+CORS_ALLOWED_ORIGINS=                   # optional, comma-separated, for preview deploys
 ```
+
+### Frontend (`frontend/.env.local`)
+
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+```
+
+In production (Vercel), set `NEXT_PUBLIC_API_BASE_URL` to the live Render backend URL.
+
+---
+
+## Rate limiting
+
+5 critiques per IP per hour, in-memory on the backend. Resets on process restart. Good enough for v1 alpha; will be replaced with a persistent store before paid tier.
+
+---
+
+## Non-goals (v1)
+
+- No accounts, no signup, no user data at rest.
+- No multi-turn conversation or "redirect mid-critique" — red-teams don't get steered.
+- No "improvement suggestions" — Veridex challenges, it does not generate.
+- No PDF export (deferred to v1.1).
 
 ---
 

@@ -1,16 +1,5 @@
-from fastapi import APIRouter
-from pydantic import BaseModel
-from app.services.orchestrator import run_alchemy
-
-router = APIRouter()
-
-
-class IdeaRequest(BaseModel):
-    idea: str
-    mode: str = "build"
-
-
-@router.post("/alchemy/run")
-def run(request: IdeaRequest):
-    result = run_alchemy(request.idea, request.mode)
-    return result
+# Removed in v1. The /alchemy/run endpoint has been replaced by /critique/stream.
+# See app/api/v1/routes_critique.py
+raise ImportError(
+    "routes_alchemy is deprecated and should not be imported. Use routes_critique."
+)
