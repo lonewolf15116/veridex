@@ -349,26 +349,32 @@ function HowItWorks() {
 }
 
 function LensPreview() {
+  // Excerpts from a real Veridex run on demos/04-cascade-spider.md (a crypto trading-bot strategy).
   const lenses = [
     {
       tag: "LENS 01", label: "Pre-Mortem", severity: "critical" as Severity,
-      summary: "The strategy assumes enterprise buyers will move fast based on an introductory call. That assumption has a 90% fail rate.",
-      flaw: "No defined sales cycle length", question: "What evidence do you have that enterprise procurement moves in under 60 days for a new vendor category?",
+      summary: "The plan rests on a narrow causal chain: a 3σ up-move plus falling open interest means forced liquidations, which means a short-lived spike that can be sold into. That causal link proved fragile.",
+      flaw: "Core causation assumption: OI drop + price spike ⇒ reliable mean reversion", question: "Can you show with labelled, out-of-sample events that this setup predicts a high-probability retrace, and quantify when it fails?",
     },
     {
-      tag: "LENS 02", label: "Unit Economics", severity: "high" as Severity,
-      summary: "Cost-to-serve is understated. LLM inference at current volumes doesn't support the $29/mo price point at gross margin.",
-      flaw: "CAC not modeled against stated channels", question: "What is your blended CAC via Twitter/LinkedIn and how many months does it take to recover?",
+      tag: "LENS 02", label: "Unit Economics", severity: "critical" as Severity,
+      summary: "The document gives projected MRR and a $49/month price but no unit-economics backing: no per-user serving costs, CAC, churn, LTV or payback model.",
+      flaw: "No per-user cost breakdown (compute, storage, messaging, support)", question: "What are total monthly infrastructure costs at 500 and at 5,000 subscribers?",
     },
     {
-      tag: "LENS 03", label: "Adversarial Competitor", severity: "high" as Severity,
-      summary: "Any well-funded player ships a 'critique mode' toggle in their existing product. That neutralizes your entire differentiation in one sprint.",
-      flaw: "Differentiation is feature-level, not structural", question: "What do you have that a $500M ARR competitor cannot copy in 6 weeks?",
+      tag: "LENS 03", label: "Adversarial Competitor", severity: "critical" as Severity,
+      summary: "The edge is a simple rule on public data, with no proprietary data and no distribution moat. An incumbent can replicate and bundle it cheaply.",
+      flaw: "Core edge is trivial to replicate or neutralize", question: "What do you own that prevents an exchange or large platform from shipping an identical signal for free?",
     },
     {
-      tag: "LENS 04", label: "Execution Risk", severity: "medium" as Severity,
-      summary: "A solo founder with a 4-week timeline is implying a scope that would take a team of three 3 months.",
-      flaw: "Timeline implies incorrect capacity", question: "Which two features are you willing to cut to ship a working v1 in 4 weeks?",
+      tag: "LENS 04", label: "Execution Risk", severity: "critical" as Severity,
+      summary: "The plan understates the operational work of running a live, leveraged, multi-asset bot. One small server and one operator is a single point of failure.",
+      flaw: "Single server + single operator = catastrophic failure point", question: "What redundancy, monitoring and emergency actions will you have before going live, so one failure can't leave positions uncontrolled?",
+    },
+    {
+      tag: "LENS 05", label: "Evidence Audit", severity: "critical" as Severity,
+      summary: "The test period strongly beats training (Sharpe 3.18 vs 1.46). That is a classic sign of leakage, not robustness. The 5-minute open-interest series may not have been available when the strategy acts on it.",
+      flaw: "Possible look-ahead from open-interest timing", question: "Re-run with every 5-minute open-interest input lagged by one full bar. Do the +52.9% and Sharpe 3.18 survive?",
     },
   ];
 
@@ -379,7 +385,8 @@ function LensPreview() {
         <h2 className="mt-3 text-[28px] sm:text-[32px] font-semibold leading-tight tracking-[-0.02em] text-white max-w-lg">
           This is what a real critique looks like.
         </h2>
-        <p className="mt-2 text-[13px] text-white/35">Actual output on: "AI tool for consultants. $29/mo. 4-week launch. Growth via Twitter."</p>
+        <p className="mt-2 text-[13px] text-white/35">Excerpts from actual output on a crypto trading-bot strategy with a +52.9% backtest.</p>
+        <p className="mt-3 text-[13px] text-white/55 leading-relaxed max-w-xl">Lens 05 asked the question that mattered: the bot&apos;s open-interest data was stamped about five minutes early, so the backtest was reading the future. With that fixed, the test return fell to −1.6%.</p>
 
         <div className="mt-8 space-y-3">
           {lenses.map((l) => {
