@@ -10,7 +10,7 @@ Returns Server-Sent Events. Event types:
   - error          {"lens": "<lens>", "reason": "<string>"}
   - done           {}
 
-All four lenses run in parallel. Each pass emits `pass_started` as soon as it begins
+All five lenses run in parallel. Each pass emits `pass_started` as soon as it begins
 and `pass_completed` (or `error`) as soon as it finishes.
 
 Rate limiting: 5 critiques per IP per hour, in-memory, resets on process restart.
@@ -36,7 +36,7 @@ from app.services.critics import (
 
 router = APIRouter()
 
-LENSES = ["pre_mortem", "unit_economics", "adversarial_competitor", "execution_risk"]
+LENSES = ["pre_mortem", "unit_economics", "adversarial_competitor", "execution_risk", "evidence_audit"]
 
 # ── Rate limiter ──────────────────────────────────────────────────────────────
 # Simple in-memory per-IP bucket. Each entry is a list of timestamps (floats).

@@ -1,21 +1,22 @@
 # Veridex
 
-An AI-powered strategy red-team. Paste a strategy document and four independent critics return a structured critique in parallel.
+An AI-powered strategy red-team. Paste a strategy document and five independent critics return a structured critique in parallel.
 
 Live at [veridex.fyi](https://veridex.fyi).
 
 ---
 
-## The four lenses
+## The five lenses
 
 - **Pre-Mortem** — It's 18 months from now and the strategy failed. Why?
 - **Unit Economics** — Does the math work at every stage?
 - **Adversarial Competitor** — A well-funded rival wants to kill this. How?
 - **Execution Risk** — Assume the strategy is directionally right. What breaks in shipping?
+- **Evidence Audit** — Are the reported numbers real? Checks look-ahead/leakage, selection bias from many configurations tried, red-flag patterns (test beating training, one period carrying the result) and missing controls.
 
 Each lens returns a short synthesis and 2–7 ranked flaws. Each flaw has a title, severity (low/medium/high/critical), a concrete description, and the sharpest question the author must answer next.
 
-Output is streamed over Server-Sent Events so the four passes surface as soon as each one completes.
+Output is streamed over Server-Sent Events so the five passes surface as soon as each one completes.
 
 ---
 
@@ -23,7 +24,7 @@ Output is streamed over Server-Sent Events so the four passes surface as soon as
 
 **Frontend** — Next.js on Vercel. Single page. Textarea, live progress panel, structured results view, copy-to-clipboard, download-as-Markdown.
 
-**Backend** — FastAPI on Render. One endpoint: `POST /api/v1/critique/stream`. Runs all four critic passes in parallel via `asyncio.gather` and streams `pass_started` / `pass_completed` / `error` / `done` events.
+**Backend** — FastAPI on Render. One endpoint: `POST /api/v1/critique/stream`. Runs all five critic passes in parallel via `asyncio.gather` and streams `pass_started` / `pass_completed` / `error` / `done` events.
 
 **Model** — OpenAI `gpt-5-mini` via a provider-agnostic wrapper (`run_critic_pass(lens, input_text, model="openai:gpt-5-mini")`).
 

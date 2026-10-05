@@ -1,11 +1,12 @@
 """
 Critics module — the core of Veridex v1.
 
-Four independent lenses critique a strategy document:
+Five independent lenses critique a strategy document:
   - pre_mortem:              "It's 18 months later and this failed. Why?"
   - unit_economics:          "Does the math actually work?"
   - adversarial_competitor:  "You're a well-funded competitor. How do you kill this?"
   - execution_risk:          "What's most likely to go wrong in shipping?"
+  - evidence_audit:          "Is the evidence itself real, or an artefact of how it was produced?"
 
 Design rules:
   - One retry on validation failure with a corrective nudge. Fails loud after that.
@@ -28,7 +29,7 @@ from app.llm.client import client
 # ---------- Schemas ----------
 
 Severity = Literal["low", "medium", "high", "critical"]
-Lens = Literal["pre_mortem", "unit_economics", "adversarial_competitor", "execution_risk"]
+Lens = Literal["pre_mortem", "unit_economics", "adversarial_competitor", "execution_risk", "evidence_audit"]
 
 
 class Flaw(BaseModel):
@@ -86,6 +87,7 @@ _LENS_FOCUS: dict[str, str] = {
     "unit_economics":         "Focus ONLY on cost structure, revenue mechanics, margins, CAC, payback period, and whether the numbers work. Do NOT raise assumption failures, competitive threats, or shipping/execution issues — those belong to other lenses.",
     "adversarial_competitor": "Focus ONLY on how a well-funded competitor would neutralize or kill this product. Do NOT raise internal assumption failures, unit economics gaps, or execution/shipping risks — those belong to other lenses.",
     "execution_risk":         "Focus ONLY on what will go wrong in the process of building and shipping this product — team, technical risk, sequencing, and distribution gaps. Do NOT raise pre-mortem scenarios, unit economics, or competitive threats — those belong to other lenses.",
+    "evidence_audit":         "Focus ONLY on whether the evidence, results and numbers in the document are valid — how they were produced, not what is built on top of them. Do NOT raise go-to-market, pricing, competition, team, or shipping concerns — those belong to other lenses.",
 }
 
 _LENS_PROMPTS: dict[str, str] = {
@@ -142,6 +144,29 @@ Assume the strategy is directionally correct. Your job is to find what will most
   - Founder / operator constraints implied by the doc
 
 Every flaw should name a concrete failure mode, not a generic category.
+
+{focus_constraint}
+""",
+
+    "evidence_audit": """You are the EVIDENCE AUDITOR reviewing the strategy document below.
+
+Every other reviewer takes the document's numbers as given and critiques what is built on them. You do the opposite: you assume nothing reported is true until the method behind it rules out the boring explanations (a bug, a bias, or luck). A strategy built on evidence that is an artefact is dead regardless of how good the plan on top of it is.
+
+First, identify the central empirical claim the whole strategy rests on (a backtest return, a model accuracy, a conversion rate, survey results, "users told us", a market size). Then audit how that claim was produced. Check for:
+
+  - LOOK-AHEAD / LEAKAGE: for every input or signal, WHEN is it actually available versus WHEN the strategy or model uses it? Bar or candle timestamps (open vs close), aggregated series (e.g. 5-minute data stamped at the start of the interval), revised or restated data, labels or features computed with future information, train/test splits that share time periods or users. Name the specific inputs at risk.
+  - SELECTION BIAS / MULTIPLE TESTING: how many configurations, parameters, variants, segments or experiments were tried before reporting this one? If the best of N was reported, how much of the result is expected from luck alone, and was any correction applied (held-out data, deflated metrics, walk-forward)?
+  - RED-FLAG PATTERNS: out-of-sample or test results that BEAT in-sample or training results (a classic sign of leakage, not skill); results that are implausibly good for the field; a single period, year, customer or event carrying most of the result; losing periods that contradict the headline; results that would plausibly vanish with a small delay, realistic costs or slippage.
+  - MISSING CONTROLS: no realistic costs/fees/latency, no naive or random baseline, no breakdown by period or segment, no sensitivity analysis, no sample size or confidence interval, survivorship bias, cherry-picked windows, unverifiable anecdotes presented as data.
+
+Severity rules for this lens (these override any instinct to soften):
+  - If there is a plausible way the central result is produced by leakage, a bug or selection rather than a real effect, that is CRITICAL — even if the document never mentions it. An invalid core result outranks every business concern.
+  - A red-flag pattern visible in the document's own numbers (e.g. test beating train, one year carrying the result, a losing year next to a strong headline) is at least HIGH. Quote the numbers.
+  - Missing controls are MEDIUM unless their absence could plausibly flip the conclusion.
+
+Each flaw's question must be a concrete check the author can run (e.g. "Re-run with every signal lagged by one bar — does the out-of-sample return survive?"), not a request for more information in general.
+
+If the document contains no empirical claims at all, say so in the summary and audit the unsupported assertions it relies on instead.
 
 {focus_constraint}
 """,

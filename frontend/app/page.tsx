@@ -31,7 +31,8 @@ type LensId =
   | "pre_mortem"
   | "unit_economics"
   | "adversarial_competitor"
-  | "execution_risk";
+  | "execution_risk"
+  | "evidence_audit";
 
 // ─────────────────────────────────────────────
 // Export helpers
@@ -96,6 +97,7 @@ const LENSES: { id: LensId; tag: string; label: string; description: string }[] 
   { id: "unit_economics",        tag: "LENS 02", label: "Unit Economics",        description: "Does the math actually work at every stage?" },
   { id: "adversarial_competitor",tag: "LENS 03", label: "Adversarial Competitor",description: "You're a well-funded rival. How do you kill this?" },
   { id: "execution_risk",        tag: "LENS 04", label: "Execution Risk",        description: "What's most likely to break in shipping?" },
+  { id: "evidence_audit",        tag: "LENS 05", label: "Evidence Audit",        description: "Are the numbers real — or an artefact of how they were produced?" },
 ];
 
 const SEV: Record<Severity, { badge: string; border: string; qbg: string; dot: string }> = {
@@ -261,7 +263,7 @@ function Hero({ onTry }: { onTry: () => void }) {
             Before you present your strategy, break it.
           </h1>
           <p className="text-[14px] text-white/45 leading-relaxed max-w-lg">
-            Veridex stress-tests your thinking — exposing blind spots, weak logic, and execution risks in minutes. Four independent AI critics. No flattery.
+            Veridex stress-tests your thinking — exposing blind spots, weak logic, and execution risks in minutes. Five independent AI critics. No flattery.
           </p>
         </div>
 
@@ -320,7 +322,7 @@ function ProblemSection() {
 function HowItWorks() {
   const steps = [
     { n: "01", title: "Paste your strategy", body: "Drop in your strategy doc, pitch, or plan. No formatting required — raw thinking is fine." },
-    { n: "02", title: "Four critics analyze in parallel", body: "Pre-Mortem, Unit Economics, Adversarial Competitor, and Execution Risk all run simultaneously in ~30 seconds." },
+    { n: "02", title: "Five critics analyze in parallel", body: "Pre-Mortem, Unit Economics, Adversarial Competitor, Execution Risk, and Evidence Audit all run simultaneously in ~30 seconds." },
     { n: "03", title: "Get a structured critique", body: "Each lens returns a summary, ranked flaws by severity, and the sharpest question you need to answer next." },
   ];
   return (
@@ -468,7 +470,7 @@ function CtaBanner({ onTry }: { onTry: () => void }) {
           Run your first strategy critique.
         </h2>
         <p className="text-[14px] text-white/35 max-w-sm mx-auto leading-relaxed">
-          No account. No setup. Paste your doc and get four independent critiques in about 30 seconds.
+          No account. No setup. Paste your doc and get five independent critiques in about 30 seconds.
         </p>
         <button
           onClick={onTry}
@@ -560,6 +562,7 @@ function CritiqueProduct() {
     unit_economics:         { status: "idle" },
     adversarial_competitor: { status: "idle" },
     execution_risk:         { status: "idle" },
+    evidence_audit:         { status: "idle" },
   });
   const [running, setRunning]     = useState(false);
   const [done, setDone]           = useState(false);
@@ -638,7 +641,7 @@ function CritiqueProduct() {
         <div>
           <Tag>Run a critique</Tag>
           <h2 className="mt-3 text-[28px] sm:text-[32px] font-semibold leading-tight tracking-[-0.02em] text-white">
-            Paste your strategy. Get four critics.
+            Paste your strategy. Get five critics.
           </h2>
         </div>
 
@@ -678,7 +681,7 @@ function CritiqueProduct() {
         {anyResults && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Tag>{running ? "Running four lenses in parallel" : done ? "Critique complete" : "Finishing…"}</Tag>
+              <Tag>{running ? "Running five lenses in parallel" : done ? "Critique complete" : "Finishing…"}</Tag>
               <p className="text-[11px] text-white/25 font-mono">{completedCount}&nbsp;/&nbsp;{LENSES.length}</p>
             </div>
             <div className="h-px w-full bg-white/[0.06] rounded-full overflow-hidden">

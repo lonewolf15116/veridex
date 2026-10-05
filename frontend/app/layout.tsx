@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s · Veridex",
   },
   description:
-    "Paste your strategy. Four independent AI critics return structured flaws, ranked by severity, in about 30 seconds. Pre-Mortem, Unit Economics, Adversarial Competitor, Execution Risk. No flattery.",
+    "Paste your strategy. Five independent AI critics return structured flaws, ranked by severity, in about 30 seconds. Pre-Mortem, Unit Economics, Adversarial Competitor, Execution Risk, Evidence Audit. No flattery.",
   keywords: [
     "strategy review",
     "AI critic",
@@ -38,14 +38,14 @@ export const metadata: Metadata = {
     siteName: "Veridex",
     title: "Veridex — Red-team your strategy in 30 seconds",
     description:
-      "Four independent AI critics stress-test your strategy. Structured flaws, ranked by severity. No flattery.",
+      "Five independent AI critics stress-test your strategy. Structured flaws, ranked by severity. No flattery.",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Veridex — Red-team your strategy in 30 seconds",
     description:
-      "Four independent AI critics stress-test your strategy. Structured flaws, ranked by severity. No flattery.",
+      "Five independent AI critics stress-test your strategy. Structured flaws, ranked by severity. No flattery.",
     creator: "@0xShura",
     site: "@0xShura",
   },
