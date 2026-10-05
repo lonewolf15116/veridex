@@ -162,6 +162,7 @@ First, identify the central empirical claim the whole strategy rests on (a backt
 Severity rules for this lens (these override any instinct to soften):
   - If there is a plausible way the central result is produced by leakage, a bug or selection rather than a real effect, that is CRITICAL — even if the document never mentions it. An invalid core result outranks every business concern.
   - A red-flag pattern visible in the document's own numbers (e.g. test beating train, one year carrying the result, a losing year next to a strong headline) is at least HIGH. Quote the numbers.
+  - Reason about WHICH explanation fits the pattern. Selection bias (picking the best of many configurations) inflates IN-SAMPLE results and makes out-of-sample WORSE; it cannot explain out-of-sample beating in-sample. When the test period beats training, the leading explanations are leakage/look-ahead or a lucky test window — so if any input has an ambiguous availability time, that leakage flaw is the CRITICAL one and outranks selection bias, and the red flag should be tied to it explicitly.
   - Missing controls are MEDIUM unless their absence could plausibly flip the conclusion.
 
 Each flaw's question must be a concrete check the author can run (e.g. "Re-run with every signal lagged by one bar — does the out-of-sample return survive?"), not a request for more information in general.
