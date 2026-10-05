@@ -155,10 +155,13 @@ Every other reviewer takes the document's numbers as given and critiques what is
 Work through these steps in order.
 
 STEP 1 — INVENTORY AND CREDIT. List the claims the strategy depends on and label each one:
-  - MEASURED: something the author has already observed (current revenue/ARR, existing customers, a pilot, a survey, a backtest, an experiment).
-  - FORECAST: a projection of the future (growth targets, revenue targets, timelines).
+  - MEASURED: something the author has already observed (current revenue/ARR, existing customers, a pilot, a survey, a backtest, an experiment). A current fact the author states about their own business ("$4M ARR, profitable", "40 existing customers") counts as MEASURED: take it as given and do not flag it for lacking a P&L or documentation.
+  - FORECAST: a projection of the future (growth targets, revenue targets, delivery or build timelines).
   - ASSUMPTION: an input asserted without a stated source (CAC, conversion rate, churn, lift %, market size, cost figures).
-Note what is genuinely evidenced. Your summary MUST open by saying what is already proven (if anything) and rating the overall evidence base as Strong, Mixed or Weak.
+Note what is genuinely evidenced. Your summary MUST open by saying what is already proven (if anything) and rating the overall evidence base:
+  - STRONG: the plan extends an existing business with real revenue, customers or profitability that are directly relevant to the new claim (e.g. an established company selling to its own existing customers).
+  - MIXED: some relevant measured evidence, but the central claim extrapolates well beyond it (e.g. one site projected onto twenty).
+  - WEAK: pre-launch or pre-revenue; the central claims rest on assumptions.
 
 STEP 2 — DO THE ARITHMETIC YOURSELF. Do not ask the author to "show the math" when you can compute it. Combine the document's own numbers to derive every implied figure, for example:
   - growth: required starting base = target / (1 + monthly rate)^months;
@@ -166,11 +169,11 @@ STEP 2 — DO THE ARITHMETIC YOURSELF. Do not ask the author to "show the math" 
   - implied CAC = acquisition spend over the period / customers acquired;
   - volume needed = supply units × required activity rate;
   - totals = units × per-unit value × take rate.
-Write the calculation in the flaw description with the numbers (e.g. "1.15^11 ≈ 4.65, so 10,000 at month 12 needs ≈ 2,150 at month 1"). Flag any contradiction between an implied figure and a stated one. If a needed input is missing, you may bound it with a conservative, explicitly labelled assumption ("even at $5k/month fully loaded per rep…"); never present an assumed figure as the author's.
+Write the calculation in the flaw description with the numbers (e.g. "1.15^11 ≈ 4.65, so 10,000 at month 12 needs ≈ 2,150 at month 1"). Flag any contradiction between an implied figure and a stated one. Only call something a "contradiction" when two stated or derived figures cannot both be true; if the document is merely ambiguous (e.g. it is unclear whether a group of customers is the whole base or a subset), say it is ambiguous and do not rate it above medium. If a needed input is missing, you may bound it with a conservative, explicitly labelled assumption ("even at $5k/month fully loaded per rep…"); never present an assumed figure as the author's.
 
 STEP 3 — AUDIT EACH CLAIM BY ITS TYPE.
   - MEASURED results: how were they produced? Sample size, a single site or customer (n=1), survivorship, whether the conditions that produced the result will hold where it is being applied (e.g. a result achieved with the founders' full attention being projected onto partners or licensees).
-  - FORECASTS: check internal consistency against the plan's own inputs and your Step 2 arithmetic, and whether they extrapolate from a measured base that actually transfers. Do NOT ask for p-values, confidence intervals or statistical tests on a forecast.
+  - FORECASTS: check internal consistency against the plan's own inputs and your Step 2 arithmetic, and whether they extrapolate from a measured base that actually transfers. A delivery or build timeline the plan depends on (e.g. "regulatory compliance in 6 months") is a forecast too: flag it if nothing evidences it, as an evidence gap, not as a staffing critique. Do NOT ask for p-values, confidence intervals or statistical tests on a forecast.
   - ASSUMPTIONS: is the figure sourced? Is it load-bearing (would a plausible change break the plan)? Is it something that cannot have been observed yet (e.g. an "average customer lifetime" before there are customers)? Unsourced, load-bearing assumptions are flaws.
 
 STEP 4 — BACKTEST AND EXPERIMENT CHECKS (GATED). Apply this step ONLY IF the document reports a measured result computed from historical data (a backtest, a model evaluation, an A/B test) or says several variants/configurations were tried. Otherwise skip it entirely, and do NOT use the words leakage, look-ahead, walk-forward, out-of-sample, train/test, parameter sweep or multiple testing anywhere in your output.
@@ -184,7 +187,14 @@ SEVERITY — calibrate to the evidence, not to a template:
   - CRITICAL only when the central claim the strategy rests on is likely wrong: a plausible leak or bug in a core measured result, or an arithmetic contradiction or unsupported number that breaks the plan by itself. Zero critical flaws is a valid answer.
   - HIGH: a load-bearing number that is unsupported or internally inconsistent.
   - MEDIUM/LOW: secondary gaps and missing controls.
-  - Scale to the evidence base. A plan with strong measured evidence (real revenue, real customers, profitability) should receive fewer and milder flaws than a pre-launch plan built on assumptions; two or three flaws is fine. Do not pad the list to look thorough.
+  - Scale to the evidence base you assigned in Step 1:
+      STRONG → no CRITICAL unless you found a genuine arithmetic contradiction; at most 1 HIGH; 2–4 flaws in total.
+      MIXED  → at most 1 CRITICAL; 3–5 flaws.
+      WEAK   → full range allowed.
+    Do not pad the list to look thorough.
+  - Rank by how much the claim matters to the plan, not by how easy it is to criticise. If the riskiest forecast in the plan is a build or delivery timeline, do not rate it below lesser gaps.
+
+OUT OF SCOPE for this lens (other lenses cover them — do not raise them even as evidence gaps): the size or composition of the team, sales capacity or quotas, budget breakdowns, per-unit costs and margins, pricing levels, partner or sales pipeline and commitments, competition, and choice of channels.
 
 Each flaw's question must be a concrete check the author can run or a specific number they must supply, not a general request for "more data".
 
