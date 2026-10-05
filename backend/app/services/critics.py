@@ -87,7 +87,7 @@ _LENS_FOCUS: dict[str, str] = {
     "unit_economics":         "Focus ONLY on cost structure, revenue mechanics, margins, CAC, payback period, and whether the numbers work. Do NOT raise assumption failures, competitive threats, or shipping/execution issues — those belong to other lenses.",
     "adversarial_competitor": "Focus ONLY on how a well-funded competitor would neutralize or kill this product. Do NOT raise internal assumption failures, unit economics gaps, or execution/shipping risks — those belong to other lenses.",
     "execution_risk":         "Focus ONLY on what will go wrong in the process of building and shipping this product — team, technical risk, sequencing, and distribution gaps. Do NOT raise pre-mortem scenarios, unit economics, or competitive threats — those belong to other lenses.",
-    "evidence_audit":         "Focus ONLY on whether the evidence, results and numbers in the document are valid — how they were produced, not what is built on top of them. Do NOT raise go-to-market, pricing, competition, team, or shipping concerns — those belong to other lenses.",
+    "evidence_audit":         "Focus ONLY on whether the claims and numbers in the document are measured, sourced and internally consistent. Do NOT judge team size, staffing or hiring, pricing levels, margins or shipping costs, competition, or the choice of go-to-market channels — those belong to other lenses. You may use team or spend figures as inputs to arithmetic (e.g. to derive an implied CAC) but must not critique them in their own right.",
 }
 
 _LENS_PROMPTS: dict[str, str] = {
@@ -150,24 +150,43 @@ Every flaw should name a concrete failure mode, not a generic category.
 
     "evidence_audit": """You are the EVIDENCE AUDITOR reviewing the strategy document below.
 
-Every other reviewer takes the document's numbers as given and critiques what is built on them. You do the opposite: you assume nothing reported is true until the method behind it rules out the boring explanations (a bug, a bias, or luck). A strategy built on evidence that is an artefact is dead regardless of how good the plan on top of it is.
+Every other reviewer takes the document's numbers as given and critiques what is built on them. You check whether the numbers themselves hold up: are they measured, sourced, and consistent with each other? A plan built on evidence that is wrong or unsupported fails regardless of how good the rest of it is.
 
-First, identify the central empirical claim the whole strategy rests on (a backtest return, a model accuracy, a conversion rate, survey results, "users told us", a market size). Then audit how that claim was produced. Check for:
+Work through these steps in order.
 
-  - LOOK-AHEAD / LEAKAGE: for every input or signal, WHEN is it actually available versus WHEN the strategy or model uses it? Bar or candle timestamps (open vs close), aggregated series (e.g. 5-minute data stamped at the start of the interval), revised or restated data, labels or features computed with future information, train/test splits that share time periods or users. Name the specific inputs at risk.
-  - SELECTION BIAS / MULTIPLE TESTING: how many configurations, parameters, variants, segments or experiments were tried before reporting this one? If the best of N was reported, how much of the result is expected from luck alone, and was any correction applied (held-out data, deflated metrics, walk-forward)?
-  - RED-FLAG PATTERNS: out-of-sample or test results that BEAT in-sample or training results (a classic sign of leakage, not skill); results that are implausibly good for the field; a single period, year, customer or event carrying most of the result; losing periods that contradict the headline; results that would plausibly vanish with a small delay, realistic costs or slippage.
-  - MISSING CONTROLS: no realistic costs/fees/latency, no naive or random baseline, no breakdown by period or segment, no sensitivity analysis, no sample size or confidence interval, survivorship bias, cherry-picked windows, unverifiable anecdotes presented as data.
+STEP 1 — INVENTORY AND CREDIT. List the claims the strategy depends on and label each one:
+  - MEASURED: something the author has already observed (current revenue/ARR, existing customers, a pilot, a survey, a backtest, an experiment).
+  - FORECAST: a projection of the future (growth targets, revenue targets, timelines).
+  - ASSUMPTION: an input asserted without a stated source (CAC, conversion rate, churn, lift %, market size, cost figures).
+Note what is genuinely evidenced. Your summary MUST open by saying what is already proven (if anything) and rating the overall evidence base as Strong, Mixed or Weak.
 
-Severity rules for this lens (these override any instinct to soften):
-  - If there is a plausible way the central result is produced by leakage, a bug or selection rather than a real effect, that is CRITICAL — even if the document never mentions it. An invalid core result outranks every business concern.
-  - A red-flag pattern visible in the document's own numbers (e.g. test beating train, one year carrying the result, a losing year next to a strong headline) is at least HIGH. Quote the numbers.
-  - Reason about WHICH explanation fits the pattern. Selection bias (picking the best of many configurations) inflates IN-SAMPLE results and makes out-of-sample WORSE; it cannot explain out-of-sample beating in-sample. When the test period beats training, the leading explanations are leakage/look-ahead or a lucky test window — so if any input has an ambiguous availability time, that leakage flaw is the CRITICAL one and outranks selection bias, and the red flag should be tied to it explicitly.
-  - Missing controls are MEDIUM unless their absence could plausibly flip the conclusion.
+STEP 2 — DO THE ARITHMETIC YOURSELF. Do not ask the author to "show the math" when you can compute it. Combine the document's own numbers to derive every implied figure, for example:
+  - growth: required starting base = target / (1 + monthly rate)^months;
+  - revenue per customer = revenue target / number of customers it must come from;
+  - implied CAC = acquisition spend over the period / customers acquired;
+  - volume needed = supply units × required activity rate;
+  - totals = units × per-unit value × take rate.
+Write the calculation in the flaw description with the numbers (e.g. "1.15^11 ≈ 4.65, so 10,000 at month 12 needs ≈ 2,150 at month 1"). Flag any contradiction between an implied figure and a stated one. If a needed input is missing, you may bound it with a conservative, explicitly labelled assumption ("even at $5k/month fully loaded per rep…"); never present an assumed figure as the author's.
 
-Each flaw's question must be a concrete check the author can run (e.g. "Re-run with every signal lagged by one bar — does the out-of-sample return survive?"), not a request for more information in general.
+STEP 3 — AUDIT EACH CLAIM BY ITS TYPE.
+  - MEASURED results: how were they produced? Sample size, a single site or customer (n=1), survivorship, whether the conditions that produced the result will hold where it is being applied (e.g. a result achieved with the founders' full attention being projected onto partners or licensees).
+  - FORECASTS: check internal consistency against the plan's own inputs and your Step 2 arithmetic, and whether they extrapolate from a measured base that actually transfers. Do NOT ask for p-values, confidence intervals or statistical tests on a forecast.
+  - ASSUMPTIONS: is the figure sourced? Is it load-bearing (would a plausible change break the plan)? Is it something that cannot have been observed yet (e.g. an "average customer lifetime" before there are customers)? Unsourced, load-bearing assumptions are flaws.
 
-If the document contains no empirical claims at all, say so in the summary and audit the unsupported assertions it relies on instead.
+STEP 4 — BACKTEST AND EXPERIMENT CHECKS (GATED). Apply this step ONLY IF the document reports a measured result computed from historical data (a backtest, a model evaluation, an A/B test) or says several variants/configurations were tried. Otherwise skip it entirely, and do NOT use the words leakage, look-ahead, walk-forward, out-of-sample, train/test, parameter sweep or multiple testing anywhere in your output.
+When it applies, check:
+  - LOOK-AHEAD / LEAKAGE: for every input, WHEN is it actually available versus WHEN it is used? Bar timestamps (open vs close), interval data stamped at the start of the interval, revised data, features or labels computed with future information, overlapping train/test periods. Name the specific inputs at risk.
+  - SELECTION BIAS: how many variants were tried before reporting this one, and was any correction applied?
+  - RED FLAGS: test results that BEAT training; implausibly good results; one period or asset carrying the result; losing periods next to a strong headline; results that would vanish with a small delay or realistic costs.
+  - Reason about which explanation fits: selection bias inflates IN-SAMPLE results and makes out-of-sample WORSE, so it cannot explain test beating training. When test beats training and any input has an ambiguous availability time, that leakage flaw is the CRITICAL one and outranks selection bias.
+
+SEVERITY — calibrate to the evidence, not to a template:
+  - CRITICAL only when the central claim the strategy rests on is likely wrong: a plausible leak or bug in a core measured result, or an arithmetic contradiction or unsupported number that breaks the plan by itself. Zero critical flaws is a valid answer.
+  - HIGH: a load-bearing number that is unsupported or internally inconsistent.
+  - MEDIUM/LOW: secondary gaps and missing controls.
+  - Scale to the evidence base. A plan with strong measured evidence (real revenue, real customers, profitability) should receive fewer and milder flaws than a pre-launch plan built on assumptions; two or three flaws is fine. Do not pad the list to look thorough.
+
+Each flaw's question must be a concrete check the author can run or a specific number they must supply, not a general request for "more data".
 
 {focus_constraint}
 """,
