@@ -495,6 +495,26 @@ function CtaBanner({ onTry }: { onTry: () => void }) {
 // Export bar
 // ─────────────────────────────────────────────
 
+async function describeRequestError(res: Response): Promise<string> {
+  let detail: unknown = null;
+  try { detail = (await res.json())?.detail; } catch { /* non-JSON body */ }
+
+  if (res.status === 429) {
+    const d = (detail ?? {}) as { limit?: number; retry_after_seconds?: number };
+    const header = Number(res.headers.get("Retry-After"));
+    const secs = d.retry_after_seconds ?? (Number.isFinite(header) && header > 0 ? header : null);
+    const limit = d.limit ?? 5;
+    const wait = secs == null
+      ? "later"
+      : secs < 90 ? "in about a minute" : `in about ${Math.ceil(secs / 60)} minutes`;
+    return `You've used all ${limit} free critiques for this hour. You can run another ${wait}.`;
+  }
+  if (res.status === 422) {
+    return "Your document couldn't be accepted. It needs to be between 20 and 10,000 characters.";
+  }
+  return `Something went wrong on the server (error ${res.status}). Please try again in a minute.`;
+}
+
 function ExportBar({ lensStates }: { lensStates: Record<LensId, LensState> }) {
   const [copied, setCopied] = useState(false);
 
@@ -573,6 +593,7 @@ function CritiqueProduct() {
   });
   const [running, setRunning]     = useState(false);
   const [done, setDone]           = useState(false);
+  const [requestError, setRequestError] = useState<string | null>(null);
   const abortRef                  = useRef<AbortController | null>(null);
 
   function updateLens(id: LensId, state: LensState) {
@@ -584,6 +605,7 @@ function CritiqueProduct() {
 
     setRunning(true);
     setDone(false);
+    setRequestError(null);
     for (const l of LENSES) updateLens(l.id, { status: "idle" });
 
     const abort = new AbortController();
@@ -599,7 +621,10 @@ function CritiqueProduct() {
         signal: abort.signal,
       });
 
-      if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok || !res.body) {
+        setRequestError(await describeRequestError(res));
+        return;
+      }
 
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();
@@ -632,7 +657,10 @@ function CritiqueProduct() {
         }
       }
     } catch (err: any) {
-      if (err.name !== "AbortError") console.error("Stream error:", err);
+      if (err.name !== "AbortError") {
+        console.error("Stream error:", err);
+        setRequestError("Couldn't reach the Veridex server. It may be waking up after being idle. Wait a minute and try again.");
+      }
     } finally {
       setRunning(false);
     }
@@ -683,6 +711,14 @@ function CritiqueProduct() {
             </button>
           </div>
         </div>
+
+        {/* Request-level error (rate limit, validation, server down) */}
+        {requestError && (
+          <div role="alert" className="rounded-2xl border border-amber-400/25 bg-amber-400/[0.06] px-5 py-4">
+            <p className="text-[13px] font-semibold text-amber-200/90">Critique not started</p>
+            <p className="mt-1 text-[12px] text-amber-100/60 leading-relaxed">{requestError}</p>
+          </div>
+        )}
 
         {/* Progress bar */}
         {anyResults && (

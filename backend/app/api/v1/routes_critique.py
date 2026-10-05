@@ -54,9 +54,17 @@ def _check_rate_limit(ip: str) -> None:
     cutoff = now - WINDOW_SECS
     bucket = [t for t in _ip_buckets[ip] if t > cutoff]
     if len(bucket) >= RATE_LIMIT:
+        # The oldest request in the window is the next one to expire.
+        retry_after = max(1, int(bucket[0] + WINDOW_SECS - now) + 1)
+        _ip_buckets[ip] = bucket
         raise HTTPException(
             status_code=429,
-            detail=f"Rate limit exceeded. Max {RATE_LIMIT} critiques per hour per IP.",
+            detail={
+                "message": f"Rate limit exceeded. Max {RATE_LIMIT} critiques per hour per IP.",
+                "limit": RATE_LIMIT,
+                "retry_after_seconds": retry_after,
+            },
+            headers={"Retry-After": str(retry_after)},
         )
     bucket.append(now)
     _ip_buckets[ip] = bucket
