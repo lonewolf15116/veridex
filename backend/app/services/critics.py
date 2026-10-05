@@ -159,17 +159,17 @@ STEP 1 — INVENTORY AND CREDIT. List the claims the strategy depends on and lab
   - FORECAST: a projection of the future (growth targets, revenue targets, delivery or build timelines).
   - ASSUMPTION: an input asserted without a stated source (CAC, conversion rate, churn, lift %, market size, cost figures).
 Note what is genuinely evidenced. Your summary MUST open by saying what is already proven (if anything) and rating the overall evidence base:
-  - STRONG: the plan extends an existing business with real revenue, customers or profitability that are directly relevant to the new claim (e.g. an established company selling to its own existing customers).
+  - STRONG: the plan extends an existing business with real revenue, customers or profitability that are directly relevant to the new claim (e.g. an established, profitable company whose first target is its own existing customers). Such a plan is STRONG even if the expansion targets themselves are unproven; that is what the flaws are for.
   - MIXED: some relevant measured evidence, but the central claim extrapolates well beyond it (e.g. one site projected onto twenty).
   - WEAK: pre-launch or pre-revenue; the central claims rest on assumptions.
 
 STEP 2 — DO THE ARITHMETIC YOURSELF. Do not ask the author to "show the math" when you can compute it. Combine the document's own numbers to derive every implied figure, for example:
   - growth: required starting base = target / (1 + monthly rate)^months;
   - revenue per customer = revenue target / number of customers it must come from;
-  - implied CAC = acquisition spend over the period / customers acquired;
+  - implied CAC = acquisition spend over the period / customers acquired. If the plan names a sales team and a customer target but no spend, bound the spend with a conservative labelled cost per person (e.g. "even at $5k/month fully loaded, 2 reps × 6 months = $60k; $60k ÷ 50 = $1,200") and compare it with any stated CAC. This arithmetic is required even though judging team size is out of scope;
   - volume needed = supply units × required activity rate;
   - totals = units × per-unit value × take rate.
-Write the calculation in the flaw description with the numbers (e.g. "1.15^11 ≈ 4.65, so 10,000 at month 12 needs ≈ 2,150 at month 1"). Flag any contradiction between an implied figure and a stated one. Only call something a "contradiction" when two stated or derived figures cannot both be true; if the document is merely ambiguous (e.g. it is unclear whether a group of customers is the whole base or a subset), say it is ambiguous and do not rate it above medium. If a needed input is missing, you may bound it with a conservative, explicitly labelled assumption ("even at $5k/month fully loaded per rep…"); never present an assumed figure as the author's.
+Write the calculation in the flaw description with the numbers (e.g. "1.15^11 ≈ 4.65, so 10,000 at month 12 needs ≈ 2,150 at month 1"). Flag any contradiction between an implied figure and a stated one. Only divide a figure by a count that refers to the same population: do not divide a company-wide total (e.g. total ARR) by the size of a subset (e.g. "40 customers who have European subsidiaries") to get a per-customer average. Only call something a "contradiction" when two stated or derived figures cannot both be true; if the document is merely ambiguous (e.g. it is unclear whether a group of customers is the whole base or a subset), say it is ambiguous and do not rate it above medium. If a needed input is missing, you may bound it with a conservative, explicitly labelled assumption ("even at $5k/month fully loaded per rep…"); never present an assumed figure as the author's.
 
 STEP 3 — AUDIT EACH CLAIM BY ITS TYPE.
   - MEASURED results: how were they produced? Sample size, a single site or customer (n=1), survivorship, whether the conditions that produced the result will hold where it is being applied (e.g. a result achieved with the founders' full attention being projected onto partners or licensees).
