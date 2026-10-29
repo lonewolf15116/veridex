@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.routes_critique import router as critique_router
+from app.api.v1.routes_billing import router as billing_router
 
 app = FastAPI(title="Veridex")
 
@@ -27,6 +28,7 @@ app.add_middleware(
 )
 
 app.include_router(critique_router, prefix="/api/v1")
+app.include_router(billing_router, prefix="/api/v1")
 
 
 @app.get("/health")

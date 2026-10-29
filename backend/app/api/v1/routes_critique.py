@@ -8,12 +8,14 @@ Returns Server-Sent Events. Event types:
   - pass_started   {"lens": "<lens>"}
   - pass_completed {"lens": "<lens>", "result": <CriticPassResult>}
   - error          {"lens": "<lens>", "reason": "<string>"}
-  - done           {}
+  - done           {"credits_remaining": <int>}   (credits_remaining only for paid critiques)
 
 All five lenses run in parallel. Each pass emits `pass_started` as soon as it begins
 and `pass_completed` (or `error`) as soon as it finishes.
 
-Rate limiting: 5 critiques per IP per hour, in-memory, resets on process restart.
+Free tier: FREE_LIMIT critiques per client IP per rolling 24 hours, in-memory (resets on restart).
+Paid: send a Founder Pack code in the X-Veridex-Code header. One critique spends one credit and
+skips the free limit; the credit is refunded if any lens fails.
 """
 
 from __future__ import annotations
@@ -24,10 +26,11 @@ import time
 from collections import defaultdict
 from typing import AsyncIterator
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Header, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
+from app.services import billing
 from app.services.critics import (
     CriticValidationError,
     run_critic_pass,
@@ -38,18 +41,18 @@ router = APIRouter()
 
 LENSES = ["pre_mortem", "unit_economics", "adversarial_competitor", "execution_risk", "evidence_audit"]
 
-# ── Rate limiter ──────────────────────────────────────────────────────────────
+# ── Free-tier limiter ─────────────────────────────────────────────────────────
 # Simple in-memory per-IP bucket. Each entry is a list of timestamps (floats).
-# We keep only timestamps within the last WINDOW_SECONDS on each check.
+# We keep only timestamps within the last WINDOW_SECS on each check.
 
-RATE_LIMIT   = 5          # max requests per window
-WINDOW_SECS  = 3600       # 1 hour
+RATE_LIMIT   = 3          # free critiques per window
+WINDOW_SECS  = 86_400     # rolling 24 hours
 
 _ip_buckets: dict[str, list[float]] = defaultdict(list)
 
 
 def _check_rate_limit(ip: str) -> None:
-    """Raise HTTP 429 if the IP has exceeded RATE_LIMIT requests in the last hour."""
+    """Raise HTTP 429 if the IP has used RATE_LIMIT free critiques in the last 24 hours."""
     now  = time.monotonic()
     cutoff = now - WINDOW_SECS
     bucket = [t for t in _ip_buckets[ip] if t > cutoff]
@@ -60,8 +63,9 @@ def _check_rate_limit(ip: str) -> None:
         raise HTTPException(
             status_code=429,
             detail={
-                "message": f"Rate limit exceeded. Max {RATE_LIMIT} critiques per hour per IP.",
+                "message": f"Free limit reached. Max {RATE_LIMIT} free critiques per day.",
                 "limit": RATE_LIMIT,
+                "window": "day",
                 "retry_after_seconds": retry_after,
             },
             headers={"Retry-After": str(retry_after)},
@@ -100,27 +104,71 @@ async def _run_one(lens: str, strategy_doc: str, queue: asyncio.Queue) -> None:
         await queue.put(_sse("error", {"lens": lens, "reason": f"{type(e).__name__}: {e}"}))
 
 
-async def _stream(strategy_doc: str) -> AsyncIterator[str]:
+def client_ip(request: Request) -> str:
+    """Best guess at the visitor's IP behind Render's proxy.
+
+    request.client.host is the proxy's address on Render, which would put every visitor in
+    one shared bucket. Prefer the proxy-supplied headers, falling back to the socket peer.
+    """
+    for header in ("cf-connecting-ip", "true-client-ip"):
+        value = request.headers.get(header)
+        if value:
+            return value.strip()
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        first = forwarded.split(",")[0].strip()
+        if first:
+            return first
+    return request.client.host if request.client else "unknown"
+
+
+async def _stream(strategy_doc: str, paid_code: str | None = None) -> AsyncIterator[str]:
     queue: asyncio.Queue[str] = asyncio.Queue()
     tasks = [asyncio.create_task(_run_one(lens, strategy_doc, queue)) for lens in LENSES]
 
+    any_error = False
     total_events = len(tasks) * 2  # each task: pass_started + pass_completed/error
     for _ in range(total_events):
-        yield await queue.get()
+        event = await queue.get()
+        if event.startswith("event: error"):
+            any_error = True
+        yield event
 
     await asyncio.gather(*tasks, return_exceptions=True)
-    yield _sse("done", {})
+
+    done: dict = {}
+    if paid_code:
+        store = billing.get_store()
+        if any_error:
+            await asyncio.to_thread(store.refund, paid_code)
+            done["credit_refunded"] = True
+        done["credits_remaining"] = await asyncio.to_thread(store.balance, paid_code)
+    yield _sse("done", done)
 
 
 # ── Route ─────────────────────────────────────────────────────────────────────
 
 @router.post("/critique/stream")
-async def critique_stream(request: Request, body: CritiqueRequest):
-    ip = request.client.host if request.client else "unknown"
-    _check_rate_limit(ip)
+async def critique_stream(
+    request: Request,
+    body: CritiqueRequest,
+    x_veridex_code: str | None = Header(default=None),
+):
+    paid_code = None
+    if x_veridex_code and billing.load_settings().payments_enabled:
+        code = billing.normalise_code(x_veridex_code)
+        remaining = None if code is None else await asyncio.to_thread(billing.get_store().consume, code)
+        if remaining is None:
+            raise HTTPException(
+                status_code=402,
+                detail={"message": "That code isn't valid or has no critiques left.", "code_status": "invalid_or_empty"},
+            )
+        paid_code = code
+    else:
+        _check_rate_limit(client_ip(request))
 
     return StreamingResponse(
-        _stream(body.strategy_doc),
+        _stream(body.strategy_doc, paid_code),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
