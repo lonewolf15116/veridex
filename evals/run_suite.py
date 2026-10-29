@@ -39,7 +39,7 @@ MONEY_RE = re.compile(r"[£$]\s?\d[\d,]*(?:\.\d+)?")
 # ---------- parsing / selection ----------
 
 def parse_case(path: Path) -> dict:
-    raw = path.read_text()
+    raw = path.read_text(encoding="utf-8")
     m = re.match(r"^---\n(.*?)\n---\n(.*)$", raw, re.S)
     if not m:
         raise ValueError(f"{path.name}: missing header")
@@ -242,6 +242,9 @@ def run_case(case: dict, token: str) -> dict:
 
 
 def main() -> int:
+    for stream in (sys.stdout, sys.stderr):  # Windows consoles default to cp1252
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser()
     ap.add_argument("folder")
     ap.add_argument("--only", default="")
@@ -263,9 +266,9 @@ def main() -> int:
     res = Path(__file__).resolve().parent / "results"
     md_dir = res / f"suite-{stamp}"
     md_dir.mkdir(parents=True, exist_ok=True)
-    (res / f"suite-{stamp}.json").write_text(json.dumps(recs, indent=2, ensure_ascii=False))
+    (res / f"suite-{stamp}.json").write_text(json.dumps(recs, indent=2, ensure_ascii=False), encoding="utf-8")
     for rec, case in zip(recs, cases):
-        (md_dir / f"{rec['name']}.md").write_text(to_markdown(rec, case))
+        (md_dir / f"{rec['name']}.md").write_text(to_markdown(rec, case), encoding="utf-8")
 
     for r in recs:
         print(f"\n== {r['name']} ({r['stage']})")
