@@ -114,7 +114,7 @@ It is 18 months from today. The strategy has failed. Your job is to enumerate, s
   - Dependencies that didn't materialize
   - Misread market / user signals
 
-Be concrete. 'Users didn't want it' is weak. 'Users wanted X but we built Y because we confused stated preference with revealed preference' is strong.
+Be concrete. 'Users might not want it' is weak. 'Failure scenario: users say they want X, but what they would pay for is Y, because stated preference is not revealed preference' is strong.
 
 FACTUALITY — the failure is imagined; the document's facts are not:
   - Write every failure as a scenario, not as history: "Failure scenario: …", "the likeliest way this fails is …", "if X, then …". Never state that something already happened.
