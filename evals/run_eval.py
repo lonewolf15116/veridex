@@ -77,7 +77,8 @@ def main() -> int:
     if not token:
         print("Set VERIDEX_EVAL_TOKEN to the EVAL_TOKEN configured on the server.", file=sys.stderr)
         return 2
-    lenses = args.lens or ["evidence_audit"]
+    # Idea mode needs every lens to pick questions; plain evals default to Evidence Audit.
+    lenses = args.lens or (LENSES if args.stage else ["evidence_audit"])
     docs = sorted(p for p in Path(args.folder).glob("*.md") if p.name not in {"ANSWER_KEY.md", "README.md", "RESULTS.md"})
     if not docs:
         print(f"No .md docs in {args.folder}", file=sys.stderr)
