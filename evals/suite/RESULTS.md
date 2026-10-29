@@ -43,3 +43,7 @@ Regex flags were checked by hand.
 1. **Bug (code, deterministic):** drop or reword the "Still unknown" section of the refinement brief, so that a skipped question carries no information.
 2. **Severity (enforcement):** in stage mode, code-cap criticals that rest only on missing information, as the checker caps Evidence Audit. Prompt wording alone has failed.
 3. **Pre-Mortem factuality:** label each failure as a scenario. Never assert events, pilots or conversations the input does not contain.
+
+## Applied after run 1
+- Fix 1 (skipped-question bug): `compose_brief` no longer lists skipped questions. Verify with
+  `run_suite.py --only T01,T04,T05`: no refined finding should cite a skip or a founder "admission" the answer did not make.

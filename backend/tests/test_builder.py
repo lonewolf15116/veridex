@@ -165,7 +165,9 @@ def test_brief_contains_only_founder_text():
     assert IDEA in brief and "Spoke to 12 / factory owners" in brief  # pipes neutralised
     assert "| Hourly rate | $90 | Measured (founder-reported, not verified) |" in brief
     assert "| Jobs per month | not given | Don't know |" in brief
-    assert "## Still unknown" in brief and builder.QUESTION_BANK["pricing"].text in brief
+    # a skipped question leaves no trace: no "still unknown" list, no question text
+    assert "still unknown" not in brief.lower() and "skipped" not in brief.lower()
+    assert builder.QUESTION_BANK["pricing"].text not in brief
     assert "pre_mortem" not in brief and "prompted" not in brief  # no critique text
 
 

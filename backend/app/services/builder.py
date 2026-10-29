@@ -7,8 +7,8 @@ Flow
   2. select_questions() maps gap tags to questions from a fixed bank. Pure function: same critique
      in, same questions out. No model call.
   3. The founder answers (or skips). compose_brief() builds the document for the re-run from a fixed
-     template: the founder's idea, their answers (numbers tagged as founder-reported), and what is
-     still unknown. Critique text is never copied into it, so it can't be mistaken for evidence.
+     template: the founder's idea and their answers (numbers tagged as founder-reported). Skipped
+     questions are left out. Critique text is never copied into it, so it can't be mistaken for evidence.
   4. lenses_for_answers() picks only the lenses the answered gaps inform. That re-run is the one
      free refinement, authorised by a single-use token issued with the first critique.
 
@@ -158,7 +158,6 @@ def compose_brief(idea: str, stage: str, answers: list[Answer]) -> str:
     """Build the re-run document from a fixed template. Only founder-supplied text goes in."""
     lines = [f"Stage: {STAGE_LABEL[stage]} (declared by the founder)", "", "## The idea (founder's words)", idea.strip()]
     answered = [a for a in answers if not a.skipped and (a.text.strip() or a.numbers)]
-    unknown = [a for a in answers if a not in answered]
 
     if answered:
         lines += ["", "## Founder's answers to follow-up questions"]
@@ -172,9 +171,9 @@ def compose_brief(idea: str, stage: str, answers: list[Answer]) -> str:
                 for n in a.numbers:
                     lines.append(f"| {_clean(n.label)} | {_clean(n.value) or 'not given'} | {EVIDENCE_LABEL[n.evidence]} |")
 
-    if unknown:
-        lines += ["", "## Still unknown (the founder skipped these)"]
-        lines += [f"- {QUESTION_BANK[a.gap].text}" for a in unknown]
+    # Skipped questions are deliberately left out. Listing them ("still unknown") made lenses read a
+    # skip as a founder admission, e.g. "the founder admits who pays is unknown" despite a stated
+    # price (suite run 1, 8/10 refinements). A skip carries no information either way.
     return "\n".join(lines)
 
 
