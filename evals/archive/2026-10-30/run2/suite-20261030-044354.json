@@ -1,0 +1,1539 @@
+[
+  {
+    "id": "T01",
+    "name": "T01-dental-saas",
+    "stage": "building",
+    "errors": [],
+    "timings": {
+      "first_s": 54.6,
+      "refine_s": 23.1
+    },
+    "first": {
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "The document states price ($299/location/mo), a 30% no-show reduction claim, and a two-person outbound plan to land 50 clinics, but provides no unit-costs, CAC math, compliance plan, or evidence of willingness-to-pay. Key inputs for LTV, payback, and gross margin are missing, so the revenue and margin claims are unsupported. Before launch the team must (1) validate willingness-to-pay with price tests, (2) model CAC using realistic outbound conversion metrics, and (3) itemize per-location serving costs including HIPAA/compliance.",
+        "flaws": [
+          {
+            "title": "No plan for HIPAA / PHI compliance — a potential blocker and material cost",
+            "severity": "critical",
+            "description": "Scheduling and no-show prediction will almost certainly require handling protected health information (PHI). The doc contains no HIPAA/BAA, security, or legal compliance plan; those are non‑optional and add measurable engineering, hosting, legal, and insurance costs. Ignoring this changes unit economics (higher fixed and per-customer costs) and may prevent selling to clinics until solved.",
+            "question": "How will you handle PHI and HIPAA (BAA, encryption, logging, audits, breach liability) and what is the expected incremental monthly cost per location to meet compliance?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Price ($299/mo) is unsupported by any willingness-to-pay evidence",
+            "severity": "high",
+            "description": "The $299/month per-location price is asserted without cited customer interviews, pilots, or price tests. There is no breakdown of what $299 buys the clinic vs alternatives, so LTV and margin projections are baseless. If clinics won’t pay this price, CAC and payback calculations (which are absent) will fail.",
+            "question": "What evidence (surveys, paid pilots, signed LOIs, price‑sensitivity tests) shows clinics will pay $299/location/month rather than a lower price or a per-appointment fee?",
+            "gap": "pricing"
+          },
+          {
+            "title": "CAC and go-to-market channels are unspecified and likely underestimated",
+            "severity": "high",
+            "description": "A two-person outbound team is the only acquisition plan; no conversion rates, outreach volume, time-per-sale, or expected CAC are given. Selling to independent dental clinics can involve slow sales cycles and significant outreach time per closed deal, so CAC could be many months of revenue per customer unless proven otherwise.",
+            "question": "What is the detailed outbound funnel (outreach per rep per week, expected response and demo rates, demo→close %), and the implied CAC and sales cycle in months?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Per-location cost-to-serve (compute, storage, support, payments) is missing",
+            "severity": "high",
+            "description": "There is no breakdown of marginal costs: model inference cost (real-time predictions), data storage and backups, retraining, monitoring, customer support/onboarding, and payment processing fees. Without per-customer unit costs you cannot compute gross margin or test price viability.",
+            "question": "Provide a per-location/month estimate for model inference, storage, backups, support time, onboarding amortization, and payment processing fees (or explain why these are negligible).",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "No gross-margin or scale economics — unclear if price covers costs at scale",
+            "severity": "medium",
+            "description": "The doc claims benefit but provides no gross-margin projections today vs at scale (50, 500, 5,000 locations). Economies of scale for model serving or support could help, but without numbers it's unknown whether margins are healthy or will flip negative as you add compliance and support.",
+            "question": "What is your projected gross margin per location at 50, 500, and 5,000 paying locations (including compliance and support costs)?",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "No LTV, churn, payback-period, or hidden operational costs modeled",
+            "severity": "medium",
+            "description": "There are no assumptions for retention/churn, refunds/chargebacks, fraud, or customer support escalations; LTV and payback period are therefore undefined. These inputs determine whether a likely CAC can be recovered and whether the business is financially viable.",
+            "question": "What are your assumed monthly churn, average contract length, refund/chargeback rate, and resulting LTV and CAC payback period?",
+            "gap": "assumptions"
+          }
+        ]
+      },
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "The plan rests on multiple interdependent assumptions that are unstated and untested: that clinics will legally and operationally provide the data needed to build the model; that a no-show risk score by itself (or with simple clinic actions) will cut missed appointments ~30%; and that clinics will pay $299/location/month and can be acquired via two-person outbound within six months. If any one of these core assumptions fails, the product either cannot be built, cannot produce the promised impact, or cannot find customers.",
+        "flaws": [
+          {
+            "title": "No proof clinics will allow HIPAA-compliant access to the patient/appointment data needed",
+            "severity": "critical",
+            "description": "The strategy assumes access to appointment and patient-level data to train and run an AI model but does not state how that data will be obtained, whether clinics will sign Business Associate Agreements (BAAs), or whether practice management vendors will permit integrations. If clinics cannot legally or operationally provide the required data streams, the core model cannot be trained or deployed as described. This is a hard stop: without compliant data access there is no AI product.",
+            "question": "Can target clinics and their vendors legally and operationally provide the necessary appointment/patient data under HIPAA-compliant BAAs and integrations to train and run the model?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Conflating prediction with impact: 30% reduction in missed appointments is unproven",
+            "severity": "high",
+            "description": "The thesis claims a no-show prediction model will reduce missed appointments by 30%, but no evidence or mechanism is provided for how predictions translate into effective actions (e.g., targeted reminders, overbooking policies) that achieve that magnitude of reduction. Prediction accuracy alone does not guarantee behavioral change by patients or operational change by clinics. If high-quality risk scores do not lead to scalable, clinic-implementable interventions that materially change behavior, the product fails to deliver its primary value proposition.",
+            "question": "When risk scores are delivered to clinics along with realistic interventions, do real clinics achieve ~30% fewer missed appointments in a controlled pilot?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Pricing is assumed, not validated: $299/month per location may not match willingness to pay",
+            "severity": "high",
+            "description": "Charging $299 per location per month is asserted without evidence that independent dental clinics value this feature at that price or prefer this pricing model to alternatives (one-off fees, per-appointment fees, bundled PMS features). Independent clinics often have tight budgets and prefer low-friction, low-cost solutions; without willingness-to-pay data the revenue plan is speculative. If clinics balk at the price, landing even a small pilot will be difficult.",
+            "question": "Will a representative sample of independent dental clinics commit to paying $299/month per location for this service versus existing reminder/manual processes or cheaper alternatives?",
+            "gap": "pricing"
+          },
+          {
+            "title": "Acquisition channel assumption: two-person outbound can hit 50 paying clinics in six months",
+            "severity": "high",
+            "description": "The plan assumes a two-person outbound team can reach decision-makers, communicate the product's value, and convert 50 paying clinics in six months, but provides no evidence of sales cycle length, response rates, or conversion rates for this market. Independent clinics may have decentralized purchasing, slow decision-making, or require trials and references, making outbound less effective than assumed. If outbound falls short, customer acquisition stalls and the strategy cannot validate product-market fit.",
+            "question": "Can a two-person outbound team reliably contact decision-makers and convert enough clinics to reach 50 paying customers within six months based on pilot outreach metrics?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Model generalizability across diverse independent clinics is assumed",
+            "severity": "medium",
+            "description": "The document implicitly assumes a model trained on some data will generalize to other independent dental clinics, but clinics vary in patient demographics, scheduling rules, reminder practices, and software systems. If the model needs per-clinic training or adaptation, the product complexity and data requirements grow and the value proposition changes. The plan does not state whether a single model or per-clinic models are envisioned.",
+            "question": "Will a single no-show prediction model trained on pooled data meet accuracy thresholds across diverse clinics, or will each clinic require bespoke training/adaptation?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Misread of alternative solutions and revealed preferences",
+            "severity": "medium",
+            "description": "There is no evidence of what clinics currently use to reduce no-shows (automated reminders, phone calls, deposits, overbooking) or why they would replace those methods with an AI-driven scheduler. The founding statement risks confusing expressed interest in reducing no-shows with actual willingness to adopt an AI tool that changes workflows. If current, cheaper, or simpler remedies are 'good enough' in revealed behavior, adoption will be low.",
+            "question": "What do target clinics actually do today to reduce no-shows, and why would they switch to an AI-driven scheduling solution instead of sticking with those practices?",
+            "gap": "alternatives"
+          },
+          {
+            "title": "Implicit integration dependency with practice management systems is unstated",
+            "severity": "low",
+            "description": "The strategy does not state whether the product requires deep integration with practice management systems to read schedules and send interventions, or if it can operate via manual uploads/CSV exports. If integrations are required but harder than assumed, deployment and adoption become frictioned. This gap affects speed of pilots but is not necessarily fatal if addressed early.",
+            "question": "Can the product access scheduling data and send reminders through the major practice management systems used by target clinics with acceptable technical effort and permission?",
+            "gap": "assumptions"
+          }
+        ]
+      },
+      "adversarial_competitor": {
+        "lens": "adversarial_competitor",
+        "summary": "This product is an undifferentiated ML layer on top of dental scheduling with an unproven 30% impact claim and a high per-location price. A well-funded incumbent can neutralize it cheaply by shipping a basic risk-score + reminder bundle, bundling it into existing products, and exploiting deeper distribution, partnerships, and trust to undercut adoption.",
+        "flaws": [
+          {
+            "title": "No defensible moat — the \"predictive\" bit is easy to replicate",
+            "severity": "high",
+            "description": "Founder leans entirely on a no-show prediction model as the unique value. That model is not described as proprietary, nor is any exclusive data source or technical barrier claimed. An incumbent with access to appointment logs can reproduce a usable risk score or simple heuristics within weeks and ship the same feature to existing customers.",
+            "question": "What proprietary data, integration, or technical advantage prevents an incumbent from reproducing your predictive score in 30–90 days?",
+            "gap": "differentiation"
+          },
+          {
+            "title": "Pricing exposed — $299/location/mo is easy to undercut or bundle away",
+            "severity": "high",
+            "description": "Charging $299 per location per month for a single feature creates a large arbitrage opportunity: incumbents can include a similar risk score and reminder automation as a free or low-cost add-on for their installed base or wholesale-bundle it into payments/insurance channels. The plan gives no evidence that independent clinics will pay a standalone $299 premium.",
+            "question": "How did you validate willingness to pay $299/location/mo given incumbents can bundle the same capability into their existing offerings?",
+            "gap": "pricing"
+          },
+          {
+            "title": "Key integration / data access assumption unstated and fragile",
+            "severity": "high",
+            "description": "A predictive scheduling product requires reliable, real-time access to appointment and patient-history data from practice management systems. The document states no integrations, pilot partners, or permissions; incumbents or EHR vendors control those channels and can block or replicate integrations. Without confirmed API access, the core product cannot function.",
+            "question": "Which practice-management systems have you confirmed API access with (or signed partnerships for), and can they provide the historical and live appointment data your model needs?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Impact claim (30% reduction) has no supporting evidence or pilot plan",
+            "severity": "medium",
+            "description": "The assertion that a no-show model will reduce missed appointments by 30% is stated as a belief with no pilot, retrospective evaluation, or baseline no-show rates. That gap is killable: incumbents can run quick A/B pilots with existing customers to show equal or better impact and beat the startup to market.",
+            "question": "Can you produce a retrospective validation or a one-month pilot with 5–10 clinics demonstrating the claimed 30% reduction on real appointment data?",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Go-to-market plan is tiny and easy to out-distribute",
+            "severity": "medium",
+            "description": "A two-person outbound team targeting 50 clinics is insufficient against competitors who can push features to thousands of existing customers, leverage SEO content, app stores/marketplaces for practice-management systems, and partner with dental associations or insurers. Distribution, not the model, is the lever that wins here.",
+            "question": "Beyond the two-person outbound effort, which channels (integrations, marketplaces, associations, SEO or partner pipelines) are validated to scale acquisition to hundreds of clinics?",
+            "gap": "acquisition"
+          }
+        ]
+      },
+      "execution_risk": {
+        "lens": "execution_risk",
+        "summary": "The plan underestimates the legal, data and integration work required to build a production-ready no-show predictor for US dental clinics and overestimates a two-person outbound team's ability to both acquire and onboard 50 clinics in six months. The biggest shipping risks are regulatory/compliance blockade around PHI, per-clinic integration and data scarcity/cold-start for the model. Several sequencing and GTM assumptions (pilot data, connector effort, pricing validation, support capacity) are unstated and likely to derail timelines and conversion.",
+        "flaws": [
+          {
+            "title": "HIPAA / PHI compliance is unaddressed and can legally block sales",
+            "severity": "critical",
+            "description": "Predicting no-shows requires appointment and likely patient-level data that is PHI under US law. The document contains no plan for HIPAA compliance, BAA signings, secure hosting, encryption, audits, or legal sign-offs — clinics will not hand over data (or allow you to process it) without these in place. Failing to solve this before outbound sales will prevent pilots and paid deployments and could create legal exposure.",
+            "question": "How will you legally and operationally obtain, store, and process appointment/patient data from US dental clinics (BAA, HIPAA controls, encryption, audit timeline) before you start selling or deploying?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Per-clinic integration burden will explode engineering and onboarding time",
+            "severity": "high",
+            "description": "Dental clinics use multiple practice-management systems (Dentrix, Eaglesoft, Open Dental, others) and often require custom connectors or manual CSV exports; the doc assumes a generic integration without listing systems or connector plans. Each new connector can take weeks of engineering, testing, and legal review (BAA), making rapid onboarding of 50 clinics infeasible with current staffing. Underrating this work will create a long tail of slow deployments and angry early customers.",
+            "question": "Which practice-management systems are you integrating with first, and what is your engineering/time/cost estimate per connector and per clinic onboarding?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Model needs historical labeled data (cold-start) — risk of poor accuracy at launch",
+            "severity": "high",
+            "description": "The promised 30% no-show reduction is model-dependent but there's no plan showing access to historical appointment/no-show labels. Individual clinics may not have enough labeled history for reliable per-location models, and a centralized model may not generalize across clinics. Without an explicit pilot dataset and accuracy milestones, you risk shipping a product whose predictions don't meaningfully reduce no-shows.",
+            "question": "Can you secure historical appointment/no-show data from at least one clinic to validate model accuracy and the 30% reduction claim before broad development?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Two-person outbound GTM won't scale to acquire and onboard 50 paying clinics in 6 months",
+            "severity": "high",
+            "description": "The acquisition plan is a two-person outbound team targeting 50 paying clinics in six months but gives no funnel metrics, conversion assumptions, demo/onboarding capacity, or implementation bandwidth. Even if leads convert, each closed customer will need onboarding, integration, BAA execution, and support — work that will overwhelm two people. This will delay revenue and create poor customer experiences.",
+            "question": "What are your assumed outreach->demo->pilot->paid conversion rates, and how many full-time sales and technical onboarding staff do you need to realistically close and deploy 50 clinics in six months?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Sequencing: building product before securing pilot data/connectors wastes engineering effort",
+            "severity": "medium",
+            "description": "The plan implies building the AI-powered product now but does not require a pilot clinic or exported historical data before development. If you build connectors and a model before proving data availability and predictability, you'll likely rework code and integrations. A cheap pilot with CSV exports or one clinic can validate feasibility much faster than full engineering.",
+            "question": "Will you run a short pilot (CSV exports from one clinic) to validate predictability before building production connectors and UX?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Price point and post-sale support expectations are unvalidated",
+            "severity": "medium",
+            "description": "You state $299/location/month but provide no evidence that clinics will accept that price or that onboarding/support costs per location are sustainable. High onboarding and integration costs per clinic can kill conversions and margins if the price isn't validated. Without at least an LOI or paid pilot at the target price, revenue forecasts and staffing plans are guesses.",
+            "question": "Have you validated willingness to pay $299/month (e.g., LOI or paid pilot) and estimated the real onboarding/support hours and cost per location at that price?",
+            "gap": "pricing"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. The plan is pre-launch with no measured pilots or customer revenue; core effectiveness and pricing assumptions are unsupported. The most important gap is the unsupported 30% no-show reduction and the absent buyer-backed ROI/pricing justification.",
+        "flaws": [
+          {
+            "title": "Core claim of 30% no-show reduction is unsupported",
+            "severity": "high",
+            "description": "You state a 30% reduction in missed appointments but provide no pilot, backtest, or source for that effect size. That number is load-bearing: expected customer ROI and willingness-to-pay depend directly on it. Without evidence from real clinics (n and context), we cannot know if a model can reach 30% in the noisy operational environment of independent dental practices.",
+            "question": "Provide the empirical evidence (pilot results, A/B test, backtest or published source) showing a 30% reduction in no-shows for clinics like your target customers, including sample size, baseline no-show rate, and how reduction was measured.",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Price $299/mo has no buyer-backed justification",
+            "severity": "high",
+            "description": "The plan sets $299 per location per month but gives no ROI calculation or willingness-to-pay data from dentists. Whether clinics will pay $299 depends on the monetary value of avoided no-shows per clinic (baseline no-show rate, average appointment revenue, and elasticity). Without that, the price is an unsupported assumption.",
+            "question": "Show a per-clinic ROI model that converts a 30% reduction in no-shows into dollars saved (with baseline no-show rate and average appointment value) and demonstrate that the net benefit justifies $299/mo for a typical independent US dental clinic.",
+            "gap": "pricing"
+          },
+          {
+            "title": "Acquisition plan missing CAC and conversion math; implied CAC example",
+            "severity": "high",
+            "description": "You target 50 paying clinics in six months with a two-person outbound team but give no spend or conversion assumptions. Conservatively, at $5k fully loaded per rep per month: 2 reps × 6 months × $5,000 = $60,000; implied CAC = $60,000 / 50 = $1,200. First-year revenue per customer = 299 × 12 = $3,588, so payback could be ~4 months only if churn is low — you haven't provided churn or close-rate assumptions.",
+            "question": "Specify planned fully-loaded rep cost, expected outbound conversion rate (leads → paying), and resulting CAC; if you use different spend assumptions, show the math that yields CAC and the expected payback period versus LTV.",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "No evidence that target buyers will buy or who the decision-maker is",
+            "severity": "medium",
+            "description": "‘Independent US dental clinics’ is a broad buyer label; you haven't stated which subset (solo owners, multi-location independents) or who signs the check (practice owner, office manager). Buyer role and procurement process affect sales cycle and conversion rates — critical for a two-person outbound plan targeting 50 clinics in six months.",
+            "question": "Identify the specific buyer persona(s) (title, clinic size, baseline no-show rate) you will target and provide evidence (surveys, interviews or pilot commitments) that these personas have the authority and willingness to purchase at your price point.",
+            "gap": "buyer"
+          },
+          {
+            "title": "No funnel/conversion assumptions for outbound required to hit 50 customers",
+            "severity": "medium",
+            "description": "You name team size and a customer target but provide no funnel metrics (outreach → booked demo → trial → paid). Without conversion rates or required outreach volume, the sales effort is unquantified and risk of not hitting 50 customers is unknown. This gap prevents validating whether two reps in six months is realistic.",
+            "question": "Provide the assumed outbound funnel conversion rates (e.g., outreach → response, response → demo, demo → trial, trial → paid) and compute the number of outbound touches required per rep per month to reach 50 customers in six months.",
+            "gap": "acquisition"
+          }
+        ]
+      }
+    },
+    "lens_errors": [],
+    "first_shape": {
+      "unit_economics": "CHHHMM",
+      "pre_mortem": "CHHHMML",
+      "adversarial_competitor": "HHHMM",
+      "execution_risk": "CHHHMM",
+      "evidence_audit": "HHHMM"
+    },
+    "questions": [
+      {
+        "gap": "acquisition",
+        "text": "How will your first customers find you?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "execution_risk"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Acquisition channel assumption: two-person outbound can hit 50 paying clinics in six months",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "CAC and go-to-market channels are unspecified and likely underestimated",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Go-to-market plan is tiny and easy to out-distribute",
+            "severity": "medium"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Two-person outbound GTM won't scale to acquire and onboard 50 paying clinics in 6 months",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Sequencing: building product before securing pilot data/connectors wastes engineering effort",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No funnel/conversion assumptions for outbound required to hit 50 customers",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "gap": "pricing",
+        "text": "Who pays, and roughly how much?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Pricing is assumed, not validated: $299/month per location may not match willingness to pay",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Price ($299/mo) is unsupported by any willingness-to-pay evidence",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Pricing exposed — $299/location/mo is easy to undercut or bundle away",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Price point and post-sale support expectations are unvalidated",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Price $299/mo has no buyer-backed justification",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "key_numbers",
+        "text": "Which numbers is this plan relying on? Give each one's value and whether it is measured, an estimate, or unknown.",
+        "kind": "numbers",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "unit_economics",
+            "title": "Per-location cost-to-serve (compute, storage, support, payments) is missing",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "No gross-margin or scale economics — unclear if price covers costs at scale",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Acquisition plan missing CAC and conversion math; implied CAC example",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "differentiation",
+        "text": "Why would customers choose this over the alternatives?",
+        "kind": "text",
+        "informs": [
+          "adversarial_competitor"
+        ],
+        "prompted_by": [
+          {
+            "lens": "adversarial_competitor",
+            "title": "No defensible moat — the \"predictive\" bit is easy to replicate",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "gap_tags_valid": "29/29",
+    "criticals": 3,
+    "answered": {
+      "gap": "acquisition",
+      "text": "Our plan is outbound outreach by the two of us; we have not yet tested whether it works."
+    },
+    "skipped_gaps": [
+      "pricing",
+      "key_numbers",
+      "differentiation"
+    ],
+    "refined": {
+      "execution_risk": {
+        "lens": "execution_risk",
+        "summary": "The plan misses several concrete execution blockers that will stop shipping: patient-data/HIPAA compliance is unaddressed (a legal blocker), there's no route to collect the historical, standardized appointment data needed to train a predictive model, and integrating with many dental practice management systems is treated as trivial. Operationally, two founders running outbound and building integrations/models is under-resourced, and pricing/sequence assumptions (build model before pilots) are unvalidated and likely to delay or derail launches.",
+        "flaws": [
+          {
+            "title": "No HIPAA / PHI compliance plan — legal blocker to onboarding clinics",
+            "severity": "critical",
+            "description": "You plan to ingest appointment and patient data but the doc has no HIPAA strategy: no Business Associate Agreement (BAA) plan, no specification of secure hosting, encryption, access controls, or breach processes. Clinics will refuse to share data or legal teams will block pilots without a signed BAA and audited controls, creating a hard stop before any data collection or deployment. This is not a future enhancement — it's a precondition to get data and paying customers.",
+            "question": "How will you achieve HIPAA-compliant data handling (BAAs, hosting, audits, breach plan) before any clinic integration or data ingestion?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "No source or plan for the labeled historical data required to train the model",
+            "severity": "high",
+            "description": "The 30% no-show reduction claim depends on a predictive model but there's no plan for acquiring sufficient, standardized historical appointment records (no-shows, cancellations, reminders, patient attributes). Dental practices hold fragmented data with inconsistent fields; without secured datasets you can't train or validate the model and will likely waste effort training models that don't generalize. This will delay an MVP or produce an unusable product.",
+            "question": "Where exactly will you obtain the standardized, labeled appointment datasets (fields and minimum record counts) needed to train and validate a no-show model prior to launch?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Integration with many practice management systems is underestimated",
+            "severity": "high",
+            "description": "You assume you can plug into clinics to get appointment data, but US dental clinics use many PMS vendors with differing APIs, exports, or none at all. Building and maintaining per-vendor connectors (or resorting to screen-scraping) requires substantial engineering and legal work for each integration, adding months per vendor and blocking onboarding. Overlooking this creates a bottleneck: product exists but can't connect to customers' systems.",
+            "question": "Which PMS vendors will you target first and what are the concrete technical and legal integration steps and estimated engineering hours per vendor?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Two-person outbound + build team is under-resourced to hit 50 paying clinics in 6 months",
+            "severity": "high",
+            "description": "You plan a two-person outbound team to land 50 paying clinics while also building integrations and the model. Each clinic will need outreach, legal/contract work (BAAs), demos, pilot setup, and often custom integration—work that typically takes weeks per clinic. The founders will be a bottleneck; hiring or delegating is not accounted for, making the 6-month target unrealistic.",
+            "question": "What is your assumed onboarding throughput per founder per month (sales, legal, onboarding, integration) and how will you scale if it proves insufficient?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Sequencing: building the model before running live pilots",
+            "severity": "medium",
+            "description": "The plan implies significant model development up front rather than validating the effect with lightweight pilots or rule-based approaches. Without a small number of live pilots to confirm data access, feature quality, and impact, you risk engineering a sophisticated model that can't be deployed or doesn't outperform simple heuristics. That wastes months and raises costs before you know the product works in real clinics.",
+            "question": "Can you run a 2–4 clinic pilot using simple rules or offline experiments to validate impact and data availability before training a production model?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Price ($299/location/mo) is asserted with no validation and may block sales",
+            "severity": "medium",
+            "description": "Charging $299/location/month is stated but there's no evidence clinics will pay that, especially if onboarding requires integration fees or operational changes. If price is wrong, conversion will be low and lengthy negotiations will slow acquisition; this is an execution risk because sales cycles are longer and more hands-on than assumed.",
+            "question": "What evidence supports $299/month per location as an acceptable price to dentists (willingness-to-pay tests, comparable products, or pilot feedback)?",
+            "gap": "pricing"
+          }
+        ]
+      },
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "The document states price ($299/location/month) and an outbound plan but contains almost no unit economics. Key inputs needed to judge viability — cost to serve per clinic, validated willingness-to-pay, CAC and conversion assumptions, gross margin, and payback — are missing. Before launch, the founder must quantify these or run cheap tests to measure WTP and outbound conversion rates.",
+        "flaws": [
+          {
+            "title": "No cost-to-serve (compute, storage, support, payments) provided",
+            "severity": "high",
+            "description": "The plan gives a list price but no breakdown of the per-location monthly operating costs (model inference, data storage, backups, monitoring, customer support, payment fees). Without these you cannot calculate gross margin or determine whether $299 covers ongoing costs at scale.",
+            "question": "What is your detailed estimated monthly cost to serve one clinic (compute, storage, backups, monitoring, support headcount allocation, and payment processing fees)?",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "Price ($299/mo) is unvalidated — willingness-to-pay unsupported",
+            "severity": "high",
+            "description": "You state a $299/month price and a 30% no-show reduction claim but provide no evidence clinics will pay that amount or how $299 maps to value delivered (cost savings from reduced no-shows). Willingness-to-pay is asserted, not demonstrated.",
+            "question": "What evidence (surveys, paid pilots, pilot revenue, customer interviews quantifying savings) supports clinics paying $299 per location per month?",
+            "gap": "pricing"
+          },
+          {
+            "title": "CAC and outbound channel economics are unspecified",
+            "severity": "high",
+            "description": "The acquisition plan is 'two-person outbound' targeting 50 clinics in six months but there are no assumptions about outreach volume, conversion rate, salaries/commissions, tooling, or per-account CAC. At this price point CAC could easily exceed acceptable payback without quantification.",
+            "question": "What is your projected CAC per paying clinic (including recruiter/sales salaries, tools, outreach volume and conversion rate) and the timeline to close a lead?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Gross margin, LTV and payback period are not modeled",
+            "severity": "medium",
+            "description": "There is no unit-economics model showing gross margin at scale, customer lifetime (churn), LTV, or months-to-payback of CAC. Without those, you cannot assess whether the business achieves acceptable payback or whether the model scales profitably.",
+            "question": "Please provide a simple unit-economics table: expected churn, LTV, gross margin, CAC, and months to recover CAC under a baseline scenario.",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "Hidden operational/compliance costs (HIPAA, refunds, fraud) not considered",
+            "severity": "medium",
+            "description": "Dental appointment data may be PHI triggering HIPAA-like obligations; monitoring, security, legal, and audit costs (and potential insurance) can be material. Also absent are assumptions about refunds, chargebacks, false positives from prediction models, or fraud which affect support and cost-to-serve.",
+            "question": "Do you plan to handle PHI and have you estimated compliance/security/insurance and extra support costs (and potential refund/chargeback rates) in your unit economics?",
+            "gap": "assumptions"
+          }
+        ]
+      }
+    },
+    "refine_lens_errors": [],
+    "refinement_meta": {
+      "lenses": [
+        "unit_economics",
+        "execution_risk"
+      ],
+      "gaps_filled": [
+        "acquisition"
+      ],
+      "gaps_skipped": [
+        "pricing",
+        "key_numbers",
+        "differentiation"
+      ]
+    },
+    "refined_shape": {
+      "execution_risk": "CHHHMM",
+      "unit_economics": "HHHMM"
+    },
+    "expected_lenses": [
+      "unit_economics",
+      "execution_risk"
+    ],
+    "refine_ran": [
+      "execution_risk",
+      "unit_economics"
+    ],
+    "refine_lenses_ok": true,
+    "reuse_refused_409": true,
+    "reuse_status": 409,
+    "watch": [
+      "money not in input: '$1,200'",
+      "money not in input: '$3,588,'",
+      "money not in input: '$5'",
+      "money not in input: '$5,000'",
+      "money not in input: '$60,000'"
+    ]
+  },
+  {
+    "id": "T04",
+    "name": "T04-medical-assistant",
+    "stage": "building",
+    "errors": [],
+    "timings": {
+      "first_s": 31.4,
+      "refine_s": 33.3
+    },
+    "first": {
+      "adversarial_competitor": {
+        "lens": "adversarial_competitor",
+        "summary": "This product is a single-feature AI assistant for appointment requests and patient queries priced at £149/month per clinic and targeting UK small private clinics. It's highly attackable: the core feature is trivial for incumbents to replicate and weaponize through existing distribution, pricing bundles, and brand trust — so the founder must show a defensible differentiation, clear acquisition channel, and validated willingness-to-pay quickly or it will be commoditized or killed by larger players.",
+        "flaws": [
+          {
+            "title": "No defensible differentiation — trivial to replicate",
+            "severity": "high",
+            "description": "An AI that answers appointment requests and patient queries is a narrowly scoped feature that incumbent booking/EHR vendors or large telehealth platforms can add as a toggle or app. A single shipped feature (automated messaging + booking integration) from a well-funded incumbent makes a standalone assistant redundant almost immediately. The document provides no unique model, data moat, regulatory certification, or exclusive integrations that would prevent quick copy by others.",
+            "question": "What specific, non-replicable capability (proprietary data, exclusive integrations, regulated certification, or stickiness) prevents large incumbents from copying this in weeks?",
+            "gap": "differentiation"
+          },
+          {
+            "title": "Pricing is exposed to bundling and undercutting",
+            "severity": "high",
+            "description": "Charging £149 per clinic per month is presented with no evidence of willingness-to-pay; a larger vendor can bundle an equivalent feature into existing subscriptions or offer freemium/discounted trials to their installed base, making the standalone price impossible to sustain. The plan lacks price testing, tiers, or a defensible reason why clinics would pay that amount versus a cheaper bundled alternative.",
+            "question": "Why will clinics pay £149/mo for a single assistant rather than accept an equivalent as a free/bundled add-on from their existing booking/EHR supplier?",
+            "gap": "pricing"
+          },
+          {
+            "title": "Go-to-market and acquisition plan is missing and easily blocked",
+            "severity": "high",
+            "description": "No customer acquisition strategy is provided. Incumbents and platform owners control the channels to clinics (marketplaces, resellers, billing relationships, app stores) and can prioritize or preinstall a competing assistant, starving you of reach. Without a distribution edge or channel partnerships, you will struggle to scale and are vulnerable to being cut off by platform gatekeepers.",
+            "question": "What's the specific, testable acquisition channel (partnership, marketplace, installed-base sales, or direct channel) you will use and how will you get initial clinics without platform owners blocking or bundling the feature?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Trust, compliance and clinical risk are unaddressed — incumbents have advantage",
+            "severity": "medium",
+            "description": "Patient communication and appointment handling involve data protection and clinical safety risk; clinics are likely risk-averse and prefer trusted vendors with certifications and long-standing support. Large established vendors can leverage existing trust, contracts, and compliance certifications to displace a new entrant unless you can prove safe handling and liability coverage.",
+            "question": "How will you validate clinics' trust in your assistant and demonstrate compliance (data protection, liability, clinical safety) before launch to overcome incumbents' trust advantage?",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Integration effort and switching cost glossed over",
+            "severity": "medium",
+            "description": "You state you will integrate with existing booking systems, but don't specify which ones or how deep the integration is. Incumbents controlling booking software can add the feature with minimal friction; for you, engineering, partnership negotiations, and maintenance across multiple vendors create friction and cost that slow adoption. This makes the product vulnerable to faster, simpler incumbent rollouts.",
+            "question": "Which booking systems will you integrate first, and what's the cheapest experiment to validate both technical feasibility and clinics' willingness to switch or add another vendor?",
+            "gap": "assumptions"
+          }
+        ]
+      },
+      "execution_risk": {
+        "lens": "execution_risk",
+        "summary": "The plan has directionally sensible goals but skips several execution blockers that will stop shipping: clinical-data compliance, fragile multi-vendor integrations, and no acquisition path for busy private clinics. The document also assumes a price and a delivery timeline/team capacity without evidence, and risks building hard ML work before validating core clinic workflows.",
+        "flaws": [
+          {
+            "title": "GDPR / clinical data compliance is unaddressed and will block pilots",
+            "severity": "high",
+            "description": "You plan to handle patient queries and appointment data but state nothing about lawful bases, Data Processing Agreements, patient consent flows, UK data residency, or clinical-data handling controls. Concrete failure mode: clinics will refuse to connect real patient data without a DPA, indemnities, or evidence of secure hosting and processes; regulators could require changes that force a rewrite or prevent live testing. This is a pre-launch blocker for any paid pilot with real patients.",
+            "question": "Before onboarding a single clinic, what precise legal/compliance artifacts (DPA, DPIA, data residency, security certifications, logging/audit controls, and patient consent flow) will you have in place?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Integration hell: unspecified booking systems and connector work",
+            "severity": "high",
+            "description": "You say 'integrate with existing booking systems' but list no target providers or integration approaches. Concrete failure mode: each clinic uses different, sometimes closed or legacy booking platforms (or bespoke systems), forcing per-clinic connector builds, screen-scraping, or manual processes that can take weeks–months each. That will blow time and budget and prevent a scalable pilot.",
+            "question": "Which specific booking systems will you support for the first 10 clinics and what is your plan (API, webhook, partner, or automated UI) and estimated engineering effort per system?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "No acquisition / onboarding plan for B2B clinics",
+            "severity": "high",
+            "description": "You target small private clinics but provide no channel, sales motion, or onboarding process. Concrete failure mode: product gets built but you can't get clinics to trial (busy owners, risk-averse, need references), leaving the product unused. Also onboarding requirements (training, consent, SLA) are unstated and likely to require human support, increasing costs and slowing adoption.",
+            "question": "What is the concrete first scalable acquisition channel (e.g., partnerships, local reps, referral pilots) and how many outreach/conversations/week will you need to sign your first 10 paying clinics?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Price (£149/mo) is asserted with no evidence of willingness-to-pay",
+            "severity": "medium",
+            "description": "You set a single price but provide no validation that small private clinics will pay £149/month for messaging/booking automation. Concrete failure mode: clinics decline or request trial periods, leading to low conversion and poor early revenue. Without testing, you risk iterating on product-market fit at the wrong price point.",
+            "question": "Who is the economic buyer that will sign a £149/mo contract and what evidence (pilot commitments, letters of intent, pre-sales) do you have that they will pay that amount?",
+            "gap": "pricing"
+          },
+          {
+            "title": "Team size / timeline not specified — likely underestimates work",
+            "severity": "medium",
+            "description": "No team composition, hiring plan, or timelines are stated despite integration, ML, security, and B2B onboarding work. Concrete failure mode: founders assume a short build window and find integrations, compliance, and support require months and additional hires, causing missed deadlines and funding burn. The scope (connectors + ML assistant + support) is often 6+ months for a small team.",
+            "question": "Who is on the execution team today (engineers, security, ops, sales) and what is your realistic timeline and milestones for the first integrated pilot?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Sequencing risk: building full ML assistant before validating clinic workflows",
+            "severity": "medium",
+            "description": "You plan an AI assistant but don't describe validating the target workflows, common query types, or whether automation can safely handle them. Concrete failure mode: you invest heavily in NLP and integration work only to find queries are rare, highly variable, or require clinical judgment, forcing major rework. A simpler manual or rules-based pilot could reveal real patterns before ML development.",
+            "question": "What is your minimal viable experiment to validate the exact messages and appointment workflows (e.g., a concierge/manual handling pilot) before building ML or connectors?",
+            "gap": "assumptions"
+          }
+        ]
+      },
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "The document gives a headline price (£149/clinic/month) but no supporting unit-costs, CAC, churn/LTV or evidence of willingness-to-pay. Key cost drivers (integration engineering, compute/storage, support, payment fees, compliance) and customer acquisition channels are unstated, so you cannot validate margins, payback or scalability. At this stage the highest-priority gaps are validating the price with buyers, estimating per-clinic cost-to-serve (including one-time integration) and modelling realistic CAC/payback for B2B clinics.",
+        "flaws": [
+          {
+            "title": "Asserting £149/mo without any willingness-to-pay evidence",
+            "severity": "high",
+            "description": "The plan states a price but provides no evidence that clinics will pay £149/month, who the buyer/decision maker is, or whether that price beats existing alternatives (staff time, other software). Without validated WTP you cannot compute realistic revenue, conversion rates or LTV. Treating the price as fixed today is unsafe for any unit-economic projection.",
+            "question": "How did you validate that UK small clinics will pay £149/month and who signs the purchase order?",
+            "gap": "pricing"
+          },
+          {
+            "title": "No per-clinic cost-to-serve or integration cost model",
+            "severity": "high",
+            "description": "There are no numbers for compute, storage, monitoring, third‑party API costs, onboarding engineering, or ongoing support per clinic. Integrations with booking systems typically require one-off engineering or per-customer configuration/maintenance, which can dominate early unit costs. Without these line-item costs you cannot estimate gross margin or break-even.",
+            "question": "What is your modeled per-clinic cost (monthly compute/storage + amortized integration/onboarding + support + payment processing) once you integrate with target booking systems?",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "Customer acquisition channels and realistic CAC are unspecified",
+            "severity": "high",
+            "description": "The doc says 'begin with clinics in the UK' but gives no acquisition channels, funnel, or expected CAC. At a B2B price point of £149/month, channels (direct sales, partnerships, reseller, paid digital) and their costs matter hugely for payback. Assuming 'low-cost' or viral growth without a channel plan will understate CAC and overstate scalability.",
+            "question": "Which specific acquisition channels will you use for clinics and what CAC do you expect from each (esp. first 100 customers)?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "No LTV, churn, payback period or sensitivity analysis",
+            "severity": "medium",
+            "description": "There is no churn or retention assumption, no LTV, and no payback calculation on CAC. That makes it impossible to judge whether a given CAC is acceptable or how long cash is tied up. Early-stage B2B products often have meaningful onboarding churn and slow sales cycles which materially affect payback.",
+            "question": "What are your assumed monthly churn and resulting LTV, and how many months to pay back a typical CAC under those assumptions?",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "Healthcare-specific compliance, liability and hidden operational costs are unaccounted",
+            "severity": "medium",
+            "description": "Patient data handling triggers GDPR, data security, potential clinical governance and legal/liability costs (audit, insurance, incident response), plus moderation of conversation logs. These can be significant fixed and per-customer costs and may require third-party certification or skilled staff. The plan includes none of these line items.",
+            "question": "Which compliance, security and liability costs (one‑time and recurring) have you budgeted per clinic and company-wide?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "No plan or cheap test to validate demand and price before building",
+            "severity": "low",
+            "description": "At idea stage you should run low-cost experiments to validate both demand and price (e.g., discovery calls, paid pilot, landing page with signups, concierge onboarding). The document contains no immediate test plan to confirm clinics' willingness to buy at the proposed price.",
+            "question": "What is the cheapest experiment you will run this week to validate at least a handful of clinics would pay £149/month?",
+            "gap": "demand_evidence"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. The plan is pre-launch with only a stated product, price (£149/mo) and UK focus. The most important gap is lack of measured demand, buyer definition and acquisition/CAC evidence to support revenue assumptions.",
+        "flaws": [
+          {
+            "title": "No evidence clinics want or will pay for this (demand untested)",
+            "severity": "high",
+            "description": "The document gives no measured demand signals (no pilot, interviews, surveys or letters of intent). Without at least one real clinic committing or a small pilot showing willingness to pay £149/month, revenue assumptions are unsupported. At £149/mo a single clinic yields £1,788/year; that per-unit revenue is only useful if adoption is real.",
+            "question": "Show one of: (a) results of X customer interviews with explicit willingness-to-pay at £149, (b) a signed pilot agreement from a UK private clinic, or (c) results of a pricing test (conversion and uptake) with at least N clinics — which of these can you provide and what are the results?",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Target buyer and clinic segment are undefined",
+            "severity": "high",
+            "description": "The plan says 'small private clinics' but doesn't define clinic size, specialty, payer type, or the decision-maker who would pay £149/mo (owner, manager, chain). Different segments have very different budgets and purchase processes; the absence of a defined buyer prevents estimating conversion or sales cycle. This is load-bearing because the acquisition approach and willingness-to-pay depend on it.",
+            "question": "Specify the target clinic profile (e.g., # of clinicians, revenue band, specialties, independent vs. multi-site) and the paying buyer role, and provide an estimate of how many such clinics exist in the UK or one measured example matching that profile.",
+            "gap": "buyer"
+          },
+          {
+            "title": "No customer acquisition plan or CAC inputs (funnels missing)",
+            "severity": "high",
+            "description": "There is no acquisition funnel, expected conversion rates, or CAC. Without CAC and expected sign-up rates, you cannot translate a per-clinic price into a business model. For context: each clinic = £149/mo = £1,788/year, so signing 100 clinics is £178,800/year; whether that is reachable depends entirely on CAC and conversion which are unstated.",
+            "question": "Provide a concrete acquisition funnel: channels, conversion rates at each step, and an expected CAC (or historical CAC from pilots) — if unknown, run a 4-week outreach pilot and report leads → trials → paid conversions so we can compute CAC.",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Price given but no evidence/pricing rationale",
+            "severity": "medium",
+            "description": "Price is stated as £149/month but there is no justification or comparison to alternatives, total clinic economics, or willingness-to-pay tests. Stating a price without evidence is an assumption that could be load-bearing: if clinics won't pay £149, unit economics collapse. The only implied arithmetic available is £149×12 = £1,788 ARR per clinic.",
+            "question": "Provide evidence supporting £149/mo (e.g., results of pricing experiments, quoted competitor pricing and position, or documented willingness-to-pay from at least 10 target clinics).",
+            "gap": "pricing"
+          },
+          {
+            "title": "No market sizing or revenue targets (key numbers missing)",
+            "severity": "medium",
+            "description": "The doc lacks UK market size (number of target small private clinics), revenue or customer targets, and a timeline. Using the stated price: one clinic = £1,788/year, therefore reaching £1M ARR would require ~560 clinics (1,000,000/1,788 ≈ 559.6). Without stated targets, scale and feasibility can't be judged.",
+            "question": "State the target ARR and timeline and provide your estimate of the count of target clinics in the UK (with source) so we can check feasibility (e.g., to reach X ARR you need Y clinics = X/1,788).",
+            "gap": "key_numbers"
+          }
+        ]
+      },
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "The plan rests on multiple unvalidated assumptions about legal/regulatory permission to process patient data, clinics' willingness to let an AI handle patient-facing communications, and seamless access to booking-system APIs. The declared price and buyer are unsupported, and the product's claimed fit (integrating with existing systems) hides a major technical and commercial dependency. Any one of these could stop the project; the most likely fatal failure is inability to legally and safely process patient data for UK clinics without onerous controls or certification.",
+        "flaws": [
+          {
+            "title": "Unstated GDPR / health-data compliance assumption — potential legal showstopper",
+            "severity": "critical",
+            "description": "You assume you can process appointment requests and patient queries with an AI for UK clinics but the strategy says nothing about GDPR, DPA contracts, patient consent, or clinical safety oversight. Handling personal health information in the UK commonly requires specific contracts, data residency, and documented safeguards. If regulators, insurers, or clinics refuse to sign on without those controls, you cannot operate as described.",
+            "question": "Exactly what legal/regulatory approvals, data processing agreements, and controls do you need to process patient queries for UK clinics, and can you obtain them within the timeline and budget?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "No evidence clinics will route live patient communications to an AI",
+            "severity": "high",
+            "description": "The plan assumes clinics will let an automated assistant handle appointment requests and patient queries, but there is no evidence clinics trust AI to interact with patients about appointments and potentially sensitive health issues. Clinics may prefer human gatekeepers for liability, triage judgments, or patient experience reasons, and stated interest in automation may not translate into actual usage. A cheap first test is direct interviews plus a paid pilot where the AI handles a subset of non-clinical messages to observe revealed preference.",
+            "question": "Will target clinics actually route real patient-facing communications to an AI in production, and under what constraints (types of queries, oversight, opt-in/opt-out)?",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Assumption that booking systems expose usable integrations",
+            "severity": "high",
+            "description": "You plan to integrate with existing booking systems but provide no evidence those systems offer APIs or webhooks that allow an AI to read/write appointments and query state in real time. Many vendors limit third-party access or impose commercial/technical gates. If the major booking platforms used by target clinics don't permit the necessary integration, the product cannot function as described.",
+            "question": "Which booking platforms do your target clinics use and do those platforms provide the APIs and contract terms required for two-way automated appointment management?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "£149/month price is asserted with no willingness-to-pay evidence",
+            "severity": "high",
+            "description": "You present a single price point but provide no evidence that small private clinics will accept £149/month for this assistant or that they are the payer. Price sensitivity, perceived value, and internal budget holders are unstated. Without tests (surveys, pricing experiments, or paid pilots) this assumption may be wrong and will affect adoption decisions.",
+            "question": "Will target clinics pay £149 per month for this service, and who in the clinic controls that budget?",
+            "gap": "pricing"
+          },
+          {
+            "title": "Buyer and decision-maker are unspecified",
+            "severity": "medium",
+            "description": "The document says 'clinics' but doesn't identify who signs the contract — owner, practice manager, chain IT, or external management company — nor whether the user and buyer are the same. Different buyers have different risk tolerances, procurement cycles, and legal requirements. This ambiguity makes acquisition and pricing assumptions fragile.",
+            "question": "Who will be the purchaser and contract signer in a typical target clinic, and what approvals will they require to buy an AI assistant handling patient data?",
+            "gap": "buyer"
+          },
+          {
+            "title": "Unclear differentiation versus existing booking features and human staff",
+            "severity": "medium",
+            "description": "You claim to integrate with booking systems but don't explain why clinics would choose your AI over built-in booking features, add-ons from booking vendors, or simply hiring/reallocating reception staff. If your value is incremental (efficiency) rather than transformational (capability they don't have), adoption will be harder than assumed. You need to prove a clear advantage that matters to the buyer.",
+            "question": "What exact capability or outcome will make clinics choose this assistant instead of their current booking features or human reception staff?",
+            "gap": "differentiation"
+          }
+        ]
+      }
+    },
+    "lens_errors": [],
+    "first_shape": {
+      "adversarial_competitor": "HHHMM",
+      "execution_risk": "HHHMMM",
+      "unit_economics": "HHHMML",
+      "evidence_audit": "HHHMM",
+      "pre_mortem": "CHHHMM"
+    },
+    "questions": [
+      {
+        "gap": "pricing",
+        "text": "Who pays, and roughly how much?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "£149/month price is asserted with no willingness-to-pay evidence",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Asserting £149/mo without any willingness-to-pay evidence",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Pricing is exposed to bundling and undercutting",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Price (£149/mo) is asserted with no evidence of willingness-to-pay",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Price given but no evidence/pricing rationale",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "gap": "acquisition",
+        "text": "How will your first customers find you?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "execution_risk"
+        ],
+        "prompted_by": [
+          {
+            "lens": "unit_economics",
+            "title": "Customer acquisition channels and realistic CAC are unspecified",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Go-to-market and acquisition plan is missing and easily blocked",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "No acquisition / onboarding plan for B2B clinics",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No customer acquisition plan or CAC inputs (funnels missing)",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "demand_evidence",
+        "text": "How do you know people want this? (people you've talked to, data, your own experience)",
+        "kind": "text",
+        "informs": [
+          "pre_mortem",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "No evidence clinics will route live patient communications to an AI",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "No plan or cheap test to validate demand and price before building",
+            "severity": "low"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Trust, compliance and clinical risk are unaddressed — incumbents have advantage",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No evidence clinics want or will pay for this (demand untested)",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "key_numbers",
+        "text": "Which numbers is this plan relying on? Give each one's value and whether it is measured, an estimate, or unknown.",
+        "kind": "numbers",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "unit_economics",
+            "title": "No per-clinic cost-to-serve or integration cost model",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "No LTV, churn, payback period or sensitivity analysis",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No market sizing or revenue targets (key numbers missing)",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "gap_tags_valid": "28/28",
+    "criticals": 1,
+    "answered": {
+      "gap": "demand_evidence",
+      "text": "We have not run any pilots and no clinic has committed to using or paying for it yet."
+    },
+    "skipped_gaps": [
+      "pricing",
+      "acquisition",
+      "key_numbers"
+    ],
+    "refined": {
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "The plan rests on untested core assumptions: that the product can reliably integrate with the booking systems clinics actually use, that clinics will pay £149/month, and that there is real demand among UK private clinics. The most likely single killing-blow is an integration blocker (no APIs, fragmented/legacy systems or restricted access) that makes automatic appointment/query handling impossible. Several other key gaps (who the buyer is, how to acquire clinics, and whether clinics/patients accept AI handling) are unstated and unvalidated.",
+        "flaws": [
+          {
+            "title": "Integration with clinic booking systems assumed feasible",
+            "severity": "critical",
+            "description": "The strategy assumes you can 'integrate with existing booking systems' but names no vendors or evidence about API availability, data access, or contractual permissions. If target clinics use a wide variety of legacy or closed systems, or if vendors restrict automated access, the assistant cannot perform its core function. This is a practical blocker: without integration, there is no product to sell.",
+            "question": "Which specific booking systems do target clinics use and can you reliably access the APIs/data needed to manage appointments at scale?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Price point (£149/mo) unvalidated with customers",
+            "severity": "high",
+            "description": "The founder has picked a flat £149/month per clinic without testing willingness to pay or willingness to switch from current processes. There's no evidence this price matches clinics' perceived value, budget, or procurement thresholds. If clinics perceive the value below this price they will not purchase.",
+            "question": "Will target clinics actually commit to paying £149/month for this service in a real purchase or paid pilot?",
+            "gap": "pricing"
+          },
+          {
+            "title": "No demand evidence or pilot commitments",
+            "severity": "high",
+            "description": "Founder admits no pilots run and no clinic has committed. The core product-market fit assumption — that small private clinics want outsourced/automated appointment & query handling — is untested. Without at least pilot agreements or pre-sells, build-out risks delivering a product nobody adopts.",
+            "question": "Can you secure pilot agreements, letters of intent, or paid trials from target clinics before continuing full development?",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Buyer / decision-maker in clinic not identified",
+            "severity": "high",
+            "description": "The plan targets 'small private clinics' but does not specify who will evaluate and pay for the service (practice owner, practice manager, receptionist, or external management company). Different buyers have different pain points, budgets, and procurement processes; this ambiguity undermines pricing, acquisition and product decisions.",
+            "question": "Who is the specific buyer and decision-maker at the clinics, and what is their procurement process and budget authority?",
+            "gap": "buyer"
+          },
+          {
+            "title": "Assumes clinics want AI handling patient queries (possible misread of preferences)",
+            "severity": "medium",
+            "description": "The product assumes clinics will be comfortable with AI handling patient queries and appointment requests, but no user research is shown about patient acceptance or clinics' tolerance for automated responses. Clinics may prioritize a human touch, clinical safety, or liability concerns that make them reluctant to deploy AI on patient-facing interactions.",
+            "question": "Do clinic staff and patients accept AI-handled communications for queries/appointments, and under what safeguards or limits?",
+            "gap": "alternatives"
+          },
+          {
+            "title": "Go-to-market / acquisition route is unspecified",
+            "severity": "medium",
+            "description": "There is no plan or evidence about how you will reach and convince small UK clinics to trial or buy the service (direct sales, partnerships, resellers, marketplace, trade bodies). Without validated acquisition channels and early-conversion signals, demand cannot be scaled even if product assumptions hold.",
+            "question": "What are the lowest-cost channels to acquire clinic customers and can you validate conversion through a small outreach experiment?",
+            "gap": "acquisition"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. The document is pre-launch with no pilots, revenue, or customer commitments—only a stated price and broad target market. The most important remaining issue is the lack of any measured demand or willingness-to-pay evidence to validate the £149/month assumption.",
+        "flaws": [
+          {
+            "title": "No measured demand or willingness-to-pay evidence",
+            "severity": "high",
+            "description": "The founder explicitly reports no pilots and no clinic commitments; there is therefore no measured evidence that clinics will adopt or pay for the product. At this stage a signed trial, paid pilot, or quantified demand survey is the minimal evidence required to validate the commercial hypothesis. Without any such proof the core claim that clinics will pay £149/mo is untested and load-bearing for the business.",
+            "question": "Provide a measured commitment: either a signed paid pilot (one or more UK clinics agreeing to pay £149/month for a trial period) or quantified results from a demand test (number approached, responses, and explicit willingness-to-pay at £149).",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Price point (£149/mo) is unsupported and unexplained",
+            "severity": "high",
+            "description": "The plan states a price of £149 per clinic per month but gives no sourcing or rationale (no willingness-to-pay studies, competitor comparators, or cost-based justification). That single price drives revenue per customer: £149 × 12 = £1,788 per clinic per year, so each clinic contributes £1,788 ARR. The viability of the business depends heavily on that number but it is an unstated assumption with no test plan.",
+            "question": "How was £149/month derived—provide the empirical basis (customer interview willingness-to-pay data, competitor pricing comparisons, or a commitment at that price) or an A/B pricing test plan to validate it.",
+            "gap": "pricing"
+          },
+          {
+            "title": "Customer segment is too vague to size or prioritise",
+            "severity": "medium",
+            "description": "Labeling the target buyer as 'small private clinics' does not specify who the decision-maker is, clinic size (appointments/day), or an addressable count in the UK. That ambiguity prevents sizing the market, estimating onboarding effort, or designing a targeted outreach test. For a pre-launch idea you must define an initial narrow segment to run pilots and measure conversion.",
+            "question": "Define the initial target buyer precisely (decision-maker title, clinic size by staff/appointments or revenue) and provide an estimate of the number of such clinics in the UK you can realistically reach for pilots.",
+            "gap": "buyer"
+          },
+          {
+            "title": "No acquisition plan or CAC estimates to reach customers",
+            "severity": "medium",
+            "description": "The document includes no channels, outreach tactics, or estimates of conversion and customer-acquisition-cost (CAC). Without those inputs you cannot estimate how many leads, trials or sales efforts are required to secure even one paying clinic, or whether £149/mo covers acquisition costs. This is a practical testable gap for pre-launch validation.",
+            "question": "State the initial acquisition method(s) you will use for pilots and provide expected conversion rates and a target CAC (or an explicit plan to measure CAC in a first 10-clinic outreach batch).",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Integration feasibility with booking systems is unstated",
+            "severity": "medium",
+            "description": "The product depends on integrating with existing booking systems, but no target systems, their API availability, or integration complexity are documented. Integration feasibility will materially affect time-to-pilot and the product's ability to deliver value; it is an assumption that must be tested before scaling. Lack of this information risks underestimating development/time-to-revenue.",
+            "question": "List the booking systems you plan to integrate with and for each provide evidence of a viable integration path (public API, partner agreement, or confirmation from a vendor/customer that integration is feasible).",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Missing unit-economics and load-bearing key numbers (CAC, conversion, churn)",
+            "severity": "low",
+            "description": "There are no stated assumptions for conversion rates, churn, or CAC and no revenue targets or clinic-count goals tied to the £149 price. For example, at £149/mo a single clinic yields £1,788 ARR; but without targets you cannot compute how many clinics are needed to cover development or marketing costs. These are necessary for planning tests and milestones.",
+            "question": "Provide target unit-economics for launch testing: expected trial-to-paid conversion, expected monthly churn, and a provisional CAC (or a plan to measure these within the first N pilot outreach attempts).",
+            "gap": "key_numbers"
+          }
+        ]
+      }
+    },
+    "refine_lens_errors": [],
+    "refinement_meta": {
+      "lenses": [
+        "pre_mortem",
+        "evidence_audit"
+      ],
+      "gaps_filled": [
+        "demand_evidence"
+      ],
+      "gaps_skipped": [
+        "pricing",
+        "acquisition",
+        "key_numbers"
+      ]
+    },
+    "refined_shape": {
+      "pre_mortem": "CHHHMM",
+      "evidence_audit": "HHMMML"
+    },
+    "expected_lenses": [
+      "pre_mortem",
+      "evidence_audit"
+    ],
+    "refine_ran": [
+      "pre_mortem",
+      "evidence_audit"
+    ],
+    "refine_lenses_ok": true,
+    "reuse_refused_409": true,
+    "reuse_status": 409,
+    "watch": [
+      "money not in input: '£1'",
+      "money not in input: '£1,788'",
+      "money not in input: '£149,'",
+      "money not in input: '£178,800'"
+    ]
+  },
+  {
+    "id": "T05",
+    "name": "T05-ai-coding-tool",
+    "stage": "idea",
+    "errors": [],
+    "timings": {
+      "first_s": 37.0,
+      "refine_s": 27.8
+    },
+    "first": {
+      "execution_risk": {
+        "lens": "execution_risk",
+        "summary": "The plan states a clear product idea and price but omits nearly all operational details required to build and ship a paid AI assistant. The biggest risks are building complex, language-specific diagnostics and integrations before validating demand and distribution, and underestimating technical work needed to run/reproduce code and guarantee correct fixes. Several assumptions (who pays, how to acquire them, privacy/IP handling) are unstated and will block shipping if not resolved early.",
+        "flaws": [
+          {
+            "title": "No evidence beginners will pay $12/mo for 'simpler explanations'",
+            "severity": "high",
+            "description": "The document asserts a $12/month subscription but provides no evidence beginners will pay that amount (or pay at all). If willingness-to-pay is low, the whole subscription model fails. The cheapest tests (landing page preorders, paid ads, or concierge explained-error sessions) are not mentioned.",
+            "question": "What minimal experiment will you run in days to prove beginners will pay $12/month (or any price) for simpler error explanations?",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "No acquisition or distribution plan for converting users to paid subscribers",
+            "severity": "high",
+            "description": "There is no channel strategy: how to find beginners, onboard them, or convert free users to $12/month subscribers. Building product features before a proven acquisition funnel risks spending months on a product with no customers. Common low-effort channels (coding bootcamps, YouTube, teacher partnerships) are not considered.",
+            "question": "Which 1–2 specific acquisition channels will you test first and what is the concrete experiment to validate they scale to payers?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Technical blocker: diagnosing and fixing errors reliably without running user code",
+            "severity": "high",
+            "description": "Accurate, actionable fixes often require reproducing runtime errors in a controlled environment; relying only on static error strings or LLM guesswork will produce incorrect or unsafe fixes. Building multi-language parsers, sandboxes, and secure execution environments is substantial engineering and security work that is not acknowledged.",
+            "question": "Will you (a) reproduce user code in a sandbox, (b) rely on static/error-text parsing, or (c) use another approach — and how long and costly is that work to implement safely for even one language?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Sequencing mistake: plan implies building product before validating explanation quality",
+            "severity": "medium",
+            "description": "The core differentiator is 'simpler explanations,' yet there's no plan to validate explanation quality against alternatives. Shipping IDE plugins, subscription billing, and LLM integration before manual-testing explanation scripts risks months of work for an unproven core feature.",
+            "question": "What lightweight process will you use to validate explanation quality (e.g., manual human-generated explanations, A/B tests) before engineering a full product?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Privacy/IP and compliance gaps for user-submitted code are unstated",
+            "severity": "medium",
+            "description": "Users will paste source code that may be proprietary or sensitive. There is no plan for data handling, retention, or consent; this creates legal and trust risks (GDPR, school policies, company policies) that can block adoption by educators or companies.",
+            "question": "How will you handle user code privacy, retention, and consent in your minimum viable implementation to avoid legal or adoption blockers?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Differentiation vs. existing tools and current user behavior is unclear",
+            "severity": "medium",
+            "description": "Claiming 'simpler explanations' as the competitive edge doesn't explain why beginners would switch from ChatGPT, StackOverflow, or free documentation. Without a clear, testable differentiation, distribution and retention assumptions will fail.",
+            "question": "What specific explanation outcomes (metrics) will you measure to prove your output is meaningfully simpler and more helpful than existing free alternatives?",
+            "gap": "differentiation"
+          }
+        ]
+      },
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "The document gives a price ($12/mo) and a user persona (beginner programmers) but provides no unit-economics inputs required to judge viability: there are no cost-per-user estimates (compute, storage, support, payments), no evidence users will pay $12, no CAC or channels, and no margin or payback calculations. Before building, the founder must (1) validate willingness-to-pay with cheap experiments and (2) estimate marginal serving costs per active user to know what CAC can be rationally paid.",
+        "flaws": [
+          {
+            "title": "Price ($12/mo) is asserted with no willingness-to-pay evidence",
+            "severity": "high",
+            "description": "The plan fixes a $12/month price but offers no evidence (surveys, tests, comparative pricing, or conversion assumptions) that beginner programmers will pay that amount. Revenue per user is therefore unsupported and could be far lower than assumed. Without validated ARPU, you cannot calculate LTV or acceptable CAC.",
+            "question": "What direct evidence (pricing tests, paid pilots, or conversion benchmarks) shows beginners will actually subscribe at $12/month?",
+            "gap": "pricing"
+          },
+          {
+            "title": "No estimate of marginal cost to serve a single user (compute + storage + support + payments)",
+            "severity": "high",
+            "description": "There are no estimates for inference costs (LLM or models), storage, support headcount per user, or payment processing fees. AI assistants commonly have meaningful per-session compute costs that can exceed a low monthly ARPU if usage is high. Without a per-user cost, projected gross margin is unknown and the business could be loss-making at any scale.",
+            "question": "What is your estimated marginal monthly cost per active paying user, broken down by inference/compute, storage, support, and payment fees?",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "Customer acquisition plan and acceptable CAC are undefined",
+            "severity": "high",
+            "description": "The strategy names no acquisition channels, conversion funnels, or CAC targets; at $12/month ARPU the sustainable CAC may be low. Claims of 'competing by simpler explanations' imply organic/viral acquisition but no mechanism, virality loop, or paid channel economics are given. Without channel-level CAC and conversion rates you cannot assess payback or scale feasibility.",
+            "question": "Which specific acquisition channels will you use and what is the expected CAC and conversion rate for each, so we can judge if payback is achievable at $12/mo?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Gross margin at scale is unstated and likely sensitive to model costs",
+            "severity": "medium",
+            "description": "No gross margin projection is provided for current or scaled usage. If per-inference costs are significant, margins could shrink substantially as active-user sessions increase, and hosting/ops can add fixed/variable costs. You need margin scenarios at different scale points to know whether the product can be profitable.",
+            "question": "What are projected gross margins per user at 1k, 10k, and 100k paying users (with clear assumptions for model/inference cost and support overhead)?",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "Payback period and churn assumptions are missing",
+            "severity": "medium",
+            "description": "No churn rate, LTV, or CAC-payback calculations are included, so payback period is unknown. For subscription businesses with modest price points, small changes in churn or CAC materially change viability. The document doesn't state what CAC is acceptable for a given churn or how quickly customer acquisition spend must be recovered.",
+            "question": "What churn rate and LTV assumptions do you plan to use, and what CAC would be acceptable to achieve a payback period you consider viable (e.g., <12 months)?",
+            "gap": "key_numbers"
+          },
+          {
+            "title": "Hidden operational costs (moderation, refunds, fraud, liability) are not budgeted",
+            "severity": "medium",
+            "description": "There is no mention of costs for content moderation (bad/misleading code), customer support for debug/refund requests, chargebacks, or legal/compliance risk management. These costs often scale non-linearly for developer tools that produce executable code or advice, and they can materially reduce margins or increase churn.",
+            "question": "How will you budget for moderation, dispute handling/refunds, chargebacks, and any compliance/legal costs as the user base grows?",
+            "gap": "assumptions"
+          }
+        ]
+      },
+      "adversarial_competitor": {
+        "lens": "adversarial_competitor",
+        "summary": "This idea rests on one narrow differentiator — \"simpler explanations\" for beginner programming errors — that a well-funded incumbent can neutralize for pennies by shipping a beginner-mode or an \"ELI5 / Simple Explanation\" toggle in existing tools, bundling it into free tiers, and leveraging massive distribution (IDE plugins, SEO, app stores, bootcamp partnerships). The cheapest kill: add a labeled \"Explain like I'm a beginner\" preset to our free chat/assistant product, push it to existing users and extension stores, and undercut the $12/month price with a free or enterprise-bundled feature. Before building, the founder must prove paying demand from beginners and a defensible, non-copyable way their explanations are superior — both are currently missing.",
+        "flaws": [
+          {
+            "title": "Core differentiation is trivially copyable",
+            "severity": "critical",
+            "description": "The product's entire competitive claim is 'simpler explanations.' That is a UI/prompt design choice — not a proprietary model or dataset — and can be implemented as a single preset or toggle in any incumbent assistant within days. Incumbents can label it \"Beginner Mode\" and ship it to millions of existing users, instantly removing the startup's unique value. Without a demonstrated, hard-to-replicate method (patentable algorithm, exclusive dataset, or community), the differentiation is not defensible.",
+            "question": "What concrete, non-trivial mechanism makes your explanations unique and hard for an incumbent to copy in a week?",
+            "gap": "differentiation"
+          },
+          {
+            "title": "No evidence beginners will pay $12/month for simpler answers",
+            "severity": "high",
+            "description": "The price point assumes beginners will convert to a subscription rather than rely on free alternatives (ChatGPT, StackOverflow, docs, course instructors). There's no data on willingness-to-pay, retention, or how much value 'simpler explanations' creates for novices. If users treat it as an occasional help tool, $12/mo is unlikely to stick.",
+            "question": "How will you prove that a meaningful share of beginner programmers will pay $12/month for simpler error explanations rather than use free channels?",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Target buyer is undefined and too broad",
+            "severity": "high",
+            "description": "The plan says 'beginner programmers' but does not segment between self-taught hobbyists, CS students, bootcamp grads, or junior devs. These groups have different acquisition channels, price sensitivity, and help habits; without a crisp buyer persona you can't optimize copy, distribution, or product fit.",
+            "question": "Which exact beginner segment are you targeting first, and why will they prefer a paid assistant over free alternatives?",
+            "gap": "buyer"
+          },
+          {
+            "title": "No go-to-market or acquisition plan — incumbents can drown you",
+            "severity": "medium",
+            "description": "There is no stated acquisition strategy (SEO, IDE plugins, partnerships with bootcamps, app store placement, or community distribution). A competitor can quickly weaponize existing distribution: push to IDE marketplaces, cross-promote to millions of active users, SEO-optimize \"how to fix X error\" content, and partner with schools to capture beginners cheaply.",
+            "question": "What specific, low-cost acquisition channels will you use to reach beginners and at what expected cost per acquisition?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Pricing is exposed to bundling and freemium attack",
+            "severity": "medium",
+            "description": "$12/month is easy for incumbents to undercut by adding a free beginner tier, offering the feature as part of a broader bundle, or subsidizing it for educational partners. The founder offers no rationale why incumbents couldn't include this as a free feature or bundle it with enterprise/paid offerings.",
+            "question": "Why can't incumbents neutralize your price advantage by giving a beginner-mode away free or bundling it into existing paid plans?",
+            "gap": "pricing"
+          },
+          {
+            "title": "Competitive landscape and current alternatives aren't mapped",
+            "severity": "low",
+            "description": "The doc says 'existing AI coding tools' but doesn't identify which tools beginners actually use today (ChatGPT, GitHub Copilot, StackOverflow, teacher/mentors, etc.) or what specific gap remains after those options. Without that map you can't prioritize features or craft messaging that beats current behavior.",
+            "question": "Which exact alternatives do beginners use today to fix errors, and why will they switch to your product?",
+            "gap": "alternatives"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. This is an idea-stage plan with no revenue, customers, or tested claims — only a declared product concept and price. Nothing in the document proves demand, willingness-to-pay, acquisition economics, or differentiation; the most important gap is measured demand and price validation.",
+        "flaws": [
+          {
+            "title": "No measured demand from target users",
+            "severity": "high",
+            "description": "The document asserts beginners will want an AI that explains errors simply, but provides no primary evidence (interviews, surveys, landing-page signups, or paid preorders). Without measured demand you cannot tell if the problem is real or sufficiently painful to pay for a $12/month product. This is the single largest evidence gap for an idea-stage product.",
+            "question": "Please provide measured demand evidence: either (a) transcripts/notes from at least 20 interviews with target beginner programmers reporting this specific pain and willingness to pay, or (b) a landing page test that produced at least 100 unique signups and a measured conversion rate to paid commitments at $12/mo.",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Primary paying customer is undefined",
+            "severity": "high",
+            "description": "The plan says 'beginner programmers' but does not define which buyer will pay (self-taught hobbyists, CS undergrads, bootcamp students, teachers, parents, etc.). Different buyer groups have different willingness-to-pay and acquisition channels, so this is a load-bearing ambiguity. Without picking a primary paying segment you cannot validate pricing, acquisition or product features.",
+            "question": "Name the single primary paying customer segment you will target first (e.g., self-taught beginners, CS students, bootcamp students) and attach evidence that this segment both experiences the stated pain and is likely to pay (interview notes or quantitative signals).",
+            "gap": "buyer"
+          },
+          {
+            "title": "Price ($12/mo) is asserted with no willingness-to-pay evidence",
+            "severity": "high",
+            "description": "You state a $12/month price but provide no test or rationale to show target users will pay that. $12/mo equals $144/year per subscriber, but without measured conversion or LTV/CAC this number is arbitrary and load-bearing for any revenue forecast. At idea stage pricing must be validated with customers.",
+            "question": "Provide direct pricing-validation data: a landing-page pre-order or paid-signup test showing paid conversion at $12/mo (report visitor→paid conversion and at least 30 paid commitments), or at minimum the results of a pricing-sensitivity survey with N≥100 target users.",
+            "gap": "pricing"
+          },
+          {
+            "title": "No acquisition channel or unit-acquisition metrics",
+            "severity": "medium",
+            "description": "The document contains no acquisition strategy or tested channel metrics (traffic, conversion, CAC). Without at least one channel with measured conversion rates you cannot project customer growth or bound CAC relative to $12/mo. This prevents any credible revenue or payback calculation.",
+            "question": "Show a tested acquisition funnel for the chosen target segment with measured metrics (visitors → email → trial → paid) including conversion rates and an empirical or pilot CAC estimate from a real channel (paid ad, content, partnership) or explain how you will obtain those metrics with a concrete test.",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Unproven differentiation versus existing AI coding tools",
+            "severity": "medium",
+            "description": "The claim that 'simpler explanations' will beat existing AI coding tools is an assertion without comparative evidence. Competitors already provide explainability and varied output styles; it's unknown whether simplicity is preferred, sufficient, or defensible. Differentiation must be demonstrated with user preference tests or feature outcomes.",
+            "question": "Provide comparative user-test results (e.g., blind comparisons with 15–30 target users) showing a measurable preference for your simpler explanations over at least one existing tool, and which specific attributes (clarity, actionability) drive that preference.",
+            "gap": "differentiation"
+          },
+          {
+            "title": "Key unit-economics inputs (conversion, churn, LTV, CAC) are missing",
+            "severity": "medium",
+            "description": "There are no stated assumptions or measurements for conversion rate (free→paid), monthly churn, CAC, or LTV. Even one given figure—$12/month—cannot be assessed for sustainability without these inputs (e.g., $12/mo = $144/year per user; whether that covers CAC depends on churn and CAC). Missing these numbers prevents any internal consistency checks.",
+            "question": "State your assumed or measured conversion rate to paid, expected monthly churn, and target CAC; show the simple arithmetic that converts $12/mo into LTV and payback time (e.g., LTV = $144 / churn, CAC = X → payback = CAC / monthly net revenue).",
+            "gap": "key_numbers"
+          }
+        ]
+      },
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "The plan rests on a set of unvalidated assumptions about who will pay, what beginners value, and what an LLM can reliably deliver pedagogically. The single most likely failure was misjudging willingness-to-pay for a subscription $12/mo product versus free or one-off solutions. Several unstated dependencies (clear buyer segment, proof that 'simpler explanations' beat working fixes, and reliable non-hallucinating output) would need cheap, early tests to validate before build.",
+        "flaws": [
+          {
+            "title": "Fatal assumption: beginners will pay $12/month for explanation-focused help",
+            "severity": "critical",
+            "description": "You set a $12/month price with no evidence that target beginners prefer a paid subscription model for error explanations. At idea stage this is the product's revenue model and a single false belief here would kill adoption—if users prefer free, one-off answers or judge the value insufficient, the product won’t acquire or retain customers. This was treated as a given rather than a hypothesis to validate.",
+            "question": "Will the specific beginner segment you target actually convert to a $12/month subscription for explanation-focused debugging instead of using free one-off resources or integrated tools?",
+            "gap": "pricing"
+          },
+          {
+            "title": "Misread signal: 'simpler explanations' as a defensible, preferred differentiation",
+            "severity": "high",
+            "description": "You assume simpler explanations are the primary unmet need and that beginners will choose your product for clarity alone. You haven't shown that beginners consistently prefer conceptual simplicity over receiving immediate working fixes, example-based solutions, or interactive debugging. Without evidence, 'simple explanations' may be a weak or non-preferred axis of choice.",
+            "question": "Do beginners actually prioritize simpler conceptual explanations over concrete, immediately runnable fixes or guided debugging in real-world error-solving sessions?",
+            "gap": "differentiation"
+          },
+          {
+            "title": "Assumed AI can consistently produce pedagogically-correct, non-hallucinated explanations",
+            "severity": "high",
+            "description": "The plan presumes LLMs can reliably generate accurate, beginner-appropriate explanations and fixes; you have no evidence this can be done at scale without frequent hallucinations or confusing jargon. If the assistant regularly gives incorrect explanations or skips necessary context, beginners will lose trust quickly and churn, undermining the value proposition.",
+            "question": "Can the model, with reasonable engineering and prompt design, consistently produce accurate, pedagogically-sound explanations for common beginner errors at an acceptably low error rate?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Wrongly assumed users will adopt a separate paid product instead of integrated/free workflows",
+            "severity": "high",
+            "description": "You implicitly assume beginners will switch to or add a standalone subscription service for error help. There is no evidence about how beginners fit new tooling into their workflows (IDE, browser search, forums, classmates). If the natural behavior is to rely on existing free channels or IDE integrations, a separate app will see low usage even if valuable.",
+            "question": "Will target beginners choose a separate subscription product for error explanations rather than continuing to use their current mix of IDE hints, search, community Q&A, or ad-hoc help?",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Unclear who 'beginner programmers' actually are and how their needs differ",
+            "severity": "medium",
+            "description": "The target 'beginner programmers' is stated but undefined (students, bootcamp grads, hobbyists, career-switchers). Different subgroups have different pain points, willingness-to-pay, and channels. Treating them as a single market obscures which segment to validate first and may have led to building the wrong MVP for the most reachable/valuable group.",
+            "question": "Which specific beginner subgroup is the primary early adopter (e.g., CS students, bootcampers, hobbyists), and how do their error-solving behaviors, budgets, and preferred channels differ?",
+            "gap": "buyer"
+          }
+        ]
+      }
+    },
+    "lens_errors": [],
+    "first_shape": {
+      "execution_risk": "HHHMMM",
+      "unit_economics": "HHHMMM",
+      "adversarial_competitor": "CHHMML",
+      "evidence_audit": "HHHMMM",
+      "pre_mortem": "CHHHM"
+    },
+    "questions": [
+      {
+        "gap": "pricing",
+        "text": "Who pays, and roughly how much?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Fatal assumption: beginners will pay $12/month for explanation-focused help",
+            "severity": "critical"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Price ($12/mo) is asserted with no willingness-to-pay evidence",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Pricing is exposed to bundling and freemium attack",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Price ($12/mo) is asserted with no willingness-to-pay evidence",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "differentiation",
+        "text": "Why would customers choose this over the alternatives?",
+        "kind": "text",
+        "informs": [
+          "adversarial_competitor"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Misread signal: 'simpler explanations' as a defensible, preferred differentiation",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Core differentiation is trivially copyable",
+            "severity": "critical"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Differentiation vs. existing tools and current user behavior is unclear",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Unproven differentiation versus existing AI coding tools",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "gap": "acquisition",
+        "text": "How will your first customers find you?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "execution_risk"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Wrongly assumed users will adopt a separate paid product instead of integrated/free workflows",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Customer acquisition plan and acceptable CAC are undefined",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "No go-to-market or acquisition plan — incumbents can drown you",
+            "severity": "medium"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "No acquisition or distribution plan for converting users to paid subscribers",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No acquisition channel or unit-acquisition metrics",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "gap": "demand_evidence",
+        "text": "How do you know people want this? (people you've talked to, data, your own experience)",
+        "kind": "text",
+        "informs": [
+          "pre_mortem",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "adversarial_competitor",
+            "title": "No evidence beginners will pay $12/month for simpler answers",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "No evidence beginners will pay $12/mo for 'simpler explanations'",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No measured demand from target users",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "gap_tags_valid": "29/29",
+    "criticals": 2,
+    "answered": {
+      "gap": "demand_evidence",
+      "text": "I haven't asked any beginner programmers whether they would pay for this; it's based on my own experience learning to code."
+    },
+    "skipped_gaps": [
+      "pricing",
+      "differentiation",
+      "acquisition"
+    ],
+    "refined": {
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. The plan is entirely pre-launch and rests only on the founder's personal experience; there are no user interviews, pricing tests, acquisition experiments, or comparative usability data. The most important gap is the lack of validated demand and willingness-to-pay from beginner programmers for a $12/month product.",
+        "flaws": [
+          {
+            "title": "No demand evidence from target users",
+            "severity": "high",
+            "description": "The founder admits they have not asked any beginner programmers whether they would pay. Willingness to pay and the value of 'simpler explanations' are load-bearing for a subscription product but currently unsupported by interviews, surveys, trials or preorders. Without basic user validation the central commercial claim (people will pay $12/month) is untested.",
+            "question": "Provide concrete validation from the target group: run and report at least 30 structured interviews or a landing-page test showing quantified willingness-to-pay (how many said they'd pay $12/mo and why), including raw counts and methodology.",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Price point ($12/mo) is asserted, not tested",
+            "severity": "high",
+            "description": "The $12/month price is stated with no supporting evidence or rationale. Price is a key input to revenue, conversion and positioning; an unsupported price makes downstream revenue or MRR targets meaningless. There is no evidence of sensitivity testing, competitor comparison, or conversion assumptions at that price.",
+            "question": "Show results of a pricing test or willingness-to-pay study for $12/mo among beginners (e.g., survey with at least 100 respondents or paid-preorder signups), reporting the conversion rate to paid at $12 and the test method.",
+            "gap": "pricing"
+          },
+          {
+            "title": "No validated customer acquisition channel or CAC estimate",
+            "severity": "medium",
+            "description": "The plan includes no data or experiments showing how beginner programmers will be reached or how much it costs to acquire them. Acquisition and CAC are necessary to forecast growth and unit economics; without any measured channel performance the plan can't produce credible customer or revenue projections.",
+            "question": "Run and report one acquisition experiment (e.g., community post, paid ad, partnership) targeted at beginners that produced measurable signups; supply visitors, signups, and cost per signup so you can compute an initial CAC.",
+            "gap": "acquisition"
+          },
+          {
+            "title": "Differentiation claim ('simpler explanations') is vague and untested",
+            "severity": "medium",
+            "description": "The product's competitive edge is stated as 'simpler explanations' but there is no evidence this is distinct from or preferred over existing AI coding tools. It's unclear whether simplicity translates into higher conversion, retention or task success for beginners versus alternatives.",
+            "question": "Provide comparative user-test results (even small-scale: 10–20 beginners) showing a measurable preference or better task completion/understanding using your explanations versus a leading existing tool, with the metrics you used.",
+            "gap": "differentiation"
+          }
+        ]
+      },
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "The strategy failed because core demand and willingness-to-pay were never validated and the product's single stated differentiator ('simpler explanations') did not map to a defensible advantage over free alternatives. Foundational assumptions about who the buyer is, how much they'd pay, and whether an LLM can reliably produce pedagogically sound fixes proved false or untested. The most likely killing blow was that beginners continued to use free LLMs, docs, and community help rather than subscribe, so there were no paying users to sustain the product.",
+        "flaws": [
+          {
+            "title": "No evidence users will pay — fatal assumption",
+            "severity": "critical",
+            "description": "The founder set a $12/month price but has not spoken to any target users or gathered willingness-to-pay data. This assumes stated preference from the founder's own experience maps to actual purchase behavior. Over 18 months the product never acquired enough paying users because willingness-to-pay was never validated and turned out to be much lower or non-existent.",
+            "question": "Will target beginner programmers actually pay $12/month for this service (vs using free alternatives), and how do you know?",
+            "gap": "demand_evidence"
+          },
+          {
+            "title": "Pricing model and price point unsupported",
+            "severity": "high",
+            "description": "A monthly $12 price was chosen without testing pricing models, commitment preferences, or competitor pricing. Beginners often prefer free, one-time purchases, course bundles, or institutional provisioning (schools/bootcamps), so the $12/subscription assumption was misaligned with buyer preferences. As a result, trials showed low conversion to subscriptions.",
+            "question": "Why is a $12/month subscription the right pricing structure and price for the specific beginner segment you intend to serve?",
+            "gap": "pricing"
+          },
+          {
+            "title": "Differentiation ('simpler explanations') was insufficient against free alternatives",
+            "severity": "high",
+            "description": "The strategy assumes simpler explanations alone will make users choose this product over free LLMs, StackOverflow, course forums, or IDE-integrated help. In practice, those alternatives already produce explanations and many beginners prioritized integration, interactivity, or free access over simplified prose. The product therefore failed to capture users who had easier-to-access substitutes.",
+            "question": "Why will beginners choose this product's 'simpler explanations' instead of free LLMs, community answers, or IDE/help integration?",
+            "gap": "differentiation"
+          },
+          {
+            "title": "Assumed LLM reliability and pedagogical quality did not hold",
+            "severity": "high",
+            "description": "The plan depends on an AI reliably diagnosing errors and producing beginner-friendly, correct explanations and fixes. This assumption wasn't tested; early users reported incorrect or confusing fixes that eroded trust. Because beginners are fragile learners, inconsistent accuracy was enough to stop adoption and drive negative word-of-mouth.",
+            "question": "Can the model consistently generate correct, pedagogically appropriate explanations and fixes for the common beginner errors in our target scope?",
+            "gap": "assumptions"
+          },
+          {
+            "title": "Target buyer is underspecified (who pays?)",
+            "severity": "medium",
+            "description": "Saying 'beginner programmers' is too broad — self-learners, CS students, bootcamp attendees, hobbyists and corporate trainees have different pain points and payment routes. Without a specific buyer profile, you couldn't tailor messaging, pricing, or acquisition, so experiments failed to find an early paying cohort.",
+            "question": "Which exact beginner segment (e.g., self-learners, bootcamp students, CS101 students) is the paying customer, and why will they pay?",
+            "gap": "buyer"
+          },
+          {
+            "title": "No acquisition hypothesis or channel tests",
+            "severity": "medium",
+            "description": "There was no plan or evidence for how to reach the chosen beginner segment cost-effectively. Assumed organic discovery didn't materialize; free alternatives dominated search and referral channels. Without early, cheap customer acquisition tests, the product never found a growth channel to reach enough trialists to prove demand.",
+            "question": "Through which specific channels will you acquire beginners and can you demonstrate low-cost conversion from those channels in an experiment?",
+            "gap": "acquisition"
+          }
+        ]
+      }
+    },
+    "refine_lens_errors": [],
+    "refinement_meta": {
+      "lenses": [
+        "pre_mortem",
+        "evidence_audit"
+      ],
+      "gaps_filled": [
+        "demand_evidence"
+      ],
+      "gaps_skipped": [
+        "pricing",
+        "differentiation",
+        "acquisition"
+      ]
+    },
+    "refined_shape": {
+      "evidence_audit": "HHMM",
+      "pre_mortem": "CHHHMM"
+    },
+    "expected_lenses": [
+      "pre_mortem",
+      "evidence_audit"
+    ],
+    "refine_ran": [
+      "evidence_audit",
+      "pre_mortem"
+    ],
+    "refine_lenses_ok": true,
+    "reuse_refused_409": true,
+    "reuse_status": 409,
+    "watch": [
+      "money not in input: '$12,'",
+      "money not in input: '$144'",
+      "pilot/trial phrase: 'trials showed'"
+    ]
+  }
+]
