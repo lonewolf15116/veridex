@@ -20,11 +20,13 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
+import secrets
 import time
 from collections import defaultdict
 from typing import AsyncIterator
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Header, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
@@ -79,6 +81,16 @@ class CritiqueRequest(BaseModel):
         max_length=10_000,
         description="The strategy document to critique. Max 10,000 characters.",
     )
+    lenses: list[str] | None = Field(
+        default=None,
+        description="Evaluation only: run just these lenses. Ignored without a valid X-Eval-Token.",
+    )
+
+
+def _is_eval(token: str | None) -> bool:
+    """True when the request carries the EVAL_TOKEN configured on the server."""
+    expected = os.getenv("EVAL_TOKEN", "")
+    return bool(expected) and bool(token) and secrets.compare_digest(token, expected)
 
 
 # ── SSE helpers ───────────────────────────────────────────────────────────────
@@ -100,9 +112,9 @@ async def _run_one(lens: str, strategy_doc: str, queue: asyncio.Queue) -> None:
         await queue.put(_sse("error", {"lens": lens, "reason": f"{type(e).__name__}: {e}"}))
 
 
-async def _stream(strategy_doc: str) -> AsyncIterator[str]:
+async def _stream(strategy_doc: str, lenses: list[str] = LENSES) -> AsyncIterator[str]:
     queue: asyncio.Queue[str] = asyncio.Queue()
-    tasks = [asyncio.create_task(_run_one(lens, strategy_doc, queue)) for lens in LENSES]
+    tasks = [asyncio.create_task(_run_one(lens, strategy_doc, queue)) for lens in lenses]
 
     total_events = len(tasks) * 2  # each task: pass_started + pass_completed/error
     for _ in range(total_events):
@@ -115,12 +127,25 @@ async def _stream(strategy_doc: str) -> AsyncIterator[str]:
 # ── Route ─────────────────────────────────────────────────────────────────────
 
 @router.post("/critique/stream")
-async def critique_stream(request: Request, body: CritiqueRequest):
-    ip = request.client.host if request.client else "unknown"
-    _check_rate_limit(ip)
+async def critique_stream(
+    request: Request,
+    body: CritiqueRequest,
+    x_eval_token: str | None = Header(default=None),
+):
+    lenses = LENSES
+    if _is_eval(x_eval_token):
+        # Evaluation runs skip the free limit and may select lenses.
+        if body.lenses:
+            unknown = [l for l in body.lenses if l not in LENSES]
+            if unknown:
+                raise HTTPException(status_code=422, detail={"message": f"Unknown lenses: {unknown}"})
+            lenses = body.lenses
+    else:
+        ip = request.client.host if request.client else "unknown"
+        _check_rate_limit(ip)
 
     return StreamingResponse(
-        _stream(body.strategy_doc),
+        _stream(body.strategy_doc, lenses),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",

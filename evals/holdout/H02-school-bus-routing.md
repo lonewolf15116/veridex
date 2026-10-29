@@ -1,0 +1,7 @@
+RouteWise sells routing optimisation software to US school districts that run their own bus fleets. Most districts still plan routes in spreadsheets or with a legacy tool that only re-optimises once a year. Our solver rebuilds routes weekly as students move, which our simulations suggest cuts the number of buses needed by 12 percent. A mid-sized district runs about 85 buses, and each bus costs roughly $70,000 a year to operate, so a 12 percent reduction is worth a lot to a transportation director.
+
+We are pre-revenue. The simulations use anonymised student address data supplied by two districts under a research agreement, and we compared our routes with the routes those districts actually ran last year. Three other districts have signed non-binding letters of intent to run a paid pilot in the next school year.
+
+Our plan is to start the next school year with 6 paying districts and grow the customer count by 25 percent a month, reaching 120 districts within twelve months. Sales cycles in public procurement are slow, but we plan to use cooperative purchasing contracts to skip formal bidding. Pricing is $18,000 per district per year, and implementation will be handled by a team of two solutions engineers.
+
+The founders are two engineers who previously worked on logistics optimisation at a parcel carrier. We have one advisor who ran transportation for a county district for eleven years. We are raising a $1.5M seed round to hire sales staff and cover the first year of cloud costs.

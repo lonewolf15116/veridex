@@ -1,0 +1,7 @@
+We plan to open a factory in the Austin area that builds prefabricated accessory dwelling units, the small backyard homes that Texas cities have recently made easier to permit. Site-built ADUs here take 9 to 12 months and often run over budget. We believe a factory process can deliver a finished unit in roughly 14 weeks at a fixed price of $98,000, delivered and installed on a prepared foundation.
+
+We have not started construction. We have a letter of intent for a leased 40,000 square foot warehouse and quotes for the equipment, which together bring start-up capital to $4.5M. Our capacity plan is 120 units a year once the line is running. At $98,000 that is $11.76M in annual revenue. We budget materials, labour and delivery at $76,440 per unit, which leaves a 22 percent gross margin, or about $2.59M a year before overheads.
+
+Demand is the main thing we have not proven. So far 14 households have paid a refundable $1,000 deposit to join a priority list, which is $14,000 in total and came from a single social media post in a local homeowners group. We assume the lead flow can be scaled with paid search and builder partnerships, and we have not yet tested either. Nobody on the team has run a factory, though our operations lead managed a modular classroom plant for six years.
+
+Our first milestone is closing the seed round and signing the warehouse lease. If the round closes by spring we expect the first unit to ship in the fourth quarter.

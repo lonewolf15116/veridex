@@ -1,0 +1,7 @@
+Little Steps provides at-home physiotherapy for children with developmental delays and sports injuries. We started in Denver in 2024 and now serve 410 active families with a team of 19 therapists. Revenue last quarter was $612,000 at an average of $149 a session, and every therapist is fully booked. Parents tell us the biggest advantage is not having to take a child out of school for clinic appointments, and our 12-month retention is 81 percent.
+
+Growth to date has come mainly through referrals from paediatricians. One large paediatric group in south Denver sends about 60 percent of our new families, and the rest come from parent word of mouth and a small paid search budget. Last quarter we spent $31,200 on marketing and signed 260 new families, a customer acquisition cost of $85, well below the roughly $900 lifetime gross profit per family.
+
+Because the Denver model works, we intend to open 25 metro areas over the next three years, starting with Phoenix, Dallas and Atlanta. Each launch would use the same playbook: sign one anchor paediatric group, recruit therapists locally, and fill the schedule through referrals. We expect each new city to reach Denver's per-capita family numbers within 18 months.
+
+We are raising $9M. About $5M would fund the first eight cities, including a launch team and therapist sign-on bonuses, and the rest would go to scheduling software and a clinical quality function.

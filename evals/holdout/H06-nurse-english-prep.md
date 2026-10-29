@@ -1,0 +1,7 @@
+NurseLingo teaches English exam preparation to Filipino nurses who want to work abroad, where they must pass a professional English test. We sell an 8-week online course with live tutoring for $140. Over the last twelve months 1,900 nurses enrolled, so course revenue was $266,000. We have been profitable at the contribution level for the past eight months.
+
+Nearly all of our students come from Facebook and Instagram ads aimed at nurses in the Philippines. Ad spend over the year was $58,000, which is about $30.50 per enrolled student. Students who complete the course and sit the exam report a pass rate of 71 percent, which we collect by surveying them; about half respond. Refund requests are under 3 percent of sales.
+
+The Philippine channel is working, but it is one channel in one country, and we know it will saturate. Our plan for the next year is to test the same course in Nigeria and India, where nurse migration is similarly large. We will spend $20,000 on a ten-week test in each country before committing more, and we will only scale a market if the cost per enrolled student stays under $60 and the survey-reported pass rate stays above 60 percent. Local tutors will be hired per market because accents and exam content differ.
+
+If neither test passes, we will continue to grow in the Philippines by adding a second exam track for a different test, using the same ad accounts and tutor pool.

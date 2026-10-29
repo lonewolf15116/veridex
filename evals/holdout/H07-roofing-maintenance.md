@@ -1,0 +1,7 @@
+Halvorsen Roofing has installed and repaired commercial flat roofs in central Ohio for 23 years. Last year we earned $14.2M in revenue at a 31 percent gross margin, which is $4.4M of gross profit, and we have been profitable every year since 2009. We served 1,150 active customers, of whom 736 had hired us before, a repeat rate of 64 percent. Most of our work comes from property managers and school facilities departments who call us when a roof leaks.
+
+We want to launch a formal annual inspection and maintenance program for the roofs we have already installed or repaired. Today we do some of this informally for 140 buildings, billed at about $2,100 a year each. Of those 140 contracts, 127 renewed this year, a renewal rate of 91 percent. Customers who take maintenance rarely need an emergency repair, which is better for them and smooths our crews' seasonal workload.
+
+Our target is 400 maintained buildings within 24 months, which would bring in $840,000 a year. We would add three technicians at a loaded cost of $68,000 each, which is $204,000, plus one truck and scheduling software. We expect the program to run at a 45 percent gross margin, higher than our installation work, because it needs less material.
+
+The main risks are that some property managers will see this as an upsell and decline, and that technician hiring takes longer than planned. We will review progress at 12 months, and if fewer than 250 buildings are signed we will stop adding technicians.

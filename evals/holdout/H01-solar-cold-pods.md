@@ -1,0 +1,7 @@
+We are building solar-powered cold storage pods for smallholder vegetable farmers in western Kenya. Roughly a third of tomatoes, kale and French beans grown by these farmers spoil before reaching market, mostly because there is no cooling between harvest and the collection truck. A pod is a 6 cubic metre insulated unit with a rooftop panel and a battery, sited at a farmer group's collection point, and it keeps produce at 8 to 10 degrees for up to five days.
+
+We have not built a production unit yet. A prototype ran for three weeks in a workshop in Kisumu, and we have signed no sales. Eleven farmer cooperatives told us in interviews that they would want one. The sector reports we have read put post-harvest loss at 30 to 40 percent in this region, and we have taken the midpoint as the loss our pods will remove.
+
+We plan to sell each pod for $2,400 and expect 300 pods in year one, about $1.2M in revenue. Farmers should save about $75 a month in avoided spoilage, so they recover their cost in roughly 14 months, which makes the pod an easy decision even for cash-poor groups. We will finance sales through a mobile-money instalment plan and assume 95 percent of instalments are paid on time.
+
+Manufacturing will be outsourced to a contract assembler in Nairobi once the seed round closes. We think we can have the first 40 units in the field within five months of funding, and we expect cooperatives to refer each other so that paid marketing stays minimal.

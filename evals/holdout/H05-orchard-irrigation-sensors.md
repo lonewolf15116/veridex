@@ -1,0 +1,7 @@
+AquaLeaf sells soil moisture sensors and an irrigation scheduling service to almond growers in California's Central Valley. Growers pay an annual subscription of $150 per acre. After two growing seasons we have three paying customers covering 1,100 acres, and annualised recurring revenue is $212,000, made up of subscriptions plus $47,000 of hardware lease fees. Revenue is concentrated: 52 percent comes from Fowler Farms, 31 percent from Bell Ranch and 22 percent from a third orchard that joined in March.
+
+In the 2025 season our three orchards used 18 percent less water than the same blocks had used in the prior year, with no yield loss that the growers could detect. We read this as the value of the service. The prior year was a wet one in the valley and 2025 was drier, but growers told us they would have used more water in a dry year without our scheduling, so we believe the real saving is higher.
+
+Acquiring a new grower costs us about $18,000 in sales time, trial hardware and agronomist visits. A typical new grower contributes about $2,500 a month in gross margin, so we recover acquisition cost in under six months.
+
+We are now raising a Series A of $8M to expand to 40,000 acres across almonds, pistachios, walnuts and wine grapes within three years. Our model applies the 18 percent saving to every acre, since the physics of soil moisture is the same across crops. We are hiring a head of sales who has sold equipment to large growers.

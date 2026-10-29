@@ -1,0 +1,7 @@
+We have developed a quality-dividend stock screen and want to commit $4M of our family office capital to it. The rule picks the 30 stocks with the highest five-year dividend growth among companies with a payout ratio under 60 percent, equally weights them, and rebalances every January. We backtested it from January 2005 to December 2024 using the 480 stocks in today's S&P 500 that have complete price histories over the whole period.
+
+The results are strong. The screen returned 14.2 percent a year after assumed trading costs of 10 basis points per rebalance, against 9.8 percent for the equally weighted version of the same universe. A $100,000 investment in January 2005 would have grown to just under $1.9 million by the end of 2024, compared with about $650,000 for the benchmark. Maximum drawdown was 31 percent in 2008-09, versus 38 percent for the benchmark. The screen beat the benchmark in 14 of 20 calendar years.
+
+We think the edge comes from companies that raise dividends consistently also tend to have durable cash flows, an effect that has been described in the academic literature. We tried payout cut-offs of 50, 60 and 70 percent and the results were similar, so we do not think the rule is fragile.
+
+We would invest in two tranches, $2M immediately and $2M after six months, and would hold the strategy for at least five years. We would also like to publish the rule as a white paper to attract outside investors, and the backtest chart would be the centrepiece.
