@@ -1,0 +1,52 @@
+{
+  "label": "v4.1-checker",
+  "lenses": [
+    "evidence_audit"
+  ],
+  "api": "https://veridex-backend-n0nf.onrender.com",
+  "runs": [
+    {
+      "doc": "04-cascade-spider.md",
+      "seconds": 58.4,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Mixed. The historical backtest shows a strong out-of-sample result (Jan 2025\u2013Aug 2026) across all ten coins, but the claim rests on a single forward window after a large parameter sweep. Key unresolved risks are overfitting/data leakage and underspecified execution/fill assumptions that could materially change live performance.",
+          "flaws": [
+            {
+              "title": "Test-period outperformance vs training after a large parameter sweep \u2014 high risk of overfitting or leakage",
+              "severity": "high",
+              "description": "You report selecting the single best configuration from 6,768 parameter combinations on 2023\u20132024 (train) and then a single test on Jan 2025\u2013Aug 2026 where Sharpe (3.18) is far higher than the train Sharpe (1.46). Picking the best of thousands inflates in-sample metrics and a single out-of-sample period that beats the training set is suspicious: it can indicate either a lucky regime or a data-leak/bug. This directly threatens the claim that the edge will persist live.",
+              "question": "Produce the full distribution (or at least percentiles and histogram) of train and test Sharpe/returns across the 6,768 parameter sets, and show the rank (percentile) of the chosen configuration in both train and test; if you retained the random seed/code, also run a walk\u2011forward or k\u2011fold out-of-sample sequence (multiple disjoint test periods) and report median and 90th percentile test Sharpe \u2014 if those medians drop substantially then the original test is likely overfit."
+            },
+            {
+              "title": "Possible data-timestamp/leakage for open-interest and 5-minute triggers",
+              "severity": "high",
+              "description": "The trigger uses 5-minute price moves, 5-minute open-interest changes and 5-minute volume ratios. The backtest claims to use Binance 1\u2011minute candles and 5\u2011minute OI history, but it's unclear whether the open-interest and volume values used at decision time were limited to data that would have been available live at that exact moment (end-of-bar vs mid-bar values). If the backtest used end-of-next-minute or revised data, that is a look\u2011ahead leak which would inflate results.",
+              "question": "Provide exact timestamp-handling: for each trade in the backtest, supply the timestamps used for price, volume and open-interest inputs and confirm these fields were only using data available up to the decision instant (no future-timestamped or end-of-next-interval values); if you can, produce a small CSV of the first 50 trades with the input timestamps and raw values used to trigger them."
+            },
+            {
+              "title": "Execution and fill model under-specified for spike events (maker/taker mix and partial fills)",
+              "severity": "high",
+              "description": "You model maker 0.02% and taker 0.05% plus 0.10% extra slippage on stops and state limits fill only if price trades through them. But during short squeezes order-book dynamics can cause partial fills, cross-ups, and price impact that your high-level assumptions may not capture. The profitability per trade is small-ish (see next flaw) and sensitive to small changes in execution; without per-trade fill detail the backtest may be optimistic.",
+              "question": "Provide (a) the per-trade breakdown in the backtest of whether a limit order filled as maker vs taker vs partial fill, (b) average realized execution price vs the intended limit for winners and losers, and (c) a worst-case simulation where maker fills are halved and stop slippage doubles \u2014 report resulting test-period return and Sharpe."
+            },
+            {
+              "title": "Per-trade economics look thin: average P&L per trade is small relative to modeled costs",
+              "severity": "medium",
+              "description": "Test period: +52.9% over 321 trades implies roughly 0.165% cumulative return per trade on average (0.529/321 \u2248 0.00165). That per-trade margin is comparable to the modeled fees/slippage (maker/taker + 0.10% stop slippage) and leaves little buffer for realistic adverse fills or market impact. The backtest summary doesn't show the distribution of trade P&Ls, so the edge might rely on a few large wins.",
+              "question": "Provide the distribution of per-trade P&L (mean, median, std, 10th/90th percentiles), and show how cumulative return and Sharpe change if per-trade P&L is reduced by 20% to represent worse fills or higher fees."
+            },
+            {
+              "title": "Single test-period validation (one out-of-sample window) is insufficient",
+              "severity": "medium",
+              "description": "You ran one out-of-sample test (Jan 2025\u2013Aug 2026). A single forward period can be unrepresentative due to regime luck. Given the large parameter sweep and the surprising improvement in test metrics, more robustness checks are needed (multiple rolling test windows, bootstrap of trade samples, or walk\u2011forward optimization) to establish stability.",
+              "question": "Run and report either (a) a 12\u2011month rolling walk\u2011forward where parameters are re-optimized on the prior 24 months and tested on the next 12 months (report distribution of test returns), or (b) at least 5 disjoint out-of-sample periods with identical fixed parameters and report returns and Sharpe for each."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    }
+  ]
+}

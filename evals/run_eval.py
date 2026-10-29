@@ -59,7 +59,7 @@ def run_doc(api: str, token: str, lenses: list[str], path: Path, timeout: int) -
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("folder", help="folder of .md docs (ANSWER_KEY.md and README.md are skipped)")
+    ap.add_argument("folder", help="folder of .md docs (ANSWER_KEY.md, README.md and RESULTS.md are skipped)")
     ap.add_argument("--lens", action="append", choices=LENSES, help="lens to run (repeatable; default evidence_audit)")
     ap.add_argument("--label", default="run", help="version label for the output file, e.g. v3.1")
     ap.add_argument("--api", default=os.getenv("VERIDEX_API", DEFAULT_API))
@@ -72,7 +72,7 @@ def main() -> int:
         print("Set VERIDEX_EVAL_TOKEN to the EVAL_TOKEN configured on the server.", file=sys.stderr)
         return 2
     lenses = args.lens or ["evidence_audit"]
-    docs = sorted(p for p in Path(args.folder).glob("*.md") if p.name not in {"ANSWER_KEY.md", "README.md"})
+    docs = sorted(p for p in Path(args.folder).glob("*.md") if p.name not in {"ANSWER_KEY.md", "README.md", "RESULTS.md"})
     if not docs:
         print(f"No .md docs in {args.folder}", file=sys.stderr)
         return 2

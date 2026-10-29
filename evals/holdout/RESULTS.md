@@ -23,3 +23,20 @@ false alarms on 7/10 plans · severity over-rated on 5/10 · strength label matc
 **Patterns:** strength labels collapse to Mixed and don't drive severity; severity is inflated on milder plans (H04–H08);
 numbers the key marks as fine get flagged; secondary statistical concerns (H10 interval width, H09 benchmark and
 single 2008–09 episode) are missed.
+
+## Checker pass (v4) — two rounds, then stop
+
+Stop rule set before testing: ship if main flag ≥9, math ≥5/6, false alarms ≤3, severity over ≤2, strength ≥6, Cascade leak still flagged; otherwise one adjustment, one more round, ship the better round.
+
+| | v3.1 baseline | v4 round 1 (`1bf1d09`) | v4.1 round 2 (`ca0f0c0`) |
+|---|---|---|---|
+| Main core flag | 9/10 | 8/10 | 8/10 (+1 partial) |
+| Planted math computed | 6/6 | 6/6 | 5/6 (+1 partial) |
+| False-alarm plans | 7/10 | 6/10 | 7/10 |
+| Severity over key ceiling | 5/10 | 4/10 | 3/10 |
+| Strength label matches key | 2/10 | 6/10 | 6/10 |
+| Backtest jargon (8 plans) | 0 | 0 | 1 |
+
+Round 2 tightened ceilings (Strong ≤ medium, Mixed ≤ high) and the Strong definition; it then labelled both genuinely Strong plans Mixed and capped the Cascade Spider leak at high (still flagged, rank 2).
+
+**Decision: ship round 1.** Neither round met every target. The checker's clear win is strength labelling (2 → 6). False alarms are not fixed by a keep/drop checker — they originate in the draft and most survive review — so they stay an open issue for later, ideally guided by real user ratings rather than more prompt tuning on this set. Single runs; differences of ±1 are within noise.
