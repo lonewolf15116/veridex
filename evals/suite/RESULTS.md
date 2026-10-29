@@ -47,3 +47,7 @@ Regex flags were checked by hand.
 ## Applied after run 1
 - Fix 1 (skipped-question bug): `compose_brief` no longer lists skipped questions. Verify with
   `run_suite.py --only T01,T04,T05`: no refined finding should cite a skip or a founder "admission" the answer did not make.
+- Verified (suite-20261030-044354, T01/T04/T05 after deploy of 7d907ea): 0 refined findings cite a skipped
+  question (was 8/10). Remaining "founder admits" lines quote what the founder actually answered. T04's
+  "internal contradiction" critical is gone. Routing 3/3, reuse 409 3/3. Still open: T05 Pre-Mortem
+  "trials showed low conversion" (invented history, fix 3); T01 $5k rep-cost assumption.
