@@ -357,7 +357,7 @@ function Hero({ onTry }: { onTry: () => void }) {
             Before you present your strategy, break it.
           </h1>
           <p className="text-[14px] text-white/45 leading-relaxed max-w-lg">
-            Veridex stress-tests your thinking — exposing blind spots, weak logic, and execution risks in minutes. Five independent AI critics. No flattery.
+            Veridex stress-tests your thinking — exposing blind spots, weak logic, and execution risks in minutes. Five independent AI critics. No flattery. Works on a full plan or a two-line idea.
           </p>
         </div>
 
@@ -415,7 +415,7 @@ function ProblemSection() {
 
 function HowItWorks() {
   const steps = [
-    { n: "01", title: "Paste your strategy", body: "Drop in your strategy doc, pitch, or plan. No formatting required — raw thinking is fine." },
+    { n: "01", title: "Paste your plan — or just an idea", body: "Drop in a strategy doc, pitch, or plan. Only have an idea? Two sentences and your stage are enough — Veridex asks for what's missing." },
     { n: "02", title: "Five critics analyze in parallel", body: "Pre-Mortem, Unit Economics, Adversarial Competitor, Execution Risk, and Evidence Audit all run simultaneously in ~30 seconds." },
     { n: "03", title: "Get a structured critique", body: "Each lens returns a summary, ranked flaws by severity, and the sharpest question you need to answer next." },
   ];
@@ -568,10 +568,10 @@ function CtaBanner({ onTry }: { onTry: () => void }) {
     <section className="py-20 border-b border-white/[0.06]">
       <div className="mx-auto max-w-3xl px-6 text-center space-y-6">
         <h2 className="text-[28px] sm:text-[32px] font-semibold leading-tight tracking-[-0.02em] text-white">
-          Run your first strategy critique.
+          Run your first critique.
         </h2>
         <p className="text-[14px] text-white/35 max-w-sm mx-auto leading-relaxed">
-          No account. No setup. Paste your doc and get five independent critiques in about 30 seconds.
+          No account. No setup. Paste a plan or a two-line idea and get five independent critiques in about 30 seconds.
         </p>
         <button
           onClick={onTry}
@@ -1168,7 +1168,7 @@ function CritiqueProduct() {
         <div>
           <Tag>Run a critique</Tag>
           <h2 className="mt-3 text-[28px] sm:text-[32px] font-semibold leading-tight tracking-[-0.02em] text-white">
-            Paste your strategy. Get five critics.
+            Paste your plan or your idea. Get five critics.
           </h2>
         </div>
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s · Veridex",
   },
   description:
-    "Paste your strategy. Five independent AI critics return structured flaws, ranked by severity, in about 30 seconds. Pre-Mortem, Unit Economics, Adversarial Competitor, Execution Risk, Evidence Audit. No flattery.",
+    "Paste a strategy or a two-line idea. Five independent AI critics return structured flaws, ranked by severity, in about 30 seconds. Pre-Mortem, Unit Economics, Adversarial Competitor, Execution Risk, Evidence Audit. No flattery.",
   keywords: [
     "strategy review",
     "AI critic",
