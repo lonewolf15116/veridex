@@ -69,6 +69,7 @@ QUESTION_BANK: dict[str, BankQuestion] = {
 assert set(QUESTION_BANK) == set(GAPS), "every gap needs exactly one bank question"
 
 SEVERITY_WEIGHT = {"critical": 4, "high": 3, "medium": 2, "low": 1}
+CATCH_ALL_GAPS = {"assumptions"}  # asked only when fewer specific gaps are open
 MAX_QUESTIONS = 4
 
 
@@ -89,11 +90,13 @@ class SelectedQuestion(BaseModel):
 
 
 def select_questions(results: dict[str, CriticPassResult], max_questions: int = MAX_QUESTIONS) -> list[SelectedQuestion]:
-    """Rank gaps by the total severity of the flaws that point at them; return up to max_questions.
+    """Rank gaps and return up to max_questions.
 
-    Deterministic: ties break by severity of the worst flaw, then by the fixed GAPS order. Flaws
-    with no gap tag are ignored. Lenses are read in LENS_ORDER so the result never depends on the
-    order results arrived in.
+    Order: specific gaps before the catch-all "assumptions" (lenses use it for anything vague, so
+    summing it crowds out the specific questions); then the worst severity pointing at the gap (a
+    single critical from one lens outranks several mediums); then total severity; then the fixed
+    GAPS order. Deterministic. Flaws with no gap tag are ignored. Lenses are read in LENS_ORDER so
+    the result never depends on the order results arrived in.
     """
     score: dict[str, int] = {}
     worst: dict[str, int] = {}
@@ -110,7 +113,7 @@ def select_questions(results: dict[str, CriticPassResult], max_questions: int = 
             worst[flaw.gap] = max(worst.get(flaw.gap, 0), w)
             sources.setdefault(flaw.gap, []).append(PromptedBy(lens=lens, title=flaw.title, severity=flaw.severity))
 
-    ranked = sorted(score, key=lambda g: (-score[g], -worst[g], GAPS.index(g)))
+    ranked = sorted(score, key=lambda g: (g in CATCH_ALL_GAPS, -worst[g], -score[g], GAPS.index(g)))
     out = []
     for gap in ranked[:max_questions]:
         q = QUESTION_BANK[gap]

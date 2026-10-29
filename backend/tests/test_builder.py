@@ -110,8 +110,9 @@ def test_idea_critique_returns_questions_and_token(calls):
     done = _done(r)
     assert done["refine_token"]
     gaps = [q["gap"] for q in done["questions"]]
-    # demand_evidence: critical(4)+high(3)=7 · key_numbers: 2+2=4 · pricing 3 · alternatives 3 (pricing first by GAPS order)
-    assert gaps == ["demand_evidence", "key_numbers", "pricing", "alternatives"]
+    # worst severity first: demand_evidence (critical) · pricing, alternatives (high; tie -> GAPS order)
+    # · key_numbers (medium, total 4) beats acquisition (medium, total 2); assumptions is the catch-all, last
+    assert gaps == ["demand_evidence", "pricing", "alternatives", "key_numbers"]
     q0 = done["questions"][0]
     assert {p["lens"] for p in q0["prompted_by"]} == {"pre_mortem", "evidence_audit"}
     assert all(q["gap"] in GAPS for q in done["questions"])
@@ -129,6 +130,19 @@ def test_question_selection_deterministic_and_order_independent():
     assert [q.model_dump() for q in a] == [q.model_dump() for q in b]
     assert len(builder.select_questions(results, max_questions=2)) == 2
     assert builder.select_questions({}) == []
+
+
+def test_catch_all_only_when_specific_gaps_run_out():
+    def res(pairs):
+        return {"pre_mortem": CriticPassResult(lens="pre_mortem", summary="s", flaws=[
+            Flaw(title=f"t{i}", severity=s, description="d", question="q", gap=g) for i, (s, g) in enumerate(pairs)])}
+    heavy = res([("critical", "assumptions"), ("critical", "assumptions"), ("low", "buyer")])
+    assert [q.gap for q in builder.select_questions(heavy)] == ["buyer", "assumptions"]
+
+
+def test_idea_rules_forbid_critical_for_merely_unstated():
+    assert "never \"critical\" at this stage" in critics._build_prompt("unit_economics", "doc", stage="idea")
+    assert "never \"critical\" at this stage" not in critics._build_prompt("unit_economics", "doc", stage="established")
 
 
 def test_every_gap_maps_to_exactly_one_question():

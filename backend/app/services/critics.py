@@ -225,7 +225,8 @@ _STAGE_GUIDANCE: dict[str, str] = {
 
 _EARLY_STAGE_RULES = """IDEA-STAGE MODE. The founder declared the stage as: {stage_words}. The document may be only a few sentences plus the founder's own answers.
   - Missing evidence is expected at this stage. For an untested hypothesis, say what to test first and the cheapest way to test it, rather than treating the gap as proof the idea fails.
-  - Keep "critical" for what is genuinely fatal on the founder's own words: internal contradictions, claims that are already false, or a plan that cannot work as described. Do not lower a genuine critical flaw because the idea is early.
+  - Keep "critical" for what is genuinely fatal on the founder's own words: internal contradictions, claims that are already false, or a plan that cannot work as described (e.g. a legal or practical blocker). Do not lower a genuine critical flaw because the idea is early.
+  - A flaw whose substance is only that something is not stated yet (no price given, no numbers, no acquisition plan) is never "critical" at this stage: rate it "high" at most and say what to find out first.
   - Do NOT invent specifics (prices, costs, market sizes, conversion rates, competitor names) to make feedback look detailed. Work only with what the founder wrote; where something is unknown, say it is unknown.
   - Rank flaws by how consequential the unknown or problem is for this idea succeeding."""
 
