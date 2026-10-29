@@ -29,8 +29,11 @@ LENSES = ["pre_mortem", "unit_economics", "adversarial_competitor", "execution_r
 JARGON = re.compile(r"leak|look-?ahead|walk-forward|out-of-sample|train/test|parameter sweep|multiple.testing", re.I)
 
 
-def run_doc(api: str, token: str, lenses: list[str], path: Path, timeout: int) -> dict:
-    body = json.dumps({"strategy_doc": path.read_text(), "lenses": lenses}).encode()
+def run_doc(api: str, token: str, lenses: list[str], path: Path, timeout: int, stage: str | None = None) -> dict:
+    payload = {"strategy_doc": path.read_text(), "lenses": lenses}
+    if stage:
+        payload["stage"] = stage
+    body = json.dumps(payload).encode()
     req = urllib.request.Request(
         f"{api}/api/v1/critique/stream",
         data=body,
@@ -46,7 +49,7 @@ def run_doc(api: str, token: str, lenses: list[str], path: Path, timeout: int) -
     except Exception as e:  # noqa: BLE001
         return {"doc": path.name, "error": f"{type(e).__name__}: {e}"}
 
-    results, errors = {}, {}
+    results, errors, done = {}, {}, {}
     for block in text.strip().split("\n\n"):
         fields = dict(line.split(": ", 1) for line in block.splitlines() if ": " in line)
         event, data = fields.get("event"), json.loads(fields.get("data", "{}"))
@@ -54,7 +57,9 @@ def run_doc(api: str, token: str, lenses: list[str], path: Path, timeout: int) -
             results[data["lens"]] = data["result"]
         elif event == "error":
             errors[data["lens"]] = data["reason"]
-    return {"doc": path.name, "seconds": round(time.time() - started, 1), "results": results, "errors": errors}
+        elif event == "done":
+            done = data
+    return {"doc": path.name, "seconds": round(time.time() - started, 1), "results": results, "errors": errors, "done": done}
 
 
 def main() -> int:
@@ -63,6 +68,7 @@ def main() -> int:
     ap.add_argument("--lens", action="append", choices=LENSES, help="lens to run (repeatable; default evidence_audit)")
     ap.add_argument("--label", default="run", help="version label for the output file, e.g. v3.1")
     ap.add_argument("--api", default=os.getenv("VERIDEX_API", DEFAULT_API))
+    ap.add_argument("--stage", choices=["idea", "building", "traction", "established"], help="idea builder mode")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--timeout", type=int, default=240)
     args = ap.parse_args()
@@ -85,13 +91,13 @@ def main() -> int:
         return 1
 
     with ThreadPoolExecutor(args.workers) as ex:
-        runs = list(ex.map(lambda p: run_doc(args.api, token, lenses, p, args.timeout), docs))
+        runs = list(ex.map(lambda p: run_doc(args.api, token, lenses, p, args.timeout, args.stage), docs))
 
     out_dir = Path(__file__).resolve().parent / "results"
     out_dir.mkdir(exist_ok=True)
     stamp = time.strftime("%Y%m%d-%H%M%S")
     out = out_dir / f"{args.label}-{'+'.join(lenses)}-{stamp}.json"
-    out.write_text(json.dumps({"label": args.label, "lenses": lenses, "api": args.api, "runs": runs}, indent=2))
+    out.write_text(json.dumps({"label": args.label, "lenses": lenses, "stage": args.stage, "api": args.api, "runs": runs}, indent=2))
 
     for r in runs:
         if "error" in r:
@@ -104,7 +110,14 @@ def main() -> int:
                 continue
             shape = "".join(f["severity"][0].upper() for f in res["flaws"])
             jargon = "jargon" if JARGON.search(json.dumps(res)) else ""
-            print(f"{r['doc']:<34} {lens:<14} {shape:<8} {len(res['flaws'])} flaws {r['seconds']:>5}s {jargon}")
+            gaps = ""
+            if args.stage:
+                tags = [f.get("gap") for f in res["flaws"]]
+                gaps = f"gaps {sum(t is not None for t in tags)}/{len(tags)}"
+            print(f"{r['doc']:<34} {lens:<14} {shape:<8} {len(res['flaws'])} flaws {r['seconds']:>5}s {jargon} {gaps}")
+        if args.stage and r.get("done"):
+            qs = [q["gap"] for q in r["done"].get("questions", [])]
+            print(f"{'':<34} questions: {', '.join(qs) or 'none'}   refine token: {'yes' if r['done'].get('refine_token') else 'no'}")
     print(f"\nSaved {out}")
     return 0
 

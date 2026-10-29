@@ -31,12 +31,25 @@ from app.llm.client import client
 Severity = Literal["low", "medium", "high", "critical"]
 Lens = Literal["pre_mortem", "unit_economics", "adversarial_competitor", "execution_risk", "evidence_audit"]
 
+# Idea builder (Revision 2): the founder-declared stage, and the fixed list of evidence gaps a flaw
+# can point at. Gap tags are only requested when a stage is given; plain critiques never carry them.
+Stage = Literal["idea", "building", "traction", "established"]
+Gap = Literal[
+    "buyer", "demand_evidence", "pricing", "acquisition",
+    "key_numbers", "assumptions", "alternatives", "differentiation",
+]
+GAPS: tuple[str, ...] = (
+    "buyer", "demand_evidence", "pricing", "acquisition",
+    "key_numbers", "assumptions", "alternatives", "differentiation",
+)
+
 
 class Flaw(BaseModel):
     title: str = Field(..., min_length=1, max_length=120)
     severity: Severity
     description: str = Field(..., min_length=1)
     question: str = Field(..., min_length=1, description="The sharpest question the user should answer next.")
+    gap: Gap | None = Field(default=None, description="Idea mode only: which missing input this flaw points at.")
 
 
 class CriticPassResult(BaseModel):
@@ -203,11 +216,45 @@ Each flaw's question must be a concrete check the author can run or a specific n
 }
 
 
-def _build_prompt(lens: str, input_text: str, retry: bool = False) -> str:
+_STAGE_GUIDANCE: dict[str, str] = {
+    "idea": "an idea that has not been built or tested",
+    "building": "a product being built, not yet launched",
+    "traction": "a launched product with some users or revenue",
+    "established": "an established business",
+}
+
+_EARLY_STAGE_RULES = """IDEA-STAGE MODE. The founder declared the stage as: {stage_words}. The document may be only a few sentences plus the founder's own answers.
+  - Missing evidence is expected at this stage. For an untested hypothesis, say what to test first and the cheapest way to test it, rather than treating the gap as proof the idea fails.
+  - Keep "critical" for what is genuinely fatal on the founder's own words: internal contradictions, claims that are already false, or a plan that cannot work as described. Do not lower a genuine critical flaw because the idea is early.
+  - Do NOT invent specifics (prices, costs, market sizes, conversion rates, competitor names) to make feedback look detailed. Work only with what the founder wrote; where something is unknown, say it is unknown.
+  - Rank flaws by how consequential the unknown or problem is for this idea succeeding."""
+
+_LATE_STAGE_RULES = """STAGE NOTE. The founder declared the stage as: {stage_words}. Credit what is already measured, judge how far the plan extrapolates beyond it, and keep criticism proportionate to the evidence. Do not invent specifics the founder did not give."""
+
+_GAP_CONTRACT = """
+Each flaw object must ALSO include a "gap" field naming the missing input it points at, chosen from exactly this list:
+  "buyer"            - who has the problem / who the customer is is unclear
+  "demand_evidence"  - no evidence that people want or need this
+  "pricing"          - who pays and how much is unclear or unsupported
+  "acquisition"      - how customers will be reached is unclear or unsupported
+  "key_numbers"      - a load-bearing number (cost, conversion, market size, revenue) is missing, unsourced or inconsistent
+  "assumptions"      - an unstated condition that must be true for the plan to work
+  "alternatives"     - what customers use today / the competition is unclear
+  "differentiation"  - why customers would choose this over the alternatives is unclear
+Pick the single closest match. Use null only if the flaw genuinely points at none of these."""
+
+
+def _build_prompt(lens: str, input_text: str, retry: bool = False, stage: str | None = None) -> str:
     if lens not in _LENS_PROMPTS:
         raise ValueError(f"Unknown lens: {lens}")
     lens_prompt = _LENS_PROMPTS[lens].format(focus_constraint=_LENS_FOCUS[lens])
     output_contract = _SHARED_OUTPUT_CONTRACT.format(lens_name=lens)
+    if stage is not None:
+        if stage not in _STAGE_GUIDANCE:
+            raise ValueError(f"Unknown stage: {stage}")
+        rules = _EARLY_STAGE_RULES if stage in ("idea", "building") else _LATE_STAGE_RULES
+        lens_prompt = f"{lens_prompt}\n{rules.format(stage_words=_STAGE_GUIDANCE[stage])}\n"
+        output_contract = output_contract + _GAP_CONTRACT
     retry_nudge = _RETRY_NUDGE if retry else ""
     return f"""{lens_prompt}
 
@@ -265,6 +312,7 @@ def _draft_pass(
     lens: str,
     input_text: str,
     model: str = "openai:gpt-5-mini",
+    stage: str | None = None,
 ) -> CriticPassResult:
     """
     Run a single critic pass and return a validated CriticPassResult.
@@ -287,14 +335,14 @@ def _draft_pass(
         raise ValueError(f"Unsupported provider: {provider}")
 
     # First attempt
-    raw = _call_openai(model_id, _build_prompt(lens, input_text, retry=False))
+    raw = _call_openai(model_id, _build_prompt(lens, input_text, retry=False, stage=stage))
     try:
         return _parse_and_validate(lens, raw)
     except CriticValidationError:
         pass  # Fall through to retry
 
     # Single retry with corrective nudge
-    raw = _call_openai(model_id, _build_prompt(lens, input_text, retry=True))
+    raw = _call_openai(model_id, _build_prompt(lens, input_text, retry=True, stage=stage))
     return _parse_and_validate(lens, raw)  # Raises CriticValidationError if still broken
 
 
@@ -307,9 +355,14 @@ def run_critic_pass(
     lens: str,
     input_text: str,
     model: str = "openai:gpt-5-mini",
+    stage: str | None = None,
 ) -> CriticPassResult:
-    """Draft a critique for one lens, then (for CHECKED_LENSES) run the checker pass over it."""
-    draft = _draft_pass(lens, input_text, model)
+    """Draft a critique for one lens, then (for CHECKED_LENSES) run the checker pass over it.
+
+    stage=None is the plain paste-a-plan critique, unchanged. A stage switches on idea-stage
+    calibration and gap tags (idea builder, Revision 2).
+    """
+    draft = _draft_pass(lens, input_text, model, stage)
     if lens not in CHECKED_LENSES:
         return draft
     from app.services.checker import check_pass  # local import avoids a circular import
@@ -322,7 +375,10 @@ __all__ = [
     "Flaw",
     "CriticPassResult",
     "CriticValidationError",
+    "Gap",
+    "GAPS",
     "Lens",
     "Severity",
+    "Stage",
     "run_critic_pass",
 ]
