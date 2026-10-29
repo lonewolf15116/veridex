@@ -34,6 +34,7 @@ Lens = Literal["pre_mortem", "unit_economics", "adversarial_competitor", "execut
 # Idea builder (Revision 2): the founder-declared stage, and the fixed list of evidence gaps a flaw
 # can point at. Gap tags are only requested when a stage is given; plain critiques never carry them.
 Stage = Literal["idea", "building", "traction", "established"]
+Basis = Literal["contradiction", "stated_fact", "missing"]
 Gap = Literal[
     "buyer", "demand_evidence", "pricing", "acquisition",
     "key_numbers", "assumptions", "alternatives", "differentiation",
@@ -50,6 +51,7 @@ class Flaw(BaseModel):
     description: str = Field(..., min_length=1)
     question: str = Field(..., min_length=1, description="The sharpest question the user should answer next.")
     gap: Gap | None = Field(default=None, description="Idea mode only: which missing input this flaw points at.")
+    basis: Basis | None = Field(default=None, description="Stage mode only: what the flaw rests on.")
 
 
 class CriticPassResult(BaseModel):
@@ -106,13 +108,18 @@ _LENS_FOCUS: dict[str, str] = {
 _LENS_PROMPTS: dict[str, str] = {
     "pre_mortem": """You are performing a PRE-MORTEM on the strategy document below.
 
-It is 18 months from today. The strategy has failed. Your job is to enumerate, specifically and honestly, why it failed. Focus on:
-  - Assumptions that turned out to be wrong
+It is 18 months from today. The strategy has failed. Your job is to enumerate, specifically and honestly, the most likely reasons it would fail. Focus on:
+  - Assumptions most likely to prove wrong
   - The killing-blow scenario (what single thing most likely ended it)
   - Dependencies that didn't materialize
   - Misread market / user signals
 
 Be concrete. 'Users didn't want it' is weak. 'Users wanted X but we built Y because we confused stated preference with revealed preference' is strong.
+
+FACTUALITY — the failure is imagined; the document's facts are not:
+  - Write every failure as a scenario, not as history: "Failure scenario: …", "the likeliest way this fails is …", "if X, then …". Never state that something already happened.
+  - Never claim pilots, trials, launches, customer conversations, sales results, refusals by partners/vendors/regulators, or measured outcomes unless the document itself reports them. "Trials showed low conversion", "clinics told the team…", "vendors refused…" are forbidden unless the document says so.
+  - You may reason about what is likely ("independent clinics often lack API access"), but phrase it as a risk to check, not as an event.
 
 {focus_constraint}
 """,
@@ -179,10 +186,10 @@ Note what is genuinely evidenced. Your summary MUST open by saying what is alrea
 STEP 2 — DO THE ARITHMETIC YOURSELF. Do not ask the author to "show the math" when you can compute it. Combine the document's own numbers to derive every implied figure, for example:
   - growth: required starting base = target / (1 + monthly rate)^months;
   - revenue per customer = revenue target / number of customers it must come from;
-  - implied CAC = acquisition spend over the period / customers acquired. If the plan names a sales team and a customer target but no spend, bound the spend with a conservative labelled cost per person (e.g. "even at $5k/month fully loaded, 2 reps × 6 months = $60k; $60k ÷ 50 = $1,200") and compare it with any stated CAC. This arithmetic is required even though judging team size is out of scope;
+  - implied CAC = acquisition spend over the period / customers acquired. If the plan names a sales team and a customer target but no spend, bound the spend with a conservative cost per person that you label as your own assumption in the same sentence (e.g. "Assuming — not from the document — $5k/month fully loaded per rep: 2 reps × 6 months = $60k; $60k ÷ 50 = $1,200") and compare it with any stated CAC. This arithmetic is required even though judging team size is out of scope;
   - volume needed = supply units × required activity rate;
   - totals = units × per-unit value × take rate.
-Write the calculation in the flaw description with the numbers (e.g. "1.15^11 ≈ 4.65, so 10,000 at month 12 needs ≈ 2,150 at month 1"). Flag any contradiction between an implied figure and a stated one. Only divide a figure by a count that refers to the same population: do not divide a company-wide total (e.g. total ARR) by the size of a subset (e.g. "40 customers who have European subsidiaries") to get a per-customer average. Only call something a "contradiction" when two stated or derived figures cannot both be true; if the document is merely ambiguous (e.g. it is unclear whether a group of customers is the whole base or a subset), say it is ambiguous and do not rate it above medium. If a needed input is missing, you may bound it with a conservative, explicitly labelled assumption ("even at $5k/month fully loaded per rep…"); never present an assumed figure as the author's.
+Write the calculation in the flaw description with the numbers (e.g. "1.15^11 ≈ 4.65, so 10,000 at month 12 needs ≈ 2,150 at month 1"). Flag any contradiction between an implied figure and a stated one. Only divide a figure by a count that refers to the same population: do not divide a company-wide total (e.g. total ARR) by the size of a subset (e.g. "40 customers who have European subsidiaries") to get a per-customer average. Only call something a "contradiction" when two stated or derived figures cannot both be true; if the document is merely ambiguous (e.g. it is unclear whether a group of customers is the whole base or a subset), say it is ambiguous and do not rate it above medium. If a needed input is missing, you may bound it with a conservative assumption, labelled in the same sentence as "assuming (not from the document)"; never present an assumed figure as the author's. A contradiction that only appears because of a figure you assumed is at most HIGH, and must say that it depends on your assumption.
 
 STEP 3 — AUDIT EACH CLAIM BY ITS TYPE.
   - MEASURED results: how were they produced? Sample size, a single site or customer (n=1), survivorship, whether the conditions that produced the result will hold where it is being applied (e.g. a result achieved with the founders' full attention being projected onto partners or licensees).
@@ -228,9 +235,11 @@ _EARLY_STAGE_RULES = """IDEA-STAGE MODE. The founder declared the stage as: {sta
   - Keep "critical" for what is genuinely fatal on the founder's own words: internal contradictions, claims that are already false, or a plan that cannot work as described (e.g. a legal or practical blocker). Do not lower a genuine critical flaw because the idea is early.
   - A flaw whose substance is only that something is not stated yet (no price given, no numbers, no acquisition plan) is never "critical" at this stage: rate it "high" at most and say what to find out first.
   - Do NOT invent specifics (prices, costs, market sizes, conversion rates, competitor names) to make feedback look detailed. Work only with what the founder wrote; where something is unknown, say it is unknown.
-  - Rank flaws by how consequential the unknown or problem is for this idea succeeding."""
+  - Rank flaws by how consequential the unknown or problem is for this idea succeeding.
+  - Any figure you introduce that the founder did not give (a salary, a cost, a conversion rate, an example price) must be labelled as your assumption in the same sentence ("assuming …", "for example …"). Arithmetic on the founder's own numbers (e.g. monthly price × 12) needs no label.
+  - Never attach a currency or unit the founder did not write. If the founder gave a number without a currency, write the bare number (e.g. "800 per year") and, if it matters, ask which currency."""
 
-_LATE_STAGE_RULES = """STAGE NOTE. The founder declared the stage as: {stage_words}. Credit what is already measured, judge how far the plan extrapolates beyond it, and keep criticism proportionate to the evidence. Do not invent specifics the founder did not give."""
+_LATE_STAGE_RULES = """STAGE NOTE. The founder declared the stage as: {stage_words}. Credit what is already measured, judge how far the plan extrapolates beyond it, and keep criticism proportionate to the evidence. Do not invent specifics the founder did not give. Any figure you introduce that the founder did not give (a salary, a cost, a conversion rate, an example price) must be labelled as your assumption in the same sentence ("assuming …", "for example …"). Arithmetic on the founder's own numbers (e.g. monthly price × 12) needs no label. Never attach a currency or unit the founder did not write. If the founder gave a number without a currency, write the bare number (e.g. "800 per year") and, if it matters, ask which currency."""
 
 _GAP_CONTRACT = """
 Each flaw object must ALSO include a "gap" field naming the missing input it points at, chosen from exactly this list:
@@ -242,7 +251,13 @@ Each flaw object must ALSO include a "gap" field naming the missing input it poi
   "assumptions"      - an unstated condition that must be true for the plan to work
   "alternatives"     - what customers use today / the competition is unclear
   "differentiation"  - why customers would choose this over the alternatives is unclear
-Pick the single closest match. Use null only if the flaw genuinely points at none of these."""
+Pick the single closest match. Use null only if the flaw genuinely points at none of these.
+
+Each flaw object must ALSO include a "basis" field saying what the flaw rests on:
+  "contradiction" - two things the founder wrote cannot both be true (e.g. 20 videos × £2 cost = £40 against a £5 price)
+  "stated_fact"   - a problem that follows directly from something the founder explicitly wrote (e.g. "no sales staff" with "15 enterprise contracts in 3 months")
+  "missing"       - the document does not state or evidence something (no compliance plan, no demand evidence, price not validated, no data-access plan, no cost figures)
+A flaw whose basis is "missing" cannot be "critical": rate it "high" at most, and say what to find out first."""
 
 
 def _build_prompt(lens: str, input_text: str, retry: bool = False, stage: str | None = None) -> str:
@@ -352,6 +367,17 @@ def _draft_pass(
 CHECKED_LENSES = {"evidence_audit"}
 
 
+def cap_missing_criticals(result: CriticPassResult) -> CriticPassResult:
+    """Stage mode: a flaw that rests on missing information cannot be critical. Cap it at high and re-sort."""
+    order = ["critical", "high", "medium", "low"]
+    flaws = [
+        f.model_copy(update={"severity": "high"}) if f.severity == "critical" and f.basis == "missing" else f
+        for f in result.flaws
+    ]
+    flaws.sort(key=lambda f: order.index(f.severity))  # stable
+    return result.model_copy(update={"flaws": flaws})
+
+
 def run_critic_pass(
     lens: str,
     input_text: str,
@@ -363,17 +389,21 @@ def run_critic_pass(
     stage=None is the plain paste-a-plan critique, unchanged. A stage switches on idea-stage
     calibration and gap tags (idea builder, Revision 2).
     """
-    draft = _draft_pass(lens, input_text, model, stage)
-    if lens not in CHECKED_LENSES:
-        return draft
-    from app.services.checker import check_pass  # local import avoids a circular import
+    result = _draft_pass(lens, input_text, model, stage)
+    if lens in CHECKED_LENSES:
+        from app.services.checker import check_pass  # local import avoids a circular import
 
-    _, model_id = _parse_provider_model(model)
-    return check_pass(lens, _LENS_FOCUS[lens], input_text, draft, lambda prompt: _call_openai(model_id, prompt))
+        _, model_id = _parse_provider_model(model)
+        result = check_pass(lens, _LENS_FOCUS[lens], input_text, result, lambda prompt: _call_openai(model_id, prompt))
+    if stage is not None:
+        result = cap_missing_criticals(result)
+    return result
 
 
 __all__ = [
     "Flaw",
+    "Basis",
+    "cap_missing_criticals",
     "CriticPassResult",
     "CriticValidationError",
     "Gap",

@@ -34,6 +34,8 @@ INFORMS = {
 SEV = {"critical": "C", "high": "H", "medium": "M", "low": "L"}
 PILOT_RE = re.compile(r"\b(pilots? (showed|found|revealed|produced)|in (the )?pilot|clinics told|customers told|trial(s)? (showed|found))\b", re.I)
 MONEY_RE = re.compile(r"[£$]\s?\d[\d,]*(?:\.\d+)?")
+LABEL_RE = re.compile(r"assum|example|e\.g\.|for instance|if |suppose|hypothetical|illustrat", re.I)
+PAST_RE = re.compile(r"\b(showed|revealed|refused|told (us|the team)|collapsed|turned out|proved)\b", re.I)
 
 
 # ---------- parsing / selection ----------
@@ -133,6 +135,47 @@ def all_text(*lens_dicts: dict) -> str:
     return "\n".join(parts)
 
 
+def unlabelled_money(text: str, input_money: set) -> set:
+    """Money figures not in the input whose containing sentence has no label word."""
+    found = set()
+    for sent in re.split(r"(?<=[.!?])\s+|\n+", text):
+        if LABEL_RE.search(sent):
+            continue
+        found |= set(MONEY_RE.findall(sent)) - input_money
+    return found
+
+
+def past_tense_hits(*lens_dicts: dict) -> list[str]:
+    hits = []
+    for ld in lens_dicts:
+        r = ld.get("pre_mortem")
+        if not r:
+            continue
+        parts = [r.get("summary", "")]
+        for f in r["flaws"]:
+            parts += [f["title"], f["description"], f["question"]]
+        text = "\n".join(parts)
+        for m in PAST_RE.finditer(text):
+            seg = text[max(0, m.start() - 50):m.end() + 50].replace("\n", " ")
+            hits.append(f"pre-mortem past-tense (check): {seg!r}")
+    return hits
+
+
+def basis_counts(lenses: dict) -> dict:
+    out: dict = {}
+    for r in lenses.values():
+        for f in r["flaws"]:
+            if f["severity"] == "critical":
+                b = f.get("basis") or "none"
+                out[b] = out.get(b, 0) + 1
+    return out
+
+
+def critical_missing(*lens_dicts: dict) -> int:
+    return sum(f["severity"] == "critical" and f.get("basis") == "missing"
+               for ld in lens_dicts for r in ld.values() for f in r["flaws"])
+
+
 def watch(case: dict, first: dict, refined: dict) -> list[str]:
     text = all_text(first, refined)
     flags = []
@@ -142,10 +185,11 @@ def watch(case: dict, first: dict, refined: dict) -> list[str]:
             for m in re.finditer(pat, text):
                 flags.append(f"T09 currency attached: {m.group(0)!r}")
     else:
-        for m in sorted(set(MONEY_RE.findall(text)) - input_money):
+        for m in sorted(unlabelled_money(text, input_money)):
             flags.append(f"money not in input: {m!r}")
     for m in PILOT_RE.finditer(text):
         flags.append(f"pilot/trial phrase: {m.group(0)!r}")
+    flags += past_tense_hits(first, refined)
     return flags
 
 
@@ -159,7 +203,7 @@ def md_critique(lenses: dict) -> str:
         r = lenses[l]
         out.append(f"### {l}\n\n{r['summary']}\n")
         for f in r["flaws"]:
-            out.append(f"- **{f['title']}** [{f['severity'].upper()}] ({f.get('gap')})\n  {f['description']}\n  -> {f['question']}\n")
+            out.append(f"- **{f['title']}** [{f['severity'].upper()}] ({f.get('gap')}{'; ' + f['basis'] if f.get('basis') else ''})\n  {f['description']}\n  -> {f['question']}\n")
     return "\n".join(out)
 
 
@@ -276,6 +320,8 @@ def main() -> int:
         print(f"   questions: {[q['gap'] for q in r.get('questions', [])]}  answered: {(r.get('answered') or {}).get('gap')}")
         if "refine_lenses_ok" in r:
             print(f"   refined shape: {r.get('refined_shape')}")
+            print(f"   criticals by basis: first {basis_counts(r['first'])} refined {basis_counts(r['refined'])}")
+            print(f"   critical+missing (should be 0): {critical_missing(r['first'], r['refined'])}")
             print(f"   refined lenses {r['refine_ran']} vs expected {r['expected_lenses']}: {'OK' if r['refine_lenses_ok'] else 'MISMATCH'}")
             print(f"   reuse 409: {'yes' if r['reuse_refused_409'] else 'NO (status %s)' % r['reuse_status']}")
             print("   flags for human review: " + ("; ".join(r["watch"]) if r["watch"] else "none"))
