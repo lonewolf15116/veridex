@@ -66,3 +66,19 @@ Saving drafts on the server, accounts, AI-written prose, file or deck upload, vo
 
 ## Effort
 About 0.5 day for the backend, 1–1.5 days for the frontend and 0.5 day for evaluation.
+
+---
+
+## Revision 2 — critique first (29 Oct 2026, after independent review)
+
+Supersedes the flow above where they disagree; the nine questions become a question bank + optional full form.
+
+1. **Idea + stage** — two sentences, no questionnaire.
+2. **Provisional critique** — all five lenses in an idea-stage mode: plausible failure modes, missing evidence vs contradictions kept apart, most consequential unknowns ranked; no invented specifics.
+3. **Targeted questions** — every flaw carries a `gap` tag from a fixed list (`buyer`, `demand_evidence`, `pricing`, `acquisition`, `key_numbers`, `assumptions`, `alternatives`, `differentiation`); code maps tags → bank questions and shows the 2–4 that matter most, each with the finding that prompted it.
+4. **Re-run** — only the lenses the answers inform, given idea + stage + founder answers (with tags) + remaining unknowns; critique text is never passed in as evidence.
+5. **Gaps you filled** — new critique beside the answered questions and the findings each addresses; no flaw-by-flaw diff.
+
+Other decisions: new optional question "Why would customers choose this over the alternatives?"; AI follow-ups deferred; no severity quota at idea stage (contradictions and false claims stay critical); "Measured" shown as founder-reported; one refinement free per critique; main page, paste-a-plan route unchanged.
+
+Testing: functional check on 3 idea types (questions trace to findings, nothing invented, second critique uses answers). Drop-off effects come from real usage, not synthetic tests.
