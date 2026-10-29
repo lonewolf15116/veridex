@@ -17,3 +17,24 @@
 - **Idea-stage criticals:** 12 criticals across 15 lens runs, most of them "X is not stated" (no price, no numbers,
   no acquisition plan). Added one idea-mode rule: a flaw that is only "not stated yet" is at most high; genuine
   blockers (e.g. legal access to receipts, on-site liability) stay critical. To be confirmed in the functional test.
+
+## Functional test, 29 Oct 2026 (backend `68641de`, frontend `535c24b`) — `run_builder_check.py`
+
+| Check | I1 consumer app | I2 B2B tool | I3 marketplace |
+|---|---|---|---|
+| Gap tags valid | 27/27 | 29/29 | 28/28 |
+| Questions | demand_evidence, acquisition, key_numbers, pricing | differentiation, acquisition, demand_evidence, key_numbers | demand_evidence, acquisition, pricing, key_numbers |
+| Refinement ran only informed lenses | yes (4) | yes (3) | yes (4) |
+| Gaps filled / skipped reported, no "resolved" claims | yes | yes | yes |
+| No second token issued | yes | yes | yes |
+| Token reuse refused (409, not charged) | yes | yes | yes |
+| Criticals (first critique) | 2 | 2 | 1 |
+
+Criticals fell from 12 (gap check, before the idea-stage rule) to 5. Three are genuine blockers (cold-start relevance,
+legal access to client receipts, trivially replicable core). Two are still "no evidence that X" (I1 demand, I3 supply),
+which the rule says should be high at idea stage. Recorded as a known limitation; no further tuning in Revision 2.
+
+Refinement free path was exercised without the eval token. Allowance not consumed by refinements is covered by
+`tests/test_builder.py::test_refinement_does_not_consume_daily_allowance`.
+
+**Decision: Revision 2 ships.**
