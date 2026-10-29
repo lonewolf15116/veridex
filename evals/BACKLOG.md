@@ -34,6 +34,29 @@ Each one needs a reproducible case before any prompt change.
 - Evidence Audit false alarms on Strong documents (holdout: 6/10 after checker round 1).
 - Idea stage: 2 remaining "X not validated" criticals in the I1–I3 run.
 
-## Not yet checked
-- Refinement journey on the dental SaaS case (which questions, which lenses re-ran, faithfulness to answers).
-  The reviewed output came from the paste-a-plan route, so it says nothing about Rev 2 idea-stage calibration.
+## Review closed 2026-10-30 (suite runs 1 and 2, adjudicated with the external reviewer)
+Revision 2 stays deployed. Fixed in between: the skipped-question bug (7d907ea, verified on T01/T04/T05).
+
+Adjudicated examples (keep as fixed reference cases):
+| Case | Text | Verdict |
+| --- | --- | --- |
+| T05 run 2, Pre-Mortem | "As a result, trials showed low conversion to subscriptions." | Invented event (failure) |
+| T04 run 1, Pre-Mortem | "clinics and some insurers refused to share identifiable patient data" | Invented event (failure) |
+| T01 runs 1–2, Evidence Audit | "Conservatively, at $5k fully loaded per rep per month … implied CAC = $1,200" | Unlabelled model assumption (failure) |
+| T04 run 2, Evidence Audit | "For context: … signing 100 clinics is £178,800/year; whether that is reachable depends…" | Conditional calculation (acceptable) |
+| T01 run 2 | "299 × 12 = $3,588" | Derived from founder input (acceptable) |
+| T09 run 1, Adversarial / Execution | "$800/yr" for a price the founder gave without a currency | Invented currency (failure) |
+
+## Next scheduled round: required outcomes
+| Check | Required outcome |
+| --- | --- |
+| Pre-Mortem fabrication (first priority) | No asserted pilots, trials, refusals or conversations absent from the input |
+| Model-supplied figures | Explicitly marked as assumptions; never treated as founder evidence inside a calculation |
+| Conditional scenarios (e.g. £178,800) | Still permitted |
+| Unspecified currency (T09) | Strict: no symbol attached to the founder's figure; alternatives only as labelled hypotheticals |
+| Severity | Missing evidence distinguished from a confirmed blocker or contradiction (T06 must keep its criticals) |
+| Revision 2 mechanics | No regression in gap tags, routing, single-use refinement |
+
+Screening rules (regex for past-tense verbs, money not in input, currency symbols) only flag candidates. A human or
+a checker must confirm each one against the input: hypotheticals like "if clinics refused…" are legitimate, and
+fabrication can happen without the listed verbs.
