@@ -1,0 +1,427 @@
+{
+  "label": "v4-checker",
+  "lenses": [
+    "evidence_audit"
+  ],
+  "api": "https://veridex-backend-n0nf.onrender.com",
+  "runs": [
+    {
+      "doc": "H01-solar-cold-pods.md",
+      "seconds": 42.4,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Weak. The team has a short workshop prototype and 11 cooperative interviews, and cites sector reports showing 30\u201340% post\u2011harvest loss. The most important remaining issues are clear numeric inconsistencies (revenue and payback arithmetic) and several load\u2011bearing, unsourced assumptions about spoilage reduction and deployment ramp.",
+          "flaws": [
+            {
+              "title": "Revenue arithmetic contradiction: 300 units \u00d7 $2,400 \u2260 $1.2M",
+              "severity": "critical",
+              "description": "The document states a price of $2,400 per pod and a year\u2011one volume of 300 pods, then reports about $1.2M in revenue. 300 \u00d7 $2,400 = $720,000, not $1,200,000. One of the three numbers (unit price, unit count, or reported revenue) is wrong. This is a core financial inconsistency that breaks downstream metrics that depend on total revenue.",
+              "question": "Which of these is correct \u2014 unit price, unit count, or year\u2011one revenue \u2014 and provide the consistent arithmetic (unit price \u00d7 units = revenue) used in the plan?"
+            },
+            {
+              "title": "Payback claim contradicts stated monthly savings",
+              "severity": "high",
+              "description": "The plan claims a $2,400 pod is recovered in roughly 14 months by $75/month in avoided spoilage. But $2,400 \u00f7 $75 = 32 months. To repay in 14 months would require ~$2,400 \u00f7 14 \u2248 $171/month in savings. The doc does not show any financing subsidy, operating-cost offset, or aggregation logic that would reconcile these numbers.",
+              "question": "Provide the full payback calculation: clarify whether the $75/month saving is per farmer, per cooperative, or per pod, and show the math (including any financing terms, subsidies or assumed aggregated beneficiaries) that produces a 14\u2011month payback."
+            },
+            {
+              "title": "Assumed 35% spoilage reduction is unsourced and load\u2011bearing",
+              "severity": "high",
+              "description": "The team adopts the sector midpoint (30\u201340%) as the share their pods will remove, but sector loss rates do not equal avoidable loss from lack of cooling at collection points. The claim that pods will remove ~35% of crop losses is load\u2011bearing for demand and savings claims yet no pilot or study is cited that isolates the cooling effect at collection points for these crops in western Kenya.",
+              "question": "Provide empirical evidence (pilot data, cited study, or detailed source) showing the percentage of spoilage that is specifically eliminated by colocated cooling pods for tomatoes, kale and French beans in your target region."
+            },
+            {
+              "title": "Prototype test is too limited to support performance and savings claims",
+              "severity": "medium",
+              "description": "The prototype ran three weeks in a workshop setting \u2014 not in the field with real harvest loads, ambient temperatures, user behaviour and the collection-truck interval. Claims that the pod maintains 8\u201310\u00b0C for up to five days and will produce the stated savings have not been demonstrated under operational conditions.",
+              "question": "Please provide results from an in\u2011field pilot (temperature logs, power/battery performance, uptime, measured spoilage reduction versus controls) that demonstrate 8\u201310\u00b0C holding for up to five days under real-use conditions."
+            },
+            {
+              "title": "Deployment ramp (40 in 5 months \u2192 300 in year) is internally ambiguous",
+              "severity": "medium",
+              "description": "You state the first 40 units will be in the field within five months of funding and expect 300 in year one. To reach 300 by month 12 requires deploying the remaining 260 units in ~7 months \u2248 37 units/month. No manufacturing capacity, supply lead times, or acceptance/testing buffer is provided to support that ramp, leaving the volume forecast unsupported.",
+              "question": "Provide a month-by-month production and deployment schedule (manufacturing capacity, lead times, and acceptance/testing milestones) that shows how you will deliver 300 units in the first 12 months and confirms the 40-in\u20115\u2011months claim is compatible with the 300/year target."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H02-school-bus-routing.md",
+      "seconds": 49.9,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Weak. The plan is pre-revenue, relying on two district simulations and three non-binding LOIs; simulations show potential but lack methodological detail. The most important remaining issues are an arithmetic contradiction in the growth projection and missing sourcing/methodology for the 12% bus reduction and the $70k per-bus cost, both of which are load-bearing.",
+          "flaws": [
+            {
+              "title": "Customer-growth arithmetic contradicts the 120-district claim",
+              "severity": "critical",
+              "description": "You claim starting with 6 paying districts and growing 25% monthly will reach 120 districts in 12 months, but 6*(1.25)^12 \u2248 6*14.55 \u2248 87 districts, not 120. To hit 120 from 6 in 12 months requires ~28.3% monthly growth (since (1+r)^12 = 120/6 = 20 \u21d2 1+r \u2248 20^(1/12) \u2248 1.283). This is a direct arithmetic contradiction that changes expected ARR (87\u00d7$18k = $1.566M vs 120\u00d7$18k = $2.16M).",
+              "question": "Which is incorrect: the stated 25% monthly growth rate, the 12-month target of 120 districts, or the 6-district starting base \u2014 provide the corrected growth-rate / starting-base / timeline math and the resulting ARR at 12 months."
+            },
+            {
+              "title": "Core benefit (12% bus reduction) rests on two small simulations with no methods or sensitivity",
+              "severity": "high",
+              "description": "The headline 12% bus reduction is measured only on simulations using two districts' data; you give no methodological details (constraints, student counts, special-education routes, time windows, driver/work rules, rerouting friction) or sensitivity analysis. This claim is load-bearing: using your own numbers, 0.12*85 buses* $70,000 = $714,000 saved per mid-sized district annually, versus your $18,000 price (a ~39.7\u00d7 ROI). If the 12% is overstated by a few points the value proposition changes dramatically.",
+              "question": "Provide the full simulation outputs and methodology for each of the two districts (student counts, route constraints used, bus counts before/after, how weekly rebuilder was modelled, and a sensitivity table showing savings at \u00b12\u20135 percentage points)."
+            },
+            {
+              "title": "No sourced evidence for cooperative-purchasing shortcut or customer-acquisition assumptions",
+              "severity": "high",
+              "description": "You rely on cooperative purchasing to avoid slow procurement and to enable the rapid adoption implied by the growth target, but you provide no evidence of specific cooperative contracts that apply to your target districts or any conversion/CAC assumptions. Growth claims therefore lack the load-bearing inputs (conversion rates, sales cycle length, CAC) required to assess feasibility.",
+              "question": "List the specific cooperative purchasing contracts you will use, with documentation showing they cover the target districts and services, and provide the assumed conversion rate, sales cycle length and CAC used to project monthly customer growth from 6 to your stated target."
+            },
+            {
+              "title": "Start-next-school-year '6 paying districts' claim unsupported by signed commitments",
+              "severity": "medium",
+              "description": "You state you will start the next school year with 6 paying districts but report only three non-binding LOIs. Non-binding LOIs do not guarantee paid pilots or deployments; without signed contracts or purchase orders the 6-customer starting base is an unproven forecast.",
+              "question": "Produce signed contracts, purchase orders, or other binding commitments (or a documented conversion plan with timelines and responsible contacts) that show you will have 6 paying districts at launch."
+            },
+            {
+              "title": "The $70,000 per-bus annual operating cost is unsourced and load-bearing for ROI",
+              "severity": "medium",
+              "description": "Your per-bus cost drives the headline dollar savings (12% of 85 buses \u00d7 $70k \u2192 $714k saved per district). The $70k figure is asserted with no source or breakdown (fuel, maintenance, drivers, capital depreciation, overhead), so the economic case is not verifiable.",
+              "question": "Provide the source(s) or district-level accounting that justify the $70,000/year per-bus operating cost (or provide a breakdown showing how you computed that figure)."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H03-prefab-adu-texas.md",
+      "seconds": 54.5,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Weak. The team has an LOI for a 40,000 ft\u00b2 lease, equipment quotes, and 14 refundable deposits, but no construction, pilots, or tested demand funnel. The most important remaining issues are the funding/runway mismatch (first\u2011year COGS exceeds stated start\u2011up capital), an unsourced per\u2011unit cost that drives margins, and an unvalidated plan to scale demand to 120 units/year.",
+          "flaws": [
+            {
+              "title": "Startup capital vs first\u2011year cost and runway is unsupported",
+              "severity": "critical",
+              "description": "You state $4.5M of start\u2011up capital but no breakdown. Your own per\u2011unit COGS assumption ($76,440) implies first\u2011year COGS = 76,440 \u00d7 120 = $9,172,800, which exceeds the entire stated start\u2011up capital. Even if some COGS are paid on delivery, $4.5M is only ~49% of the first\u2011year COGS, so it is not self\u2011evident you can fund production to reach 120 units without external financing or customer prepayments. This single arithmetic gap could make the plan infeasible.",
+              "question": "Provide a detailed use\u2011of\u2011funds and cash runway: show the $4.5M line items (equipment, leasehold, deposits, hiring, working capital) and a month\u2011by\u2011month cash flow showing how you will fund the forecasted COGS ($9,172,800) until customer receipts cover outflows."
+            },
+            {
+              "title": "Demand scaling claim: 14 deposits \u2192 120 annual customers is untested and load\u2011bearing",
+              "severity": "high",
+              "description": "You have 14 refundable $1,000 deposits from a single social post but forecast a 120 unit/year run rate. That requires converting at least 106 additional buyers (120/14 \u2248 8.57\u00d7 current expressed demand) and assumes channels (paid search, builder partnerships) will scale with acceptable cost and conversion. No experiments, conversion rates, or CAC estimates are provided, so demand is a major unvalidated assumption.",
+              "question": "Provide tested funnel metrics (lead \u2192 deposit \u2192 signed contract \u2192 closed sale) or, if not available, a plan with target conversion rates and cost per acquisition showing how many leads and what CAC are required to deliver 120 closed sales/year and the evidence for those numbers."
+            },
+            {
+              "title": "Per\u2011unit cost ($76,440) is unsourced and load\u2011bearing",
+              "severity": "high",
+              "description": "The plan uses $76,440 per unit for materials, labour and delivery to compute a 22% gross margin. That line item drives profitability and required funding but is presented without a bill of materials, supplier quotes, labour productivity assumptions, or delivery/install cost breakdown. If that number is optimistic the margin and funding math collapse.",
+              "question": "Supply the detailed per\u2011unit cost build (BOM with supplier quotes or line\u2011item estimates, labour hours \u00d7 rates, and delivery/install quotes) and state which costs are paid upfront versus on completion."
+            },
+            {
+              "title": "Timeline to first shipment (round closes by spring \u2192 first unit in Q4) is unsupported",
+              "severity": "high",
+              "description": "You forecast a first shipment in Q4 if the seed round closes by spring, but you have not started construction. That timeline requires lease signing, tenant improvements, equipment procurement and installation, hiring and training, pilot builds and permitting \u2014 none of which are evidenced (no vendor lead times, permit durations, or pilot results). This is a consequential schedule assumption.",
+              "question": "Provide a detailed project schedule (critical path) with vendor lead times, permit/inspection milestones, expected pilot acceptance criteria, and the earliest and latest dates for first ship under realistic vendor/permit lead times."
+            },
+            {
+              "title": "Implied concurrent-build requirement vs facility layout not shown",
+              "severity": "medium",
+              "description": "A 14\u2011week in\u2011factory build time implies required concurrent in\u2011process slots = 14 weeks \u00d7 (120 units / 52 weeks) \u2248 32.3 slots (\u224833 units in progress simultaneously) to hit 120/year. You claim a 40,000 sqft warehouse but provide no floorplan or per\u2011unit in\u2011process footprint to show the space supports ~33 units plus equipment, staging, materials, and flow.",
+              "question": "Provide a factory layout or calculations showing the per\u2011unit in\u2011progress footprint, number of bays/slots, and how the 40,000 sqft space supports the ~33 concurrent builds plus equipment, storage and staging needed to reach 120 units/year."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H04-pediatric-physio-denver.md",
+      "seconds": 49.7,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Strong. Denver operations are proven with real revenue ($612k last quarter), 410 active families, measured retention (81%) and clear referral sources. The most important remaining issues are internal arithmetic inconsistencies (CAC and stated lifetime gross profit) and missing per\u2011city KPIs and replication evidence to validate the $5M for eight cities.",
+          "flaws": [
+            {
+              "title": "Critical arithmetic contradiction in CAC",
+              "severity": "high",
+              "description": "You state marketing spend last quarter was $31,200 and you signed 260 new families, which implies CAC = $31,200 / 260 \u2248 $120 per family. The document also states CAC = $85. Those two figures cannot both be correct and CAC is load\u2011bearing for your raise and per\u2011city economics.",
+              "question": "Reconcile and show the exact CAC calculation: supply the numerator and denominator used to produce $85 and explain why it differs from $31,200 / 260 = $120."
+            },
+            {
+              "title": "High: '~$900 lifetime gross profit per family' conflicts with observed revenue",
+              "severity": "medium",
+              "description": "Observed revenue implies far higher gross revenue per family: $612,000 / 410 \u2248 $1,493 per family per quarter, i.e. \u2248$5,972 per family per year (149*10.02 sessions/quarter*4). A $900 lifetime gross profit implies either an implausibly low gross margin or a very short lifetime; neither is shown. This number is load\u2011bearing for ROI and funding needs.",
+              "question": "Show the full LTV/gross profit calculation: assumed sessions per family over lifetime, gross margin per session (therapist cost vs price), and resulting lifetime gross profit, and reconcile it with the observed ~$5,972/year revenue per family."
+            },
+            {
+              "title": "High: city replication claim lacks the per\u2011city targets and population scaling",
+              "severity": "medium",
+              "description": "You plan 25 metro launches in three years and say each new city will reach Denver's per\u2011capita family numbers within 18 months, but you give no per\u2011city family targets, timelines, or evidence that Denver's referral density scales. Without explicit per\u2011city targets we cannot verify required hires, CAC, or funding sufficiency (e.g. $5M for eight cities).",
+              "question": "Provide per\u2011city KPIs for a new market (target active families at 18 months, sessions/month per family, therapists required) and show how $5M for eight cities maps to those targets (i.e. cost per city and break\u2011even family count)."
+            },
+            {
+              "title": "Medium: heavy dependence on one pediatric group (60% of new families) is measured but not stress\u2011tested",
+              "severity": "medium",
+              "description": "You report one large paediatric group in south Denver sends ~60% of new families. That concentration is a directly measured source of growth in Denver but you assume signing 'one anchor paediatric group' per new city will reproduce this intake without showing availability or conversion rates of comparable anchors in target metros.",
+              "question": "For each target metro, list the number of comparable paediatric groups you can approach and provide any signed LOIs, historical conversion rates from approaching groups to referral flow, or a pipeline demonstrating you can replicate a 60% share from a single anchor."
+            },
+            {
+              "title": "Medium: 'fully booked' therapists \u2014 utilization definition and capacity not provided",
+              "severity": "medium",
+              "description": "You state every therapist is 'fully booked'. From revenue and price we derive total sessions last quarter = $612,000 / $149 \u2248 4,108 sessions, which is \u2248216 sessions per therapist per quarter or \u224816.6 sessions per therapist per week. That number needs context (hours, billable vs non\u2011billable time) to judge replicability and to size hires for new cities.",
+              "question": "Define 'fully booked' (sessions/week or billable hours/week per therapist) and confirm the derived figure: 4,108 sessions/19 therapists/13 weeks \u2248 16.6 sessions/week \u2014 is that correct and is it your targeted max billable load per therapist?"
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H05-orchard-irrigation-sensors.md",
+      "seconds": 48.3,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Mixed. The company has measurable early traction \u2014 three paying customers and $212,000 ARR (including $47,000 hardware lease fees). The most important remaining issues are internal inconsistencies in reported revenue shares and CAC payback arithmetic, and that the 18% water-saving figure is based on only three sites with a confounded weather baseline yet is being extrapolated across other crops without evidence.",
+          "flaws": [
+            {
+              "title": "Revenue concentration percentages are inconsistent (sum >100%)",
+              "severity": "critical",
+              "description": "The document states revenue is 52%, 31% and 22% from three customers; 52+31+22 = 105%, which is arithmetically impossible for shares of a whole. This is a direct internal contradiction in the reported revenue breakdown and undermines trust in the reported numbers.",
+              "question": "Provide corrected revenue shares (percentages or absolute dollars) for each customer and the total; explain the source of the current 52/31/22 figures and reconcile them with the stated $212,000 ARR."
+            },
+            {
+              "title": "Claimed CAC payback (<6 months) contradicts provided CAC and margin numbers",
+              "severity": "high",
+              "description": "You report acquisition cost \u2248 $18,000 per grower and typical gross margin \u2248 $2,500/month. That implies payback = $18,000 \u00f7 $2,500 \u2248 7.2 months, not under six months as stated. Either the CAC, the $2,500 monthly margin, or the payback claim is incorrect or uses a different margin definition.",
+              "question": "Which figures are correct: show the calculation that yields 'under six months' (include whether you use gross margin or net margin, and the exact monthly margin number used)."
+            },
+            {
+              "title": "18% water saving is measured on n=3 with a confounded weather baseline",
+              "severity": "high",
+              "description": "The 18% water reduction comes from your three orchards comparing 2025 to a prior-year that was wetter. With only three customers and different-year weather, the result may be confounded by baseline variability and not attributable to the service alone. This figure is used as the core 'value' claim for scaling.",
+              "question": "Provide the raw per-block water-use data, how usage was measured (meters/estimates), rainfall/ET differences between years, and the statistical comparison method that isolates the service effect from weather and other year-to-year changes."
+            },
+            {
+              "title": "Applying the 18% saving to other crops (pistachios, walnuts, grapes) is unsourced",
+              "severity": "high",
+              "description": "You state the physics of soil moisture is the same across crops and therefore apply the 18% saving to all crops. Crop-specific irrigation practices, rooting depth, and economic sensitivities differ; without measured trials or agronomic references this extrapolation is unsupported and load-bearing for projected impact.",
+              "question": "Provide evidence (trial data, published agronomy studies, or pilot results) that the measured saving for almonds transfers at similar magnitude to pistachios, walnuts and wine grapes, or provide a crop-specific savings model."
+            },
+            {
+              "title": "$8M raise to reach 40,000 acres lacks arithmetic linkage to stated CAC and scale",
+              "severity": "medium",
+              "description": "You plan to expand from 1,100 to 40,000 acres. Using current average acres per customer (1,100/3 \u2248 366.7 acres/customer), that implies ~109 total customers, so ~106 new growers. At $18k acquisition cost that implies ~$1.9M in acquisition spend\u2014much less than $8M\u2014yet no allocation or implied CAC-per-acre is provided. The raise sizing is therefore unsupported by the given unit economics.",
+              "question": "Show the detailed use-of-proceeds / model that maps the $8M to (a) number of growers and acres acquired, (b) implied CAC per grower and per acre, and (c) the timeline to hit 40,000 acres using your stated $18k CAC and current average acres/customer assumptions."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H06-nurse-english-prep.md",
+      "seconds": 51.6,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Strong. The document shows real revenue (1,900 enrollments, $266k) and measured ad spend, proving the Philippines channel has measurable traction. The key remaining issues are survey nonresponse bias on the 71% pass rate, insufficient statistical power of the $20k market tests to reliably assess the 60% pass threshold, and ambiguity whether $30.50 is full CAC.",
+          "flaws": [
+            {
+              "title": "$20k test can be too small to decide the 60% pass-rate threshold reliably",
+              "severity": "high",
+              "description": "The decision rule is to scale only if survey-reported pass rate >60%. If the test spend yields enrollments at the $60 threshold, 20,000/60 \u2248 333 enrollments; at the historical ~50% survey response that is \u2248167 responses. For p\u22480.60 the 95% CI half-width \u22481.96\u00b7\u221a(0.6\u00b70.4/167) \u2248 7.5 percentage points, so an observed 60\u201365% could be noise and you cannot confidently distinguish 60% from materially lower true pass rates.",
+              "question": "Show the expected enrollment and respondent counts for each $20k test under plausible CAC scenarios (e.g., $30, $45, $60) and the corresponding 95% CI on the observed pass rate so we can see whether the test is powered to decide >60%."
+            },
+            {
+              "title": "Survey-based 71% pass rate likely biased by 50% response rate",
+              "severity": "medium",
+              "description": "The reported 71% pass rate comes from a survey with ~50% response. Nonresponse can materially bias the estimate: with 1,900 students and 950 respondents, 950\u00b70.71 = 674 reported passes. If non-respondents had lower pass rates (or all failed) overall pass would be 674/1900 = 35.5%. No analysis of respondent representativeness is provided.",
+              "question": "Provide the raw survey counts (n responded, n reported pass), show response-rate by cohort (e.g., month/cohort), and supply any evidence that responders are representative (or provide verified exam pass records for the whole cohort)."
+            },
+            {
+              "title": "The $30.50 figure is ad-spend per enrollment, not clearly a full CAC",
+              "severity": "medium",
+              "description": "You state ad spend was $58,000 and calculate \u2248$30.53 per enrolled student (58,000/1,900). It is unclear whether this is being used as your full customer acquisition cost (CAC) \u2014 i.e., whether other acquisition expenses (creative production, agency fees, organic/partner channels, discounts) are included. The test decision uses a $60 per-enrollee threshold but it's unspecified if that is ad-only or full CAC.",
+              "question": "Clarify what exactly was included in the $58k and $30.50 figures (ads only vs full CAC) and supply a reconciled full-CAC for the last 12 months with line items."
+            },
+            {
+              "title": "Ambiguous 'refunds under 3% of sales' \u2014 percent of transactions or revenue and absolute counts missing",
+              "severity": "low",
+              "description": "You report refunds under 3% of sales but do not state whether this is 3% of transactions (enrollments), 3% of revenue, or 3% of orders in a given period. That ambiguity prevents assessing the absolute number of refunds (e.g., 3% of 1,900 enrollments = 57 refunds; 3% of $266k = $7,980).",
+              "question": "State refunds as both percent and absolute numbers for the 12-month period (number of refunds and dollars refunded) and whether refunds are front-loaded by week or cohort."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H07-roofing-maintenance.md",
+      "seconds": 42.4,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Strong. The company is an established, profitable roofing contractor with real revenue, customers, and an existing maintenance pilot (140 buildings with high renewals). The largest remaining evidence gaps are unsupported margin and capacity assumptions and an unproven sign-up ramp for scaling to 400 maintained buildings.",
+          "flaws": [
+            {
+              "title": "45% gross margin for maintenance is asserted but unsourced",
+              "severity": "high",
+              "description": "The plan assumes the new maintenance program will run at a 45% gross margin without showing how that was measured or how costs were allocated. Arithmetic: 400 buildings \u00d7 $2,100 = $840,000 revenue; at 45% gross margin that yields $378,000 gross profit. That figure must cover loaded technician costs ($204,000), plus truck, software and other variable/allocable costs \u2014 leaving $174,000 for all remaining costs and contribution. There is no breakdown to show COGS components, whether technician loaded pay is included in the 55% COGS, or historical margins for the 140-building pilot.",
+              "question": "Provide a detailed cost build-up (COGS line items) that demonstrates how you arrive at 45% gross margin, showing which items (hourly tech pay, benefits, vehicle depreciation, parts, travel, scheduling software, admin time) are included and the historical margin on the current 140-building portfolio."
+            },
+            {
+              "title": "No evidence that three technicians can service 400 buildings",
+              "severity": "medium",
+              "description": "The plan proposes adding three technicians (3 \u00d7 $68k = $204k) but gives no capacity calculation. Simple division: 400 buildings \u00f7 3 technicians = ~133 buildings per technician. There is no data on average visits per building per year, time per visit, travel time, or how seasonal load is distributed. Without this, the staffing decision could under- or over-provision labor and break the program's economics.",
+              "question": "Supply a technician capacity model: average visits/year per building, average hours per visit (including travel and administration), productive hours per technician per year, and how 3 technicians produce the required service volume to cover 400 buildings."
+            },
+            {
+              "title": "Scaling renewal rate and sign-up ramp is unsupported",
+              "severity": "medium",
+              "description": "You rely on a 91% renewal rate observed on 140 contracts to project expansion to 400 buildings. To reach 400 from 140 requires +260 buildings in 24 months \u2248 10.8 net new contracts/month (or +110 in 12 months if you must hit 250 to continue hiring \u2248 9.2/month). There's no evidence of the pipeline or conversion rates from outreach/upsell to signed maintenance at scale, nor whether the 140 pilot customers are representative of the broader customer base.",
+              "question": "Show historical acquisition/conversion data for maintenance: number of prospects contacted, conversion rate to paid maintenance, churn beyond year 1, and the current pipeline that supports signing ~11 net new maintenance contracts/month (or 9+/month in year 1)."
+            },
+            {
+              "title": "Truck and scheduling software costs are unspecified and load-bearing",
+              "severity": "medium",
+              "description": "The plan lists 'one truck and scheduling software' as additional items but gives no dollar amounts or whether these are capital expenditures or included in the loaded technician cost. These costs materially affect profitability: if they are significant (capital depreciation, leasing, or subscription fees), they could erode the $174k residual gross margin after tech wages.",
+              "question": "Provide the expected one-time and recurring costs (purchase/lease, fuel, insurance, maintenance, and depreciation for the truck; license/implementation/recurring fees for scheduling software) and state whether they are included in the $68k loaded technician cost or in COGS."
+            },
+            {
+              "title": "\"Rarely need emergency repair\" claim is unquantified",
+              "severity": "medium",
+              "description": "The document asserts that customers on maintenance 'rarely need an emergency repair' and that maintenance smooths crew workload, but offers no quantified reduction in emergency calls or measured impact on crew utilization. This claim underpins the benefit case (customer satisfaction, smoothing, possibly lower contingency costs) but is unmeasured here.",
+              "question": "Provide data comparing emergency repair incidence and crew-hours for customers with maintenance versus those without (e.g., emergency calls per 100 buildings/year and average emergency repair cost), preferably from the existing 140-building sample."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H08-vet-fifth-clinic.md",
+      "seconds": 47.5,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Strong. The company is an operating veterinary group with reported revenue, margin and a signed lease for a new clinic. Key remaining evidence gaps are internal inconsistencies in the growth arithmetic and missing year\u2011by\u2011year pro formas and local market data to support the new\u2011clinic revenue and cash sufficiency assumptions.",
+          "flaws": [
+            {
+              "title": "Stated historical growth rate contradicts the arithmetic",
+              "severity": "high",
+              "description": "The doc says revenue grew from $7.9M to $10.4M over four years 'about 6.5% a year.' But (10.4/7.9)^(1/4)-1 \u2248 7.1% CAGR, not 6.5%. That is a direct arithmetic contradiction between two reported figures and undermines any narrative that relies on a 6.5% trend.",
+              "question": "Which is correct: the starting/ending revenue figures ( $7.9M and $10.4M ) or the 6.5% annual growth claim \u2014 and please provide the year-by-year revenue series used to compute the stated growth rate."
+            },
+            {
+              "title": "No clinic ramp profile or year\u20111/2 P&L provided \u2014 cash adequacy ambiguous",
+              "severity": "medium",
+              "description": "You state build-out = $1.1M and funding will come from $1.5M cash, leaving $0.4M. A mature clinic at 85% generates \u2248 $2.21M \u00d7 18% \u2248 $396k EBITDA, i.e. roughly equal to the remaining cash (0.4M). Without a year-by-year revenue and margin ramp for years 1\u20133, it is impossible to evaluate whether the remaining cash covers negative cash flow before the clinic approaches maturity \u2014 and you also note new clinics run below group margin for two years.",
+              "question": "Provide a year-by-year pro forma (revenues, EBITDA, and net cash flow) for the new clinic and the consolidated group for at least three years, showing the assumed year\u20111 and year\u20112 revenue and margin levels and the resulting cash balance after the $1.1M spend."
+            },
+            {
+              "title": "85%-of-mature-by-year-3 claim rests on only two prior openings (n=2)",
+              "severity": "medium",
+              "description": "You cite 'based on our last two openings' that a new clinic hits ~85% of mature average by year 3. Two samples is a small basis for a generalizable ramp assumption, and there is no detail on whether those prior sites matched the new site's demographics or competitive context.",
+              "question": "Please supply the full data from the two prior openings: opening dates, year\u2011by\u2011year revenues and margins for each new clinic, and the characteristics (catchment population, competitor load, distance from nearest clinic) that show comparability to this new site."
+            },
+            {
+              "title": "No evidence provided that the new catchment will support current per-clinic revenue",
+              "severity": "medium",
+              "description": "The plan assumes the new suburb will reach parity (or 85% by year 3) with existing clinics and explicitly assumes 'no price premium' due to corporate competitors, but offers no local market metrics (pet population, visit rates, competitor share) to justify the revenue target of \u2248$2.2M.",
+              "question": "Provide localized market evidence (catchment population, estimated pet households, recent local visit or spend benchmarks, and competitor throughput/pricing) that demonstrate this site can reach the assumed revenue trajectory."
+            },
+            {
+              "title": "Cash-on-hand statement is underspecified (timing and other commitments)",
+              "severity": "low",
+              "description": "You state $1.5M of cash will fund the $1.1M build, but there is no date for the balance, no breakdown of restricted vs. free cash, and no disclosure of other near-term capital or lease obligations that could affect available funds.",
+              "question": "Please provide a current balance-sheet snapshot (date-stamped) showing cash and any restricted cash or committed capital expenditures and lease guarantees that would affect the $1.5M available for this project."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H09-dividend-screen-backtest.md",
+      "seconds": 49.1,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Mixed. The backtest shows historical outperformance on the authors' constructed universe, but key measurement and reporting gaps remain. The most important issues are an arithmetic inconsistency in reported returns and underspecified universe, dividend-metric timing, and trading-cost assumptions that could materially change results.",
+          "flaws": [
+            {
+              "title": "Arithmetic contradiction between CAGR and reported terminal value",
+              "severity": "critical",
+              "description": "The document reports a 14.2% annual return and separately that $100,000 in Jan 2005 would grow to just under $1.9M by end-2024. These cannot both be true: 100,000*(1.142)^20 \u2248 $1.42M, while $1.9M implies CAGR \u2248 (1.9M/100k)^(1/20)-1 \u2248 15.9%. The benchmark numbers are internally consistent (100k\u2192~650k matches 9.8% over 20 years).",
+              "question": "Which figure is correct: the stated 14.2% annualized return or the $100k\u2192$1.9M terminal value? Provide the precise backtest output (annualized return, final NAV, and the vector of yearly portfolio values) and the code/data that produced them so the arithmetic can be verified."
+            },
+            {
+              "title": "Survivorship / universe construction likely biased (\"today's S&P 500\" filter)",
+              "severity": "high",
+              "description": "You say the backtest used the 480 stocks in today's S&P 500 with complete price histories over the whole period. Selecting current constituents and excluding delisted/removed firms creates survivorship bias and overstates historical performance; the choice of 480 is also implausible without a list. The investable universe and its changes over time are undocumented.",
+              "question": "Provide the full list of the 480 tickers used, the data source, and a re-run (or the outputs) of the backtest using the historical S&P 500 constituents as of each rebalance date (i.e., an investable-per-period universe including delistings) so we can measure survivorship effects."
+            },
+            {
+              "title": "Trading-cost assumption (10 bps per rebalance) is underspecified and load-bearing",
+              "severity": "high",
+              "description": "You apply 'assumed trading costs of 10 basis points per rebalance' but do not state how that maps to turnover, per-trade costs, bid/ask spread, market impact, or whether that is round-trip. With annual rebalances over 20 years the cumulative cost depends critically on realized turnover; 0.1% per rebalance \u00d7 20 rebalances = 2% total if applied to full NAV, which may understate real execution costs for many equities.",
+              "question": "Provide the turnover profile (average % of portfolio traded at each rebalance and number of shares/trade), the precise trading-cost model used (per-trade fee, per-share, spread, market impact, round-trip vs one-way) and a sensitivity table showing strategy returns for trading costs = 10, 25, 50, 100 bps per rebalance."
+            },
+            {
+              "title": "Dividend growth and payout-ratio measurements lack timing and data-source detail (look-ahead risk)",
+              "severity": "high",
+              "description": "The rule depends on five-year dividend growth and a payout-ratio <60%. The backtest gives no detail on how dividend growth or payout ratio were computed (TTM dividends? fiscal-year dividends? adjusted for special/dividend cuts?) or the exact as-of date used at each rebalance \u2014 which creates a high risk of using future information inadvertently.",
+              "question": "Supply the exact algorithms and data sources: how five-year dividend growth and payout ratio were calculated, the as-of date for each metric at each rebalance, and how special/supplementary dividends, dividends suspended, and missing dividend histories were handled."
+            },
+            {
+              "title": "Claim of beating benchmark in 14 of 20 calendar years is unsupported without annual returns",
+              "severity": "medium",
+              "description": "The text states the screen beat the benchmark in 14 of 20 calendar years but provides no year-by-year returns to verify this or to check whether outperformance is concentrated in a few years. This is important for assessing stability and the reported CAGR/drawdown story.",
+              "question": "Provide a table of calendar-year returns for the strategy and the benchmark for every year 2005\u20132024 (or the precise yearly return vector used), and indicate which 14 years the strategy outperformed the benchmark."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    },
+    {
+      "doc": "H10-checkout-redesign-test.md",
+      "seconds": 45.7,
+      "results": {
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Mixed. The live A/B test produced a measurable conversion difference, but the test was short, stopped early, overlapped a promotional email, and the team extrapolates the 9-day result to full-month and annual revenue without demonstrating persistence. The most important unresolved issue is the early stopping/peeking risk (and related confounding by the sale email).",
+          "flaws": [
+            {
+              "title": "Stopping early (peeking) plus underpowered planned sample inflates Type I risk",
+              "severity": "critical",
+              "description": "You stopped a planned 28-day, 50/50 test after 9 days because results 'pulled clearly ahead'. With n\u22482,150 and 2,130 you observed rates 4.0% vs 5.5% (diff 1.493pp, z\u22482.30, two-sided p\u22480.022). But the sample per arm (\u22482.1k) is below the ~3,155 per arm needed to have 80% power to detect that 1.5pp absolute lift, and sequential looks without a pre-specified alpha-spending rule materially increase false-positive probability. That combination can make a p\u22480.02 unreliable as evidence of a true effect.",
+              "question": "Provide the pre-specified test plan and stopping rule (if any), the full time-series of daily visitors/conversions per variant and the exact randomization/timestamp log so we can (a) recompute corrected p-values for sequential looks or (b) rerun the test to the originally planned sample size; if there was no stopping rule, re-run to the planned sample or apply a sequential testing correction and report the adjusted p-value."
+            },
+            {
+              "title": "Promotional email / three-day sale overlapped the test and may explain the lift",
+              "severity": "high",
+              "description": "Day 9 included a three-day weekend sale email that was sent on day 6; promotional traffic often converts differently. You did not segment by traffic source, and the dashboard claim that both versions received a 'similar share of email traffic' is undocumented. If email recipients were unevenly assigned between variants, the email could fully or partially explain the 37% relative lift.",
+              "question": "Provide counts of visitors and conversions by variant broken down by traffic source (email vs non-email) and by day for the test window; specifically, how many email-driven visitors saw each variant and what were their conversion rates?"
+            },
+            {
+              "title": "Extrapolation to full-month / annual revenue assumes lift is uniform and persistent",
+              "severity": "high",
+              "description": "You extrapolate the observed 9-day conversion rates to a full month (60,000 visitors \u2192 +57,600/month, +$691k/year). That projection assumes the 5.5% rate persists across all traffic and all calendar contexts (including non-sale periods). Given the test spanned a sale period and was short, this is a load-bearing assumption without evidence of persistence.",
+              "question": "Provide post-launch aggregated conversion rates (and visitor counts) for the checkout across at least one full month and separately for non-promotion periods so we can verify the lift sustained beyond the sale window."
+            },
+            {
+              "title": "No reported segmentation by device, new vs returning, or other covariates to check balance",
+              "severity": "medium",
+              "description": "Randomization can fail on covariates that affect conversion (mobile vs desktop, new vs returning users, geographies). You report only aggregate visitor counts and a dashboard statement about email shares; without breakdowns we cannot verify variants were balanced on important covariates that affect conversion.",
+              "question": "Supply visitor and conversion counts by variant crossed with key covariates (device type, new vs returning, and top traffic channels) for the test period to demonstrate balance or allow adjustment."
+            }
+          ]
+        }
+      },
+      "errors": {}
+    }
+  ]
+}

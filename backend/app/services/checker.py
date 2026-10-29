@@ -5,9 +5,9 @@ The checker can only KEEP, DOWNGRADE or DROP the draft's flaws. It cannot add fl
 them, because it returns decisions by index and the code applies them. It also rates the
 document's evidence strength, and the code enforces severity caps for that band:
 
-    Strong -> no critical, at most 1 high
-    Mixed  -> at most 1 critical
-    Weak   -> no cap
+    Strong -> nothing above medium
+    Mixed  -> nothing above high
+    Weak   -> no cap (critical allowed)
 
 If the checker call fails or returns something unusable, the draft is returned unchanged.
 """
@@ -48,7 +48,8 @@ Your job is quality control, not new criticism. You will see the document and th
 Do NOT invent new flaws. For each draft flaw decide keep or drop, and the right severity.
 
 STEP 1 — RATE THE EVIDENCE STRENGTH of the document, using these definitions literally:
-  - Strong: an established business with real revenue, customers or profitability that are directly relevant to the plan's central claim (e.g. an operating company extending what it already does, or selling to its own existing customers). Being unproven about the extension itself does NOT make it Mixed.
+  - Strong: an established business with real revenue, customers or profitability, AND that measured evidence comes from the same kind of customers, market and offering the central claim is about (e.g. adding a location like its existing ones, or selling a related service to its own existing customers). Being unproven about the extension itself does NOT make it Mixed.
+    If the central claim moves into a new country, a new customer type, or a new channel where the business has no measured results, or rests on a single pilot, cohort or channel, it is Mixed, not Strong — even for an established business.
   - Mixed: some real measured traction (a pilot, early revenue, one site, one channel), but the central claim extrapolates well beyond it.
   - Weak: pre-launch or pre-revenue, OR the central claim rests on a single study/backtest/experiment whose method is questionable, OR on assumptions only.
 
@@ -101,20 +102,16 @@ def parse_verdict(raw: str) -> CheckerVerdict:
     return CheckerVerdict(**json.loads(text))
 
 
+_CEILING: dict[str, str] = {"Strong": "medium", "Mixed": "high", "Weak": "critical"}
+
+
 def _cap(flaws: list[Flaw], strength: Strength) -> list[Flaw]:
-    """Enforce severity caps per strength band; flaws must already be sorted most severe first."""
-    max_critical, max_high = {"Strong": (0, 1), "Mixed": (1, 99), "Weak": (99, 99)}[strength]
-    out, n_crit, n_high = [], 0, 0
-    for f in flaws:
-        sev = f.severity
-        if sev == "critical" and n_crit >= max_critical:
-            sev = "high"
-        if sev == "high" and n_high >= max_high:
-            sev = "medium"
-        n_crit += sev == "critical"
-        n_high += sev == "high"
-        out.append(f.model_copy(update={"severity": sev}))
-    return out
+    """Lower any flaw above the band's ceiling to the ceiling."""
+    ceiling = _SEV_ORDER.index(_CEILING[strength])
+    return [
+        f if _SEV_ORDER.index(f.severity) >= ceiling else f.model_copy(update={"severity": _SEV_ORDER[ceiling]})
+        for f in flaws
+    ]
 
 
 def apply_verdict(draft: CriticPassResult, verdict: CheckerVerdict) -> CriticPassResult:

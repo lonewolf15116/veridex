@@ -28,17 +28,18 @@ def _run(draft, raw):
     return checker.check_pass("evidence_audit", "focus", "doc", draft, lambda prompt: raw)
 
 
-def test_strong_band_caps_critical_and_high():
-    d = _draft("critical", "high", "high", "medium")
+def test_strong_band_caps_at_medium():
+    d = _draft("critical", "high", "high", "low")
     out = _run(d, _verdict("Strong", [{"index": i, "action": "keep"} for i in range(4)]))
-    assert [f.severity for f in out.flaws] == ["high", "medium", "medium", "medium"]
+    assert [f.severity for f in out.flaws] == ["medium", "medium", "medium", "low"]
     assert out.summary.startswith("Evidence base: Strong")
 
 
-def test_mixed_band_allows_one_critical():
-    d = _draft("critical", "critical", "high")
-    out = _run(d, _verdict("Mixed", [{"index": i, "action": "keep"} for i in range(3)]))
-    assert [f.severity for f in out.flaws] == ["critical", "high", "high"]
+def test_mixed_band_caps_at_high_weak_uncapped():
+    d = _draft("critical", "critical", "medium")
+    keep = [{"index": i, "action": "keep"} for i in range(3)]
+    assert [f.severity for f in _run(d, _verdict("Mixed", keep)).flaws] == ["high", "high", "medium"]
+    assert [f.severity for f in _run(d, _verdict("Weak", keep)).flaws] == ["critical", "critical", "medium"]
 
 
 def test_drop_and_regrade_and_resort():
@@ -97,7 +98,7 @@ def test_only_checked_lenses_get_checked(monkeypatch):
 
     monkeypatch.setattr(critics, "_call_openai", fake)
     ea = critics.run_critic_pass("evidence_audit", "a plan with numbers")
-    assert ea.flaws[0].severity == "high" and len(calls) == 2  # draft + checker; Strong caps critical
+    assert ea.flaws[0].severity == "medium" and len(calls) == 2  # draft + checker; Strong caps at medium
     calls.clear()
     pm = critics.run_critic_pass("pre_mortem", "a plan with numbers")
     assert pm.flaws[0].severity == "critical" and len(calls) == 1  # no checker
