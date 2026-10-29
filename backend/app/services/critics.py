@@ -261,7 +261,7 @@ def _parse_and_validate(lens: str, raw: str) -> CriticPassResult:
     return result
 
 
-def run_critic_pass(
+def _draft_pass(
     lens: str,
     input_text: str,
     model: str = "openai:gpt-5-mini",
@@ -296,6 +296,26 @@ def run_critic_pass(
     # Single retry with corrective nudge
     raw = _call_openai(model_id, _build_prompt(lens, input_text, retry=True))
     return _parse_and_validate(lens, raw)  # Raises CriticValidationError if still broken
+
+
+# Lenses whose draft goes through the checker pass (see checker.py). Start with the one
+# we can measure on evals/holdout; extend once it is shown to help.
+CHECKED_LENSES = {"evidence_audit"}
+
+
+def run_critic_pass(
+    lens: str,
+    input_text: str,
+    model: str = "openai:gpt-5-mini",
+) -> CriticPassResult:
+    """Draft a critique for one lens, then (for CHECKED_LENSES) run the checker pass over it."""
+    draft = _draft_pass(lens, input_text, model)
+    if lens not in CHECKED_LENSES:
+        return draft
+    from app.services.checker import check_pass  # local import avoids a circular import
+
+    _, model_id = _parse_provider_model(model)
+    return check_pass(lens, _LENS_FOCUS[lens], input_text, draft, lambda prompt: _call_openai(model_id, prompt))
 
 
 __all__ = [
