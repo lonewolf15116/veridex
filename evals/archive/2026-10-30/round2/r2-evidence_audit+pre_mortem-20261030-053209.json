@@ -1,0 +1,889 @@
+{
+  "label": "r2",
+  "lenses": [
+    "evidence_audit",
+    "pre_mortem"
+  ],
+  "stage": null,
+  "api": "https://veridex-backend-n0nf.onrender.com",
+  "runs": [
+    {
+      "doc": "H01-solar-cold-pods.md",
+      "seconds": 37.0,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The strategy rests on several brittle assumptions about product fit, customer payment behaviour, and the magnitude of spoilage that cooling alone will eliminate. The single most likely fatal flaw is a mismatch between the pod's temperature spec and crop physiology/market quality requirements. Several other high-risk dependencies \u2014 notably repayment behaviour, the true share of spoilage caused by lack of cooling, and collective governance of a shared asset \u2014 could each plausibly collapse the financial case and adoption.",
+          "flaws": [
+            {
+              "title": "Critical: temperature setpoint may damage target crops (killing blow)",
+              "severity": "critical",
+              "description": "Failure scenario: the pods are specified to hold produce at 8\u201310\u00b0C, but one or more target crops (especially tomatoes) suffer chilling injury or other quality loss at that temperature. Farmers who use the pods may receive lower prices or have produce rejected, so cooling not only fails to increase revenue but actively reduces it, causing rapid abandonment of the product and loss of trust. This is a single-product design mismatch that would immediately negate the core value proposition.",
+              "question": "What crop-specific evidence (post-harvest physiology plus buyer acceptance tests) proves that storing tomatoes, kale and French beans at 8\u201310\u00b0C for up to five days preserves or improves marketable quality and price?"
+            },
+            {
+              "title": "High: 95% on-time mobile-money instalments assumed without proof",
+              "severity": "high",
+              "description": "Failure scenario: cooperatives overstate interest in interviews, but their real cashflow timing, seasonality of harvest income, or social governance prevents monthly on-time payments at the expected rate. If instalment collections fall well below 95% or require subsidies/forgiveness, revenue collapses and the financing model fails. The assumption conflates stated willingness with timely repayment behaviour under real harvest cash cycles.",
+              "question": "What empirical evidence supports a 95% on-time repayment rate for group-level, monthly mobile-money instalments in these exact communities, and how will payment timing be aligned with seasonal cashflows?"
+            },
+            {
+              "title": "High: spoilage reduction (30\u201340% midpoint) is assumed to be fully removable by pods",
+              "severity": "high",
+              "description": "Failure scenario: the sector reports' loss figures are decomposed incorrectly \u2014 much of the reported 30\u201340% loss may be due to bruising, poor packing, transport delays after collection, pest/disease or market gluts rather than lack of cold between harvest and truck. If the pod only prevents a subset of these causes, realized savings per farmer will be far lower than the assumed $75/month, extending payback beyond farmers' tolerance and killing demand.",
+              "question": "What crop- and chain-specific analysis demonstrates the proportion of post-harvest loss that is directly attributable to lack of cooling between harvest and collection truck, in the target cooperatives?"
+            },
+            {
+              "title": "High: shared-asset governance and utilisation will be worse than assumed",
+              "severity": "high",
+              "description": "Failure scenario: farmer groups cannot or will not manage a communal cold pod fairly \u2014 disputes over scheduling, payments, prioritisation, maintenance, and petty theft lead to low utilisation, unexpected repair costs, or social conflict. Underuse removes the expected per-farmer savings and produces defaults on instalments; referrals dry up and adoption stalls. The plan assumes smooth cooperative decision-making without demonstrating tested governance models.",
+              "question": "How will access rules, booking systems, maintenance responsibilities, and conflict-resolution mechanisms be designed, tested and enforced so that utilisation and payment outcomes meet financial assumptions?"
+            },
+            {
+              "title": "Medium: contract assembler and seed funding timing are single-point dependencies",
+              "severity": "medium",
+              "description": "Failure scenario: manufacturing depends on an assembler in Nairobi 'once the seed round closes'; if funding is delayed or the assembler lacks capacity/technical match, production of the first 40 units will slip beyond windows when demand is present or when buyers are receptive. Delays could break referral-driven marketing and undermine early adoption momentum. This is a dependency gap: the strategy assumes a seamless handoff contingent on funding.",
+              "question": "What binding commitments, timelines and contingencies exist from the chosen contract assembler, and what is the plan if seed funding or assembler capacity is delayed?"
+            },
+            {
+              "title": "Medium: three-week workshop prototype is an inadequate test of field durability and maintenance needs",
+              "severity": "medium",
+              "description": "Failure scenario: performance in a Kisumu workshop does not surface real-field failure modes (dust, humidity, roof theft, battery degradation, insect ingress, user handling errors). Unanticipated maintenance frequency or part replacement costs create downtime that reduces effective storage days and farmer savings, and raises resentment over ongoing costs. The prototype evidence is too thin to support the reliability assumptions underlying payback and referral forecasting.",
+              "question": "What field-based endurance tests and maintenance-cost projections have been run or planned to validate uptime, mean-time-between-failure and consumable/battery replacement costs under realistic rural conditions?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Weak. Proven: a workshop prototype ran three weeks, 11 cooperatives expressed interest, and sector reports indicate 30\u201340% post-harvest loss. Biggest issues: internal arithmetic contradictions and several load-bearing assumptions (spoilage reduction, payback math, collection rate, field performance, and the 300\u2011pod sales projection) lack measured evidence.",
+          "flaws": [
+            {
+              "title": "Revenue arithmetic contradicts stated target",
+              "severity": "critical",
+              "description": "The document states price = $2,400 and year-1 volume = 300 pods, but reports ~ $1.2M revenue. 300 \u00d7 $2,400 = $720,000, not $1,200,000. This is an internal arithmetic contradiction that directly breaks the headline revenue target and any downstream cashflow or fundraising claims based on $1.2M.",
+              "question": "Which is correct: the pod price, the year\u2011one volume, or the revenue target? Provide the corrected arithmetic (units \u00d7 price = revenue) and, if you intended a different volume or price, show the revised numbers."
+            },
+            {
+              "title": "Payback claim contradicts per-farmer savings",
+              "severity": "high",
+              "description": "You claim farmers save $75/month and that the $2,400 pod is recovered in ~14 months. $2,400 \u00f7 $75 \u2248 32 months, not 14. To get a 14\u2011month payback total monthly savings must be $2,400 \u00f7 14 \u2248 $171.4, which implies either that multiple farmers share savings or the $75 figure is per farmer per something other than month. The stated numbers are internally inconsistent.",
+              "question": "Show the payback math you used: if savings are $75/month per farmer, state the number of farmers sharing a pod (or the cooperative-level monthly saving) so that $2,400 \u00f7 (monthly saving) = 14 months; provide measured evidence of that group size and of the aggregated monthly savings."
+            },
+            {
+              "title": "Assumed 35% spoilage reduction is unsupported and load-bearing",
+              "severity": "high",
+              "description": "You take sector reports' 30\u201340% post-harvest loss midpoint and assume the pod removes that loss. That assumes the pod prevents the entire stated loss, but no in-field trials or spoilage measurements with the pod in real use are presented. This percentage is load-bearing for farmer savings, adoption, and the core value proposition.",
+              "question": "Provide in-field evidence (pilot or measured before/after data) quantifying the pod's actual spoilage reduction for tomatoes, kale and French beans (sample sizes, control measurements, storage durations, and measured % reduction)."
+            },
+            {
+              "title": "95% on-time instalment payment rate is asserted without evidence",
+              "severity": "high",
+              "description": "The financial plan assumes 95% of mobile-money instalments are paid on time, which materially affects cashflow and realized revenue. No historical repayment rates, pilot payment tests, or references to comparable programs are provided to justify this high collection rate in this market and segment.",
+              "question": "Supply documented repayment performance: historical mobile-money instalment on-time rates for similar asset-financing to these cooperatives (or results from a payment pilot), or else a stress test showing plan outcomes at lower, evidence-backed repayment rates (e.g. 80%, 60%)."
+            },
+            {
+              "title": "Prototype test scope (3 weeks in workshop) does not evidence field performance",
+              "severity": "medium",
+              "description": "The prototype ran for three weeks in a workshop, which does not demonstrate the pod's claimed 5-day, field-level cooling, durability, battery cycling, or performance under real harvest/loading patterns and ambient conditions. The workshop run is insufficient to support claims about in-field reliability, spoilage prevention, or maintenance needs.",
+              "question": "Provide results from an in-field pilot (duration, number of deployments, measured internal temperatures under load, battery discharge cycles, and any maintenance events) demonstrating the pod meets the 5\u2011day/8\u201310\u00b0C performance in real use."
+            },
+            {
+              "title": "Year\u2011one volume (300 pods) extrapolates from 11 interviews with no pipeline",
+              "severity": "medium",
+              "description": "You report interviews with 11 cooperatives expressing interest but target 300 pods in year one. If one pod is sited per cooperative, 300 pods implies reaching ~300 cooperatives, an ~27\u00d7 scale-up from 11 interested groups, with no documented commitments, LOIs, or conversion assumptions. The customer-acquisition and conversion math is absent.",
+              "question": "Provide the customer pipeline and conversion assumptions underlying 300 pods in year one: number of cooperatives contacted, historical or pilot conversion rates, any signed LOIs or prepayments, and the referral/uptake rate you assume (with the arithmetic showing cooperatives contacted \u00d7 conversion = 300)."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H02-school-bus-routing.md",
+      "seconds": 53.9,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The most likely failure paths cluster around data & procurement dependencies and a misread of real-world routing constraints and stakeholder incentives. If districts cannot provide the timely, structured student/address/constraint data, or if cooperative purchasing cannot be used to bypass formal procurement, the product cannot scale. Even with data and contracts, simulations risk overstating savings because they may have omitted special-education, tiered schedules, labor rules, and parent expectations that make weekly rerouting infeasible or unacceptable.",
+          "flaws": [
+            {
+              "title": "Critical: inability to get timely, standardized student & routing data",
+              "severity": "critical",
+              "description": "Failure scenario: districts either cannot or will not supply the frequent, structured data (student addresses, eligibility flags, IEP constraints, bell times, existing stop assignments) needed to rebuild routes weekly, or their IT systems deliver data in inconsistent, manual formats that prevent automation. Without reliable, standardized inputs the weekly re-optimisation promise collapses and pilots cannot demonstrate production value. The document does not specify the exact data schema, integration approach, or legal/ privacy approvals required across districts.",
+              "question": "How will you, before launch, secure signed commitments (technical and legal) from target districts to deliver the exact, frequent data feeds you need in a standardized schema, and what are the fallbacks if a district's IT cannot provide that?"
+            },
+            {
+              "title": "High: cooperative purchasing assumption fails to bypass formal procurement",
+              "severity": "high",
+              "description": "Failure scenario: target districts refuse or are unable to use the cooperative purchasing route the team expects, requiring full formal RFPs or board approvals that add months or block pilots. The three non-binding LOIs do not guarantee procurement exceptions, and many districts treat cooperative contracts differently or have legacy vendor master agreements that prevent new sign-ons. If procurement cannot be expedited, the planned customer growth timeline and early revenue cannot be met.",
+              "question": "Which exact cooperative contracts have been validated by district procurement/legal teams for each target district, and can you show written confirmation that they eliminate the need for a formal RFP/board vote?"
+            },
+            {
+              "title": "High: weekly rerouting operationally infeasible due to policy, labor, and parental constraints",
+              "severity": "high",
+              "description": "Failure scenario: even if routes can be computed, district policies, union contracts, driver familiarity/safety practices, or parent expectations make frequent route changes unacceptable\u2014districts prioritize route stability, predictable stops, and driver routes over modest reductions in fleet size. Weekly changes may violate labor agreements, create scheduling conflicts with multi-tier bell schedules, or trigger significant parental backlash, forcing districts to reject weekly rebuilds or require changes only annually.",
+              "question": "Can you document, for multiple pilot districts, that weekly stop/route changes are permitted by union agreements, district policies, and parent communications plans, and that the district is willing to accept the operational disruption?"
+            },
+            {
+              "title": "High: simulation savings don't generalize once real constraints are included",
+              "severity": "high",
+              "description": "Failure scenario: the 12% bus reduction is driven by optimisations that assumed data or constraints not present in most districts\u2014simulations used anonymized addresses and may have excluded special education routing rules, time-window constraints, stop consolidation resistance, or tiered school schedules. When those real-world constraints are modeled, achievable savings fall well below the threshold that motivates districts to change procurement decisions.",
+              "question": "Which real-world constraints (IEPs, time-windows, tiered schedules, max ride time, stop-placement rules) were excluded from your simulations, and what is the sensitivity of your savings estimate when each is added back in?"
+            },
+            {
+              "title": "Medium: validation sample too small and unrepresentative",
+              "severity": "medium",
+              "description": "Failure scenario: the two districts used for simulations are atypical (urban/rural mix, policy environment, existing route hygiene) so their results cannot be extrapolated to the broader US district market. The three non-binding LOIs do not provide stronger evidence, leaving the team with insufficient evidence that the product works across the diverse policies and geographies of target customers.",
+              "question": "How representative are the two research districts across key dimensions (size, rural/urban, special-education share, bell schedules), and what plan do you have to validate results across a statistically diverse sample before committing to growth targets?"
+            },
+            {
+              "title": "Medium: buyer willingness-to-pay may be misread \u2014 demand for proof or pay-for-performance",
+              "severity": "medium",
+              "description": "Failure scenario: transportation directors express interest in cost savings in conversations, but procurement leaders insist on contracts tied to realized savings, multi-year pilots, or heavy proof-of-value before paying $18k/year up-front. The flat-price offering may not match buyer procurement risk preferences, slowing conversions and forcing pricing concessions that undermine the go-to-market plan.",
+              "question": "Have procurement stakeholders indicated acceptance of a flat $18k/year contract without a prior proof-of-savings pilot, and if not, what pricing or contracting terms will you offer to align with their risk tolerance?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Weak. The team is pre-revenue and the central 12% bus-savings claim rests on simulations from only two districts. Biggest outstanding issues are an arithmetic contradiction in the growth plan and insufficient sampling and backtest transparency to trust the 12% figure.",
+          "flaws": [
+            {
+              "title": "Arithmetic contradiction between stated monthly growth and 12\u2011month customer target",
+              "severity": "critical",
+              "description": "You claim starting with 6 paying districts and 25% month-over-month growth will reach 120 districts in 12 months, but 6 * 1.25^12 \u2248 6 * 14.55 \u2248 87 districts, not 120. To reach 120 from 6 in 12 months requires \u224828.3% monthly growth (20^(1/12) \u2248 1.283). One of these numbers must be wrong or the growth plan needs a different starting point or timing.",
+              "question": "Which is incorrect: the 25% monthly growth rate or the 120-district 12-month target? Provide the month-by-month customer counts or a corrected growth rate and show the arithmetic that exactly yields 120 districts from the stated starting point."
+            },
+            {
+              "title": "12% bus reduction is based on only two districts (n=2)",
+              "severity": "high",
+              "description": "The headline 12% reduction comes from simulations run on anonymised data from two districts only. n=2 is too small to assess variability across district sizes, routing policies, bell schedules, special-needs loads, and geography; the result may not generalise to a wider addressable market and is load-bearing for your value proposition.",
+              "question": "Provide simulation results across a larger, representative sample (or a stratified holdout set) showing the distribution (n, mean, median, standard deviation, and percentiles) of % bus reduction so we can see whether 12% is typical or an outlier."
+            },
+            {
+              "title": "Backtest details and possible look-ahead or omitted constraints not documented",
+              "severity": "high",
+              "description": "You say you compared your solver's routes with the routes those districts ran last year, but you haven't documented which operational constraints and input timestamps were used. If the model used information not available at decision time (future student moves) or omitted constraints (special-education routing, tiered bell times, max ride-time, bus capacity, transfer rules), the 12% number could be inflated.",
+              "question": "Provide a technical appendix for the simulations that lists: (a) all constraints modelled, (b) the exact timestamp for each input field (when each student/address was considered 'known'), and (c) an explicit statement that no future/after-the-fact information was used when generating routes, with examples demonstrating constraint parity versus the districts' actual operations."
+            },
+            {
+              "title": "Non-binding LOIs and conversion assumptions are unstated",
+              "severity": "medium",
+              "description": "You report three non-binding letters of intent and plan to start the year with 6 paying districts, but there's no evidence linking LOIs to paid pilots or conversion assumptions. Non-binding LOIs are weak evidence for revenue and customer targets without conversion rates, timelines, or signed pilot contracts.",
+              "question": "Provide the LOI documents (dates, signatories, scope, and any timelines) and/or the signed paid-pilot contracts, and state the assumed conversion rate and timeline you are using to turn LOIs and prospects into the 6 paying customers claimed at launch."
+            },
+            {
+              "title": "Per-bus operating cost ($70k/year) lacks sourcing or breakdown",
+              "severity": "medium",
+              "description": "You state a mid-sized district runs ~85 buses and each bus costs roughly $70,000/year to operate, which drives the dollar value of the 12% reduction. That $70k figure is asserted but not sourced or decomposed (driver wages, benefits, fuel, maintenance, insurance, capital/depreciation). Different definitions materially change the economic case.",
+              "question": "Provide the source or a line-item breakdown (wages, benefits, fuel, maintenance, insurance, capital/depreciation, overhead) for the $70,000/year per-bus operating cost and confirm whether the two districts used in the simulation have similar per-bus economics."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H03-prefab-adu-texas.md",
+      "seconds": 51.6,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The plan rests on thin, unvalidated demand signals and a set of optimistic dependencies that are not yet proven. The single most dangerous assumption is that a $1,000 refundable deposit from 14 people and a social post can be scaled into real buyers at $98K per unit. Several other untested dependencies \u2014 funding timing, scalable lead channels, regulatory consistency, and site-readiness of buyers \u2014 each present plausible single-point failures that would stop the strategy within 18 months.",
+          "flaws": [
+            {
+              "title": "Critical: Priority-list deposits do not equal purchase intent at $98K",
+              "severity": "critical",
+              "description": "Failure scenario: The 14 refundable $1,000 deposits gathered from a single social media post do not predict conversion to full-price purchases. Once presented with contracts, financing requirements, or alternative options, most priority-list members decline or delay, leaving the factory without early orders and making seed investors and lenders unwilling to commit. Stated interest from a single channel is an incomplete and biased signal of market willingness-to-pay.",
+              "question": "How will you validate, before factory build-out, that a representative funnel converts deposits into signed purchase contracts at or above your $98K price and acceptable payment/financing terms?"
+            },
+            {
+              "title": "High: Lead-generation via paid search and builder partnerships is unproven",
+              "severity": "high",
+              "description": "Failure scenario: Paid search CAC, creative, or funnel economics prove far worse than assumed, and local builders decline or deprioritize partnership referrals, so lead volume and quality never scale to support 120 units/year. Without tested channel-level conversion and predictable acquisition costs, the business cannot replace early organic interest or hit sales velocity needed to justify the factory.",
+              "question": "What are your validated customer acquisition cost, conversion rate, and average time-to-close for each channel (paid search and builder partnerships) based on controlled tests, and how do those map to the 120 units/year target?"
+            },
+            {
+              "title": "High: Seed round timing and lease dependency could stop everything",
+              "severity": "high",
+              "description": "Failure scenario: The plan depends on closing the seed round and signing the warehouse lease by spring to hit a Q4 ship; if investors delay or require additional milestones, the lease or vendor quotes may expire or terms worsen, preventing launch. The strategy lacks a specified fallback: if capital or lease timing slips, the factory plan becomes infeasible and momentum stalls.",
+              "question": "What concrete capital commitments, bridge financing, or lease flexibility do you have if the seed round does not close on the assumed timetable?"
+            },
+            {
+              "title": "High: Regulatory and permitting assumptions are overly generalized",
+              "severity": "high",
+              "description": "Failure scenario: The assumption that local Texas cities have made permitting easier is not universally true across Austin neighborhoods, suburbs, or neighboring jurisdictions; differing interpretations, utility hookup requirements, or new local rules create long delays or add costs that eliminate the value proposition. If permit paths, inspections, and utility connections vary widely, customers face unpredictable timelines and expenses that reduce willingness to buy prefab units.",
+              "question": "Which specific jurisdictions and permit pathways have you mapped and validated end-to-end, and what are the documented timelines, inspection points, and failure modes that could affect delivery and installation?"
+            },
+            {
+              "title": "Medium: Prepared-foundation prerequisite reduces addressable buyers",
+              "severity": "medium",
+              "description": "Failure scenario: Many prospective customers lack a ready foundation, access, or site conditions required for a delivered-and-installed unit; added site work, grading, utility trenching, or HOA approvals become necessary, pushing total installed cost or timeline beyond buyer expectations. The business assumes customers will provide a prepared pad, but if that assumption is false at scale, installation friction kills conversions.",
+              "question": "What percentage of your target buyers have sites that meet the prepared-foundation requirement today, and how have you tested the typical costs and timelines to bring non-compliant sites to readiness?"
+            },
+            {
+              "title": "Medium: Assumption that modular classroom experience transfers to a new ADU factory",
+              "severity": "medium",
+              "description": "Failure scenario: The operations lead's modular classroom experience does not translate to the specific design, regulatory, and customer-configuration complexity of ADUs, leaving process design and quality control gaps that undermine reliability of delivered units. The strategy assumes transferable skills without an explicit gap analysis or hiring plan to cover ADU-specific manufacturing and customer-integration needs.",
+              "question": "What specific factory-operation gaps have you identified between modular classroom production and the ADU product, and how will you staff or validate those capabilities before committing to full-scale plant opening?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Weak. The plan is pre\u2011revenue with an LOI, equipment quotes and a stated capacity/cost model, plus 14 refundable deposits. The most important gaps are unvalidated demand and unsupported load\u2011bearing numbers (per\u2011unit cost, capacity math, and committed financing).",
+          "flaws": [
+            {
+              "title": "Demand to fill 120 units/year is unvalidated (only 14 refundable deposits)",
+              "severity": "critical",
+              "description": "You target 120 units/year (10 units/month) but have only 14 refundable $1k deposits sourced from a single social post. That is 11.7% of one year\u2019s required sales and provides no conversion-rate or funnel metrics to justify scaling. The plan depends on paid search and partnerships that have not been tested; without conversion rates and CAC this critical revenue claim is unsupported.",
+              "question": "Provide either (A) signed, non\u2011contingent purchase orders or binding customer commitments that together cover 120 units/year, or (B) a validated funnel: leads/month, deposit conversion %, close rate, and CAC (with test campaign results) that mathematically show how you will achieve 10 net sales/month."
+            },
+            {
+              "title": "Per\u2011unit cost ($76,440) is asserted but not substantiated",
+              "severity": "high",
+              "description": "You state materials, labour and delivery at $76,440/unit leaving a $21,560/unit gross margin (22%). No BOM, supplier quotes, labour-hour estimates, or freight/installation bids are provided. This single number is load-bearing: a modest upward revision would materially reduce or eliminate the margin you rely on for operating overheads.",
+              "question": "Submit a detailed per\u2011unit cost build (BOM with supplier quotes, labour hours & rates, subcontracted delivery/installation quotes, and assumptions about yield/waste) that supports the $76,440 figure."
+            },
+            {
+              "title": "$4.5M 'start\u2011up capital' status and sufficiency are unclear",
+              "severity": "high",
+              "description": "You say a LOI and equipment quotes 'bring start\u2011up capital to $4.5M' but also state the seed round is not closed. It's unclear what is committed vs required and whether $4.5M covers leasehold improvements, equipment purchase & installation, working capital until first sale, and contingency. Without a use\u2011of\u2011proceeds and committed funding, the financing claim is unsupported.",
+              "question": "Clarify how much of the $4.5M is already committed vs expected from the seed round and provide a line\u2011item use\u2011of\u2011proceeds and cash runway showing that the stated funding (committed + expected) covers all costs through first shipment."
+            },
+            {
+              "title": "Capacity math inconsistent with 14\u2011week build time and factory size",
+              "severity": "high",
+              "description": "With a 14\u2011week cycle time a single production slot yields \u22483.72 units/year (52/14 \u2248 3.71). To reach 120 units/year requires \u224833 concurrent build slots (120 / 3.71 \u2248 32.3). You provide no production-layout, takt analysis, or demonstrated throughput to show the 40,000 ft\u00b2 site can support ~33 concurrent builds or the number of parallel lines/equipment needed.",
+              "question": "Provide a production model: cycle times per work cell, number of parallel bays/lines, floor area per bay, and a layout demonstrating how the LOI'd 40,000 ft\u00b2 supports the required \u224833 concurrent builds (or show alternative math that yields 120 units/year)."
+            },
+            {
+              "title": "Timeline to first shipment is asserted without schedule evidence",
+              "severity": "medium",
+              "description": "You expect first unit to ship in Q4 if the round closes by spring but supply no schedule, equipment lead times, leasehold improvement timeline, permitting assumptions or hiring ramp. This forecast is plausible but unsupported; permit or vendor delays could push first shipment past Q4.",
+              "question": "Provide a milestone Gantt (permits, leasehold work, equipment procurement & installation, test runs, hiring) with vendor lead times and critical\u2011path dates that support delivering the first unit by Q4 under the stated financing timing."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H04-pediatric-physio-denver.md",
+      "seconds": 43.2,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The plan assumes Denver's referral-driven demand and local therapist supply are readily replicable across 25 metros. The likeliest ways this fails are (1) inability to secure equivalent anchor pediatric groups in new cities, (2) per-capita demand in other metros falling short of Denver's, and (3) local therapist availability or referral/marketing channels not materializing as expected. Several key dependencies and market signals (payor mix, school-based services, and marketing channel transferability) are unstated and could be the single killing blow.",
+          "flaws": [
+            {
+              "title": "Anchor pediatric referral cannot be reproduced in new cities (killing blow)",
+              "severity": "critical",
+              "description": "Failure scenario: the model depends on signing a single \"anchor\" pediatric group that supplies the majority of new families (Denver had one group providing ~60% of referrals), but equivalent groups either don't exist, won't partner, or won't drive comparable referral volume in the target metros. Without a repeatable, high-volume referral source at launch, new-city pipelines dry up and there isn't enough organic demand to fill therapists' schedules. This single dependency is the most direct path to a failed launch in multiple markets.",
+              "question": "How will you consistently generate the anchor-level referral flow in each city if an equivalent pediatric group cannot be signed or does not deliver comparable volume?"
+            },
+            {
+              "title": "Per-capita uptake target (Denver -> other metros in 18 months) proves false",
+              "severity": "high",
+              "description": "Failure scenario: the strategy assumes every new market will reach Denver's per-capita family numbers within 18 months, but Denver may be atypical in demographics, density of referral sources, or parental preferences. If demand grows more slowly or plateaus at a lower penetration, launches will chronically under-index on volume forecasts and expansion becomes unsustainable. The plan lacks explicit evidence that Denver's adoption curve is representative of the chosen metro mix.",
+              "question": "What evidence shows Denver's per-capita demand and 18-month ramp are representative of each target metro, and what are go/no-go criteria if uptake is slower?"
+            },
+            {
+              "title": "Local therapist supply, credentialing, and willingness to do home visits fall short",
+              "severity": "high",
+              "description": "Failure scenario: the plan assumes recruiting local therapists is straightforward and scalable across markets, but local labor pools may be smaller, salary expectations higher, licensure rules different, or therapists unwilling to do in-home work and travel. If you cannot staff launches with sufficient licensed therapists quickly, either capacity or quality targets won't be met and referral partners may not engage. The document does not show market-level evidence for therapist availability or licensure/time constraints in target cities.",
+              "question": "What market-level data proves you can recruit and credential the required number of therapists in each city at the necessary pace and terms?"
+            },
+            {
+              "title": "Referral-driven low CAC in Denver masks paid acquisition risk elsewhere",
+              "severity": "high",
+              "description": "Failure scenario: Denver's reported CAC ($85) is achievable because referrals\u2014especially from one large pediatric group\u2014drive most new families; in new cities those referral channels may be absent, forcing reliance on paid channels that have higher CPCs and lower conversion. If paid acquisition costs materially exceed Denver's CAC or converts poorly for at-home physio, new markets will fail to generate enough bookings. The strategy assumes marketing performance will transfer without showing contingency plans if it doesn't.",
+              "question": "How will you acquire families at the planned rates if referral volume is not available\u2014what are tested channel mixes and worst-case CACs per market?"
+            },
+            {
+              "title": "Unstated payor mix and interaction with school-based services reduce addressable demand",
+              "severity": "medium",
+              "description": "Failure scenario: the document omits payor mix, insurance coverage, and how in-school (IEP/school district) services interact with at-home demand. In some metros families may rely heavily on school-based therapy or insurer-provider networks that limit out-of-network at-home uptake, reducing the true addressable market. If these factors materially lower the pool of families willing or able to use paid at-home services, growth projections will be unrealistic.",
+              "question": "What is the payor mix and how do school-based therapy/IEP coverage and local reimbursement practices affect addressable at-home demand in each target city?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Strong. The document shows a real operating business with measured revenue, customers, therapists and a stated retention rate. The most important remaining issue is internal inconsistency and missing derivations for key unit-economics and scaling assumptions (CAC, lifetime gross profit, cohort flows and city-replication evidence).",
+          "flaws": [
+            {
+              "title": "Arithmetic contradiction: stated CAC ($85) conflicts with reported marketing spend and signups",
+              "severity": "high",
+              "description": "The document says marketing spend was $31,200 last quarter and 260 new families were signed, which implies marketing CAC = $31,200 / 260 = $120 per family, not $85 as stated. That $85 figure is used to claim economics that justify expansion, so the internal inconsistency breaks a core economic claim unless reconciled (e.g., other non-marketing channels credited, different time windows, or a different denominator).",
+              "question": "Provide the full CAC calculation and reconciliation: show the numerator and denominator (marketing and non-marketing acquisition spend and the exact cohort of new customers used) and explain why $31,200 spent vs 260 signups yields CAC = $85 rather than $120."
+            },
+            {
+              "title": "Unsupported/opaque lifetime gross profit ($900) given observed revenue per family",
+              "severity": "medium",
+              "description": "Reported lifetime gross profit \u2248 $900 is presented without a breakdown. Using reported numbers: revenue/quarter = $612,000 across 410 active families implies \u22484,106 sessions/quarter and \u224810 sessions/family/quarter \u2192 \u224840 sessions/family/year \u2192 \u2248$5,960 revenue/family/year at $149/session. A $900 lifetime gross profit requires specific low gross margins or very short lifetime; neither is documented.",
+              "question": "Supply the LTV calculation: average customer lifetime (months/years), gross margin per session (or cost per session), and the arithmetic that produces $900 lifetime gross profit per family."
+            },
+            {
+              "title": "Scaling assumption (18 months to reach Denver per-capita) is unsupported and load-bearing",
+              "severity": "medium",
+              "description": "The plan to open 25 metros and have each match Denver's per-capita family numbers in 18 months extrapolates from a single-city outcome (Denver) and assumes replicable anchor paediatric referrals. No evidence is given that comparable paediatric groups, referral rates, family density, or onboarding speed exist in target cities.",
+              "question": "Provide city-level evidence for replication: for each target city, show the number of comparable paediatric groups, expected referral conversion rates per group (with source), and a signed or pipeline commitment that supports reaching Denver-equivalent per-capita families within 18 months."
+            },
+            {
+              "title": "Active base vs new signups vs retention is ambiguous and may hide churn dynamics",
+              "severity": "medium",
+              "description": "The company reports 410 active families and 260 new families in the last quarter plus a 12\u2011month retention of 81%, but does not show cohort movement. If 260 were net additions the prior active base would be small; if 260 were gross signups then churn must be large to total 410 active now. This ambiguity prevents validating growth and unit economics.",
+              "question": "Provide a cohort table (monthly or quarterly for the past 12 months) showing new signups, churned customers, and active customers so we can reconcile 260 new last quarter with 410 active and the stated 12\u2011month retention."
+            },
+            {
+              "title": "\u2018Fully booked\u2019 therapists \u2014 capacity and utilization metrics are undefined",
+              "severity": "medium",
+              "description": "Claiming every therapist is 'fully booked' is used to justify replication but lacks a definition: billable sessions/week, working days, travel time, cancellations, and how waitlists or overtime are handled are not provided. Without these, therapist capacity assumptions for new cities are unsupported.",
+              "question": "Define 'fully booked' with numbers: average billable sessions per therapist per week, utilization rate (billable hours \u00f7 available hours), cancellation/no-show rate, and how many additional families a new therapist can take in month 1, 6, and 18."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H05-orchard-irrigation-sensors.md",
+      "seconds": 57.9,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The strategy hinges on a single observed 18% water-saving signal from three orchards and assumes that both the technical benefit and the go-to-market economics scale unchanged across crops and tens of thousands of acres. The likeliest failure modes are (1) the 18% saving proves non-reproducible or not causal at scale, (2) willingness-to-pay and buying behavior of the broader grower population diverge from early signals, and (3) the product does not map cleanly to other crops and operational contexts.",
+          "flaws": [
+            {
+              "title": "Killing blow \u2014 the 18% water-saving is not causal or not reproducible at scale",
+              "severity": "critical",
+              "description": "Failure scenario: the observed 18% reduction was driven by year-to-year weather, idiosyncratic grower behaviour, or small-sample effects rather than the scheduling service, so when measured across more blocks, seasons, and crops the average saving falls to levels that growers do not value. If the core quantified benefit disappears or becomes highly variable, the service loses its claim to value and willingness-to-pay evaporates, ending rapid expansion plans. The strategy currently assumes the single-season, three-orchard signal generalizes without committing to multi-year, controlled validation.",
+              "question": "What specific, multi-site and multi-year validation (control/comparison design, measurement protocol, and statistical thresholds) will we produce before scaling that would make the 18% saving a defensible, repeatable claim?"
+            },
+            {
+              "title": "Revealed preference mismatch: growers won't pay $150/acre at scale",
+              "severity": "high",
+              "description": "Failure scenario: early customers verbally endorsed the service and reported behavior changes, but when asked to adopt at scale \u2014 across diverse growers, orchards, and crop economics \u2014 most decline or negotiate materially lower pricing or services. Stated intent ('we would have used more water') may not translate into widespread subscription purchases because growers prioritize different investments, perceive insufficient risk reduction, or expect irrigation decisions to remain farm-managed. The document lacks evidence that the $150/acre price point and subscription model survive beyond early adopters.",
+              "question": "How will we validate, with a representative sample of growers and real purchasing decisions, that $150/acre (or equivalent contract terms) is acceptable and sustainable outside the founding customers?"
+            },
+            {
+              "title": "Assumed cross-crop transferability \u2014 'physics' \u2260 deployable value across almonds, pistachios, walnuts, grapes",
+              "severity": "high",
+              "description": "Failure scenario: while soil moisture physics are similar in theory, irrigation systems, root architecture, crop-specific crop-water response, pest/disease tradeoffs, and grower management conventions differ enough that the scheduling service's algorithms and agronomic recommendations do not deliver comparable savings or are operationally incompatible across target crops. If agronomic recommendations produce lower savings, increased perceived risk, or additional agronomist time per client, expansion into other crops stalls. The strategy asserts transferability without empirical cross-crop evidence.",
+              "question": "What crop-specific tests and performance targets will we require to declare the service effective for each new crop, and how will we adapt algorithms/operations if those targets are not met?"
+            },
+            {
+              "title": "Scaling sales assumption: acquisition cost and sales model won't hold as we expand",
+              "severity": "high",
+              "description": "Failure scenario: the stated $18k acquisition cost and sub-six-month payback are based on a small, founder-led sales process with trial hardware and agronomist visits; when pursuing tens of thousands of acres across regions and crops, sales cycles, trial cadence, and credentialing needs change and CAC rises or sales velocity slows. If the head-of-sales hire cannot replicate the low-touch, repeatable channel implied, the go-to-market plan fails to hit acreage targets. The document does not show evidence that the current sales process scales or that alternative channels have been validated.",
+              "question": "What evidence demonstrates the $18k CAC and six-month payback scale reproducibly when moving from three reference customers to a distributed sales strategy across new crops and regions?"
+            },
+            {
+              "title": "High revenue concentration creates fragile scaling assumptions",
+              "severity": "medium",
+              "description": "Failure scenario: revenue is concentrated in two large growers (over 80% combined), and this concentration masks weak product-market fit beyond a small set of early supporters. If those large customers do not expand acreage, renew under the same terms, or fully endorse the product to their peers, the traction signal used to justify Series A and aggressive scaling is misleading. The strategy lacks a clear plan to diversify reference customers and de-risk dependency before scaling.",
+              "question": "What milestones and customer mix thresholds will we hit to demonstrate traction is broad-based rather than concentrated in a few early anchors?"
+            },
+            {
+              "title": "Attribution and baseline measurement uncertainty undermines claimed savings",
+              "severity": "medium",
+              "description": "Failure scenario: the method for establishing the prior-year baseline and attributing reduced water use to the scheduling service is insufficiently rigorous, so in drier/wetter year-to-year variability the company cannot substantiate savings to skeptical buyers or investors. Without standardized measurement protocol and attribution controls (e.g., accounting for ET, surface water deliveries, and farm operational changes), claims will be challenged and scaled sales conversations will stall. The document does not specify measurement standards or third-party validation plans.",
+              "question": "What specific measurement and attribution protocol (baseline definition, data sources, control comparisons, and auditability) will we adopt to make savings claims defensible to prospective customers and investors?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Mixed. You have real early revenue and a measured season of water savings on three orchards, but the plan extrapolates those results to 40,000 acres and multiple crops without supporting data. The most important remaining issue is whether the 18% water saving and claimed unit economics generalize across crops, seasons and scale.",
+          "flaws": [
+            {
+              "title": "Critical: 18% water saving is overgeneralized and unsupported for other crops",
+              "severity": "critical",
+              "description": "The 18% water reduction is measured on your three existing orchards for a single season (2025 vs prior year) and you then apply it to almonds, pistachios, walnuts and wine grapes. This is a direct extrapolation across crops and seasons with no presented data that the same percent saving, or the same yield/no-yield tradeoff, holds for other crops or multi-year conditions. The central revenue/value model depends on applying 18% to every acre, so the plan is fragile if that number is not generalisable.",
+              "question": "Provide the raw per-block water-use and yield data (for each block) over multiple seasons showing the 18% reduction and no yield loss, plus comparable trials or agronomic evidence demonstrating the same percentage saving (or an evidence-backed conversion factor) for pistachios, walnuts and wine grapes."
+            },
+            {
+              "title": "High: Stated CAC payback (<6 months) contradicts your own CAC and margin figures",
+              "severity": "high",
+              "description": "You state acquisition cost \u2248 $18,000 and a typical new grower contributes \u2248 $2,500/month gross margin. Arithmetic: $18,000 \u00f7 $2,500/month = 7.2 months to recover CAC, not under six months as claimed. This is a direct numerical contradiction that affects unit-economics and fundraising messaging.",
+              "question": "Which of the two numbers is incorrect: please confirm the actual acquisition cost per grower and/or provide the supporting calculation (detailed margin per customer or acres) that demonstrates payback under six months."
+            },
+            {
+              "title": "High: Revenue concentration percentages sum to >100% (52%+31%+22%=105%)",
+              "severity": "high",
+              "description": "You report revenue concentration as 52%, 31% and 22% for three orchards; these add to 105%, which is impossible. This undermines credibility of the ARR breakdown and any downstream statements about customer concentration risk.",
+              "question": "Please supply the exact revenue (or percent) contribution by customer that reconciles to 100% and the raw revenue lines that produce the $212k ARR so we can verify the concentration numbers."
+            },
+            {
+              "title": "High: Scaling math requires an explicit assumed acres-per-grower (missing load-bearing input)",
+              "severity": "high",
+              "description": "You target 40,000 acres in three years but give no assumed average acres per grower at scale. Using current average (1,100 acres / 3 customers \u2248 366.7 acres/customer) implies ~109 customers (40,000 \u00f7 366.7 \u2248 109). At $18k CAC that is \u2248 $1.96M in acquisition costs alone. Without the assumed acres/customer the fundraising and CAC spend planning are under-specified and could be materially different.",
+              "question": "State the assumed average acres per customer at scale (or provide the target number of customers) and the implied total acquisition spend to reach 40,000 acres using your stated $18k CAC."
+            },
+            {
+              "title": "Medium: Measured 18% saving is from a single-season comparison with a confounding wet-to-dry year",
+              "severity": "medium",
+              "description": "The 18% figure is a year-over-year comparison where the prior year was unusually wet and 2025 drier \u2014 growers' statements about counterfactual behavior are anecdotal. n=3 orchards and single-season comparisons are likely confounded by weather and operational changes; growers' subjective 'no detectable yield loss' is not an objective yield metric.",
+              "question": "Provide multi-year block-level water and objective yield data (kg/acre or lbs/acre) for the measured blocks and the local weather/ET data to show the saving is attributable to your service and not to inter-annual weather variation."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H06-nurse-english-prep.md",
+      "seconds": 45.8,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The plan hinges on three fragile assumptions: that paid-social acquisition economics in Nigeria and India will stay below the $60 threshold; that the internally surveyed 71% pass rate is a reliable measure for expansion decisions; and that local tutors and minimal curriculum changes will reproduce Philippine outcomes. The likeliest single kill is ad/economics in the new markets exceeding the stated threshold, making the planned tests unscalable. Several other risks come from treating survey responses as representative, assuming tutor supply and curriculum fit, and presuming the same ad creative/messaging will convert across different countries.",
+          "flaws": [
+            {
+              "title": "Critical: acquisition economics in Nigeria/India will exceed the $60 per enrolled threshold",
+              "severity": "critical",
+              "description": "Failure scenario: paid social in Nigeria or India produces materially higher cost-per-enrolled-student than the $60 cutoff (because of higher CPCs, different audience sizes, lower conversion rates, or ad platform fragmentation), causing both $20k tests to fail to meet the go/no-go rule and preventing any market-scale expansion. The plan assumes Philippine CAC scales as a baseline without documented localized acquisition tests. If this single metric fails, the expansion decision rule prevents scaling and the company is stuck with a saturating Philippines channel.",
+              "question": "What localized acquisition benchmarks, sample ad experiments, and conversion funnels prove we can acquire Nigerian and Indian nurses for under $60 per enrolled student before committing $20k to each market?"
+            },
+            {
+              "title": "High: reported 71% pass rate may be inflated by 50% survey nonresponse",
+              "severity": "high",
+              "description": "Failure scenario: the 71% pass rate is biased upward because only half of students respond to the survey and responders are disproportionately the successful/completing students; actual pass rates (including non-responders) are substantially lower and fall below the 60% expansion threshold, causing the team to misjudge product effectiveness. The document does not state how pass data is validated, whether exam scores are verified, or how nonresponse bias is addressed.",
+              "question": "How will you validate true pass rates independent of voluntary surveys (e.g., verified exam results, mandatory follow-up, or statistical adjustments for nonresponse) to ensure the >60% rule is meaningful?"
+            },
+            {
+              "title": "High: inability to hire/scale local tutors with requisite exam expertise",
+              "severity": "high",
+              "description": "Failure scenario: local tutor hiring in Nigeria and India fails to produce enough tutors who both speak locally appropriate English accents and have demonstrated mastery of the target exam formats; the team ends up hiring tutors with weaker pedagogy or exam knowledge, which lowers pass rates and student satisfaction. The strategy assumes local tutors can be found and trained but provides no hiring pipeline, selection criteria, or proof that tutor quality will match Philippine outcomes.",
+              "question": "What concrete hiring funnel, selection metrics, sample tutor QA, and ramp timeline demonstrate you can recruit and scale local tutors who deliver comparable pass outcomes?"
+            },
+            {
+              "title": "Medium: curriculum and exam differences are larger than assumed",
+              "severity": "medium",
+              "description": "Failure scenario: the target exams in Nigeria and India differ in format, language register, or regulatory expectations such that the existing 8-week course content and lesson sequences are insufficient; one-off tutor adjustments do not close the gap and pass rates decline. The document assumes only accent and 'exam content differ' and that local tutors alone will adapt curriculum, but it does not describe a curriculum gap analysis or required content development work.",
+              "question": "What side-by-side mapping of exam formats and content shows which modules must change, and what resources/timelines are budgeted to adapt the curriculum beyond tutor accents?"
+            },
+            {
+              "title": "Medium: ad creative and messaging will not translate across cultures",
+              "severity": "medium",
+              "description": "Failure scenario: Facebook/Instagram creative that converted Filipino nurses fails to resonate with Nigerian or Indian nurses because of different migration pathways, motivators, credential expectations, or trust signals\u2014resulting in clicks but low enrollments or poor completion rates. The plan assumes platform and creative reuse without documented localization research or messaging tests.",
+              "question": "What qualitative research and localized creative A/B tests will you run to confirm the value proposition, trust signals, and calls-to-action that drive enrollments in each market?"
+            },
+            {
+              "title": "Low: fallback to add a second exam track in the Philippines may not be plug-and-play",
+              "severity": "low",
+              "description": "Failure scenario: the Philippines is approaching channel saturation and the new exam track targets a different buyer persona or requires new tutor competencies and messaging; reusing the same ad accounts and tutor pool fails to drive demand or passes, leaving growth stalled. The document treats the second exam as a straightforward reuse of existing assets without evidence that the same funnel and tutors apply.",
+              "question": "What evidence indicates the same ad accounts, audiences, and tutor pool can convert and support learners for a materially different exam track in the Philippines?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Strong. The business shows real revenue and 1,900 enrollments, so demand and historical CAC/refund figures are demonstrated. The most important remaining issue is measurement and unit-economics: survey-based pass rates and missing per-market tutor costs undermine the planned go/no-go tests.",
+          "flaws": [
+            {
+              "title": "Pass rate used as go/no-go is survey self-report with 50% response \u2014 risk of selection bias",
+              "severity": "high",
+              "description": "The decision rule requires survey-reported pass rate >60%, but the only reported pass rate (71%) comes from a survey with ~50% response. Self-selection likely inflates pass rates because students who pass are more likely to respond. That measurement is central to the go/no\u2011go decision and is unsourced/uncorroborated by independent exam records. Without validated pass counts, the threshold is unreliable.",
+              "question": "Provide the raw counts for the Philippines: number of enrolled students, number who actually sat the exam, number surveyed, number of survey respondents who reported pass, and whether you can validate passes against exam authority records (or supply documentation showing how many unique students actually passed)."
+            },
+            {
+              "title": "Test sample and precision: $20k at $60 CAC yields too few survey responses to reliably detect >60% pass rate",
+              "severity": "medium",
+              "description": "At the stated go/no-go CAC cap $60, a $20,000 test buys 20,000/60 = 333 enrollments. With your historical 50% survey response that means ~167 responses. For p\u22480.6, SE = sqrt(0.6*0.4/167) \u2248 0.0379 \u2192 95% CI \u00b17.4%, so an observed 62% could easily be statistically indistinguishable from 55%. The planned spend therefore may not produce a precise enough estimate to make a confident go/no-go call.",
+              "question": "Show your expected enrollments and expected number of survey responses per $20k test (using your planned CAC and assumed response rate) and the resulting 95% confidence interval for the pass rate; if that CI exceeds \u00b15%, state how you'll increase precision (more spend, higher response rate, or exam-verified outcomes)."
+            },
+            {
+              "title": "No per-market tutor variable cost or per-student tutor burden disclosed",
+              "severity": "medium",
+              "description": "You say you'll hire local tutors per market but provide no tutor cost, class sizes, or utilization metrics. With price $140 and measured ad CAC \u2248 $30.50, average contribution before tutors and platform is only \u2248 $140 - $30.53 - (0.03*140\u2248$4.20) = $105.27 per enrollee. If tutor cost per student in Nigeria/India exceeds this, expansion will not be contribution-profitable despite meeting CAC/pass thresholds.",
+              "question": "Provide per-market tutor cost assumptions: tutor hourly rate, students per tutor session (or weekly student load), and the implied per-student tutor cost so we can see contribution margin per enrolled student in each target country."
+            },
+            {
+              "title": "\u2018Profitable at contribution level\u2019 claim undefined and unsupported by numbers",
+              "severity": "medium",
+              "description": "You state you have been 'profitable at the contribution level for the past eight months' but do not define 'contribution' or show the P&L items included (ads, tutors, platform, payment fees, refunds). This is load-bearing because it justifies scaling and hiring tutors; without a breakdown we cannot tell if Philippines economics will hold when tutor pay or other variable costs change.",
+              "question": "Provide the contribution P&L for the last 8 months showing revenue, ad spend, tutor payments, platform/payment processing fees, refunds, and resulting contribution margin per student and in aggregate."
+            },
+            {
+              "title": "Implicit assumption that Philippines CAC and funnel metrics transfer to Nigeria/India is undocumented",
+              "severity": "medium",
+              "description": "The plan implicitly treats the Philippines channel as a template for Nigeria and India but provides no evidence that ad performance, funnel conversion, or survey response behavior will be comparable. The document does note a higher CAC tolerance ($60) but gives no market-level CAC estimates or reach/traffic feasibility.",
+              "question": "Supply expected CAC, conversion rate (ad click\u2192enroll), expected funnel volumes (impressions\u2192clicks\u2192enrolls) for Nigeria and India based on either prior tests or comparable benchmarks, or explain why Philippines metrics are transferable."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H07-roofing-maintenance.md",
+      "seconds": 48.3,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The plan rests heavily on a small, self-selected informal-subscriber sample and untested assumptions about how property managers buy recurring maintenance. The likeliest failure is that procurement rules, budget timing, or revealed preferences prevent scaling beyond the 140 early adopters; other risks include misreading renewal as broad demand, contract/payment structure rejection, and missing operational dependencies (data, decision\u2011maker access, hiring). Each failure below is written as a concrete scenario to test before committing to hiring and roll\u2011out.",
+          "flaws": [
+            {
+              "title": "Killing blow \u2014 procurement and purchasing practices block scale",
+              "severity": "critical",
+              "description": "Failure scenario: when the team attempts to convert the broader customer base, property managers require formal procurement steps (RFPs, preferred\u2011vendor lists, multi\u2011site contracts or insurance endorsements) or must go through bundled facilities vendors, and Halvorsen cannot win or complete those processes quickly enough \u2014 so uptake stalls and the program never reaches 400 buildings. This single barrier could stop most renewals and new signups regardless of price or technician capacity. The document does not state any engagement plan for procurement cycles or account for how many customers are governed by centralized purchasing.",
+              "question": "Which customers in our installed base are subject to formal procurement workflows or preferred\u2011vendor rules, and what percentage of prospective maintained buildings would require RFPs, insurance proof, or other procurement steps before signing?"
+            },
+            {
+              "title": "Scaling assumption is based on a self\u2011selected 140\u2011building sample",
+              "severity": "high",
+              "description": "Failure scenario: the 140 buildings with informal maintenance and 91% renewal are anomalous (early adopters, high\u2011risk properties, or customers with a prior relationship); when the program is sold to the remaining installed base, conversion rates fall sharply and the 400\u2011building target is missed. The strategy treats the 140 as representative without segmenting by building age, owner type, or prior service intensity. If selection bias exists, revenue and hiring plans built on that sample are invalid.",
+              "question": "What are the profiles (building age, owner type, facility budget process, historical repair frequency) of the 140 informal contracts vs the remaining installed/repaired buildings, and how do expected conversion rates differ by segment?"
+            },
+            {
+              "title": "Stated preference \u2260 revealed preference for recurring contracts and pricing",
+              "severity": "high",
+              "description": "Failure scenario: property managers express interest in maintenance but when presented with a recurring $2,100/year contract (auto\u2011renewal, payment terms, cancellation terms) they decline in favor of pay\u2011as\u2011needed repairs, internal staff checks, or cheaper one\u2011off inspections. The current renewal stat (127/140) could reflect inertia or preexisting informal understandings rather than willingness to accept formal contract terms and prices at scale. If customers won\u2019t sign standardized recurring agreements, revenue growth stalls.",
+              "question": "How many pilot customers would sign a standardized annual contract with our proposed terms and price (vs continuing ad\u2011hoc or pay\u2011per\u2011incident), and what contract elements most frequently cause refusals?"
+            },
+            {
+              "title": "Sales timing and budget cycle mismatch delays signups past 24 months",
+              "severity": "high",
+              "description": "Failure scenario: many target property managers make maintenance budgeting decisions on an annual or multi\u2011year cadence and cannot add a new vendor mid\u2011cycle; as a result, most potential customers cannot sign within the 24\u2011month horizon and the 400\u2011building target is missed. The document does not account for procurement lead times, fiscal year constraints, or the calendar timing of school and municipal budgets. Delayed sales compress the usable runway for technician hiring and make the 12\u2011month review threshold misleading.",
+              "question": "What are the typical budgeting and approval cycles (timing and lead time) for our target property managers and school facilities, and how many prospective customers have signable budgets within the next 12 and 24 months?"
+            },
+            {
+              "title": "Assumed causal benefit (fewer emergencies) may be selection, not effect",
+              "severity": "medium",
+              "description": "Failure scenario: customers who purchased maintenance historically had fewer emergencies for reasons unrelated to the program (better initial installation, newer roofs, or more proactive on\u2011site staff). If maintenance does not materially reduce repairs for the broader base, the program\u2019s value proposition weakens and renewals/referrals decline. The strategy infers causality from correlation without testing whether maintenance meaningfully alters emergency incidence across segments.",
+              "question": "Can we quantify, via matched comparison, whether customers who receive maintenance experience a statistically significant reduction in emergency repairs compared with similar buildings that do not receive maintenance?"
+            },
+            {
+              "title": "Unstated dependency on accurate asset/contact data and software interoperability",
+              "severity": "medium",
+              "description": "Failure scenario: the company cannot reliably identify, contact, and schedule service across 400 buildings because customer contact info, roof asset histories, or building access procedures are incomplete, and the chosen scheduling software does not integrate with current CRM or billing systems. This prevents efficient roll\u2011out, increases customer friction, and lowers conversion/renewal when the program is formalized. The document assumes scheduling software will solve scale without validating data readiness or integration needs.",
+              "question": "Do we have clean customer contact lists, standardized roof asset records, and a validated plan for integrating the chosen scheduling software with existing CRM/billing workflows to serve 400 buildings?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Mixed. The company has real revenue and a 140-building maintenance pilot with strong renewal, proving some measured traction. The biggest remaining gaps are the unsupported 45% gross-margin assumption and lack of a sourced plan to add the 260 additional buildings needed to hit 400.",
+          "flaws": [
+            {
+              "title": "Unsupported 45% gross-margin claim is load-bearing and unverified",
+              "severity": "critical",
+              "description": "The plan's profitability hinges on an assumed 45% gross margin for the maintenance program but provides no basis for this number. Numerically: 400 buildings \u00d7 $2,100 = $840,000 revenue; at 45% gross margin gross profit = $378,000. Three technicians cost $204,000, leaving $174,000 to cover the truck, scheduling software and any other incremental costs \u2014 none of which are estimated. The break-even gross margin to cover technician salaries alone is 204,000 / 840,000 = 24.29%; if the true margin is anywhere near the company average (31%) or falls below ~24.3% the program economics change materially. This is a central arithmetic risk that could make the program unprofitable once truck/software and other costs are included.",
+              "question": "Please provide the line-item basis for the 45% gross-margin estimate (materials per building, labor hours billed, historical maintenance cost data) plus firm estimates for truck purchase/lease and scheduling-software costs so we can produce a full incremental P&L and confirm the program remains profitable."
+            },
+            {
+              "title": "No evidence or plan showing where 260 additional buildings will come from",
+              "severity": "high",
+              "description": "Targeting 400 maintained buildings means adding 260 to the current 140. If the addressable pool is the 1,150 active customers and we assume one building per customer, the remaining pool is 1,010 and required conversion = 260 / 1,010 = 25.7%. That conversion rate may be optimistic given no conversion data for customers not already on the program and unclear building counts per customer. The document gives no market-sizing or conversion assumptions to justify hitting 400 within 24 months.",
+              "question": "Provide the addressable number of buildings (not just customers), historical conversion rates from upsell offers to non-maintenance customers, or a pipeline showing how the 260 additional buildings will be sourced (with conversion % assumed) so we can confirm the target is reachable."
+            },
+            {
+              "title": "Ambiguous 12-month review trigger \u2014 affects hiring and ramp math",
+              "severity": "high",
+              "description": "The doc says: 'We will review progress at 12 months, and if fewer than 250 buildings are signed we will stop adding technicians.' It's unclear whether '250 buildings signed' means 250 total maintained buildings or 250 additional/new signings in 12 months. Arithmetic consequences differ: if 250 total, needed new = 110 in 12 months \u2192 \u22489.2 signings/month; if 250 new, needed = 250 in 12 months \u2192 \u224820.8/month. This ambiguity materially changes hiring and capacity decisions and the decision rule's meaning.",
+              "question": "Clarify whether the 12\u2011month threshold is 250 cumulative maintained buildings or 250 new signings in 12 months, and provide the assumed monthly sign-up rate used to justify hiring three technicians."
+            },
+            {
+              "title": "No technician capacity / time-per-building assumptions to justify 3 hires",
+              "severity": "medium",
+              "description": "The plan adds three technicians at $68k loaded each but gives no work-time model showing that 3 technicians can handle 400 buildings (or what utilization is expected). The implied load is 400 / 3 \u2248 133 buildings/technician/year; whether that is feasible depends on visits/year, average hours per inspection/maintenance, travel time, and emergency call volume. Without these inputs the staffing hire is an assumption, not evidenced.",
+              "question": "Provide the expected visits per building per year, average hours (including travel) per visit, technician productive hours per year, and planned utilization so we can verify 3 technicians can sustainably service 400 buildings."
+            },
+            {
+              "title": "Renewal rate (91%) from 140-building pilot is being generalized without evidence",
+              "severity": "medium",
+              "description": "127/140 renewals (91%) is a strong result but comes from customers already receiving informal maintenance; there is no evidence that the same high renewal holds for customers newly converted or for a larger roll-out. Selection bias (early adopters or landlord types) can make pilot retention unrepresentative of the broader base.",
+              "question": "Supply cohort details for the 140 buildings (customer types, reasons they were in the pilot) and any historical data on renewal/retention for customers newly offered maintenance, or run an A/B test/pilot with a representative sample and report conversion and renewal rates."
+            },
+            {
+              "title": "Unquantified benefit from fewer emergency repairs (claimed but not measured)",
+              "severity": "low",
+              "description": "The doc states that customers on maintenance 'rarely need an emergency repair' and that it 'smooths crew seasonal workload', but offers no quantification of reduced emergency jobs, avoided costs, or revenue impacts. This is presented as a benefit but is not measured or included in the P&L projections.",
+              "question": "Provide measured historical data showing how maintenance customers reduce emergency repair frequency and the quantifiable impact on revenue variability, crew utilization, or cost savings (e.g., emergency repairs avoided per maintained building per year)."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H08-vet-fifth-clinic.md",
+      "seconds": 49.8,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The plan rests on a small set of fragile assumptions about hiring, demand ramp, and the composition of local population growth. The likeliest single failure is inability to staff the new clinic to the team's threshold, which triggers a cascade of delays and lost opportunity. Several other assumptions\u2014extrapolating growth from two prior openings, equating suburb population growth with pet-care demand, and ignoring cannibalization\u2014are plausible second-order killers if not validated.",
+          "flaws": [
+            {
+              "title": "Critical hiring failure stops the project",
+              "severity": "critical",
+              "description": "Failure scenario: the team cannot secure two full\u2011time veterinarians by the planned opening date and chooses to delay rather than use locums. Because the strategy explicitly ties opening to having two FT vets, delays may accumulate against a signed lease and build schedule, eroding the timing advantage the plan expects and increasing sunk costs. The document gives no concrete contingency (e.g., bridge staffing options with clear thresholds, financial runway for delays, or alternative staffing models) beyond 'delay opening'.",
+              "question": "If we cannot have two full\u2011time veterinarians by opening, what are the concrete contingency actions, maximum acceptable delay, and the financial and contractual consequences of those delays?"
+            },
+            {
+              "title": "Ramp assumption (85% of mature by year 3) is extrapolated from too small and possibly non\u2011representative sample",
+              "severity": "high",
+              "description": "Failure scenario: the new clinic fails to hit ~85% of group average by year three because the earlier two openings used to justify that figure were atypical (different demographics, pricing environment, or tailwinds). The plan lacks a statistical basis, sensitivity ranges, or alternate scenarios if the new location underperforms versus that single metric. If the ramp is materially slower, the projected revenue and staffing plans will be invalidated.",
+              "question": "What is the evidence supporting the 85% ramp (cohort details, local comparables), and can you publish a sensitivity analysis showing outcomes if ramp is 25\u201350% slower?"
+            },
+            {
+              "title": "Misread of local demand: population growth \u2260 paying pet\u2011patients",
+              "severity": "high",
+              "description": "Failure scenario: the suburb's fast population growth does not translate into the volume or payer mix the clinic forecast assumes\u2014growth could be driven by demographics (e.g., renters, younger households, or households with lower pet\u2011ownership rates or lower discretionary spend) that generate fewer visits or lower average spend. The strategy does not cite local pet\u2011ownership, income, or veterinary utilization data to validate consumer demand assumptions.",
+              "question": "What local market data (pet ownership rates, household income, age distribution, competitor utilization patterns) demonstrates the new population will produce the visit and revenue mix assumed?"
+            },
+            {
+              "title": "Overreliance on historical price increases to support growth assumptions",
+              "severity": "high",
+              "description": "Failure scenario: prior revenue growth was materially driven by 3\u20134% annual price increases; if pricing cannot be sustained at the new location (the plan assumes no price premium but also relies on price-driven growth), visit volume alone may not achieve the same revenue. The document lacks a breakdown of revenue growth by price vs volume and does not model a scenario where price growth stalls.",
+              "question": "How much of past system revenue growth came from price increases versus visit growth, and how does the new\u2011clinic forecast change if price inflation is limited for 3 years?"
+            },
+            {
+              "title": "Unstated cannibalization and catchment overlap risk",
+              "severity": "medium",
+              "description": "Failure scenario: a sizable share of the new clinic\u2019s patient base is drawn from existing clinics rather than net new customers, so group revenue and EBITDA do not rise by the projected clinic contribution. The plan assumes the new clinic will reach a standalone revenue target but provides no catchment analysis, patient origin data, or estimates of intra\u2011group patient shifts.",
+              "question": "What share of forecasted visits are expected to be net new patients versus transfers from existing clinics, and what is the group\u2011level revenue/EBITDA projection after accounting for cannibalization?"
+            },
+            {
+              "title": "Assumes low turnover and cultural replicability without evidence",
+              "severity": "medium",
+              "description": "Failure scenario: opening a new clinic increases turnover (staff take new roles, commute patterns change, leadership bandwidth is stretched), degrading productivity and customer experience. The document cites group-level low turnover historically but does not describe how culture, onboarding, training, or HR capacity will scale to a fifth site to maintain the same tenure and performance.",
+              "question": "How will you preserve retention and replicate culture at the new site\u2014what are the concrete HR/onboarding plans and leading indicators you will monitor in the first 12 months?"
+            },
+            {
+              "title": "Assumes ability to delay opening without material strategic cost",
+              "severity": "low",
+              "description": "Failure scenario: the plan's stated preference to delay opening if under\u2011staffed overlooks time\u2011sensitive costs and competitive/windowing effects (e.g., lease obligations, escalating build costs, or shifting local demand), meaning repeated delays could compound strategic loss. The document mentions the option to delay but does not quantify acceptable delay length or the breakpoints that would force alternate decisions.",
+              "question": "What is the maximum delay (in months) we can absorb without undermining the investment case, and what contractual or market risks increase with each month of delay?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Strong. Brightwater is an operating veterinary group with real revenue, profitability and a track record; the expansion is funded from existing cash and benchmarked to prior openings. The most important remaining issues are unsupported or underspecified assumptions that drive the new-clinic P&L: revenue ramp, year-by-year margins, post-build cash runway, competitor/pricing evidence, and hiring fill rates.",
+          "flaws": [
+            {
+              "title": "Revenue ramp (85% by year 3) rests on only two prior openings",
+              "severity": "high",
+              "description": "The plan\u2019s key revenue forecast for the new clinic \u2014 85% of mature average by year 3 (85% \u00d7 $2.6M = $2.21M \u2248 $2.2M) \u2014 is justified only by 'our last two openings'. n=2 is a very small sample and may not generalize to a different suburb with different competitors and demographics. No year-by-year revenue trajectories or variance are provided for those two reference clinics.",
+              "question": "Provide the month-by-month or year1\u2013year3 revenue for each of the two prior clinic openings, plus the mature revenue they reached and the local market context (distance to nearest clinic, presence of corporate competitors, population growth) so we can judge whether those ramps are comparable."
+            },
+            {
+              "title": "Used group 18% margin to compute new-clinic profit without specifying year-by-year margin",
+              "severity": "medium",
+              "description": "The document computes ~$400k EBITDA for the new clinic as 18% of $2.2M (2.2M \u00d7 0.18 = $396k) but also states that 'new clinics usually run below the group margin for the first two years.' It is unclear what margin is assumed at year 3 (the point of the 85% revenue), so the profit projection is unsupported without a year-by-year margin assumption.",
+              "question": "Supply the assumed EBITDA margin for the new clinic for years 1, 2 and 3 (with supporting data from the two prior openings showing the margin path), or justify using the 18% group margin at year 3."
+            },
+            {
+              "title": "Post-build cash cushion not shown: $1.5M - $1.1M = $400k remaining",
+              "severity": "medium",
+              "description": "Funding the $1.1M build from $1.5M cash leaves only $400k on the balance sheet (1.5M \u2212 1.1M = 0.4M). The plan does not present a cash-flow forecast or months-of-runway for the ramp period, which is critical if the new clinic underperforms or staffing is delayed.",
+              "question": "Provide a post-build quarterly cash-flow projection (revenues, operating expenses, hiring costs) showing the expected months of cash runway and the break-even month under your base and downside (slower ramp) scenarios."
+            },
+            {
+              "title": "Competitive environment and pricing assumption unsourced",
+              "severity": "medium",
+              "description": "The plan assumes 'no price premium over our current clinics' because two corporate competitors exist, but gives no evidence of how competitors affected pricing or volumes in prior openings. That pricing/elasticity assumption materially affects the revenue ramp and profitability.",
+              "question": "Share historical evidence (from the two prior openings or market studies) showing how competitor presence changed realized pricing or visit volumes, or provide the specific price and volume assumptions used for the new location."
+            },
+            {
+              "title": "Hiring risk is flagged but lacking historical fill-rate data",
+              "severity": "medium",
+              "description": "Recruiting is presented as the main risk and the team has one offer accepted and is 'in talks' with a second. The plan\u2019s conditional strategy (delay if two FTEs are not hired) is sensible but unsupported by historical time-to-hire metrics for prior clinic openings or contingency probabilities.",
+              "question": "Provide the accepted candidate\u2019s start date/contract and the historical time-to-fill for two full-time veterinarians in prior openings (or region-wide averages) so we can assess the probability of meeting your staffing-by-opening condition."
+            },
+            {
+              "title": "Stated historical CAGR (6.5%) does not match the numbers provided",
+              "severity": "low",
+              "description": "The document states revenue grew from $7.9M to $10.4M over four years 'about 6.5% a year'. The compound annual growth rate is (10.4/7.9)^(1/4)-1 \u2248 7.15%, not 6.5%. This is a small arithmetic discrepancy but worth correcting.",
+              "question": "Confirm the historical CAGR calculation or correct the stated percent and, if relevant, supply the year-by-year revenues used to compute it."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H09-dividend-screen-backtest.md",
+      "seconds": 50.9,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The strategy's backtest relies on a narrowly selected historical universe and a single, simple signal (five\u2011year dividend growth) that may not generalize. The most likely failure modes are selection and data biases that inflated past returns, and a fundamental mismatch between what the metric captures and what real investors pay for (cash income and payout behavior). Several concrete data and regime dependencies are unstated and, if wrong, would collapse the edge.",
+          "flaws": [
+            {
+              "title": "Critical: Survivorship and look\u2011ahead bias from using 'today's S&P 500' sample",
+              "severity": "critical",
+              "description": "Failure scenario: the backtest is materially inflated because it uses the 480 companies that survived to today and have complete price histories, so the live investable universe at each historical rebalance would have included firms that failed, were delisted, or only later joined the index. If the real historical selection set (the true investable universe at each date) is used, the screen's historical edge shrinks or disappears and realized performance falls below expectations.",
+              "question": "How does the strategy perform when backtested on the true, time\u2011matched investable universe at each rebalance date (no survivorship/look\u2011ahead filtering)?"
+            },
+            {
+              "title": "High: Metric selects high percentage dividend growth but low absolute cash payouts",
+              "severity": "high",
+              "description": "Failure scenario: the five\u2011year dividend growth ranking systematically favors companies that started with a very small dividend and raised it aggressively in percentage terms but still pay negligible cash. Investors expecting meaningful dividend income or yield react negatively, redeem, or never allocate, and the strategy's marketed benefit (income growth) fails to materialize in dollar terms.",
+              "question": "What is the distribution of absolute dividend cash payments and current yield for the selected 30 names at each rebalance, and would those cash flows meet target investor expectations?"
+            },
+            {
+              "title": "High: Corporate payout regime shifts erode the signal (buybacks, variable dividends, policy changes)",
+              "severity": "high",
+              "description": "Failure scenario: companies increasingly favor buybacks, special/variable payouts, or change dividend policies due to tax/regulatory or macro reasons, breaking the historical link between past dividend growth and durable cash flow quality. If dividend growth becomes a weaker or noisier proxy for durable cash generation, the strategy's purported edge vanishes and selections perform no better than neutral benchmarks.",
+              "question": "How robust is the strategy to changes in corporate payout behavior (e.g., lower dividend issuance, substitution by buybacks, more frequent special dividends) and what contingency rules would you apply?"
+            },
+            {
+              "title": "High: Investors want present yield and stability, not historical growth rates",
+              "severity": "high",
+              "description": "Failure scenario: potential outside investors read the white paper and want dividend strategies for cash income or low volatility; they discover the portfolio\u2019s current yield or income volatility is lower/higher than expected because the screen optimizes five\u2011year growth, not yield. Stated interest in 'dividend strategies' therefore fails to convert into committed capital and the attempt to scale via published research stalls.",
+              "question": "Have you validated that your target allocators prioritize five\u2011year dividend growth over current yield, dividend stability, or downside protection, and are willing to accept the strategy's income profile?"
+            },
+            {
+              "title": "Medium: Backtest period and S&P\u2011only universe may reflect favorable past regimes",
+              "severity": "medium",
+              "description": "Failure scenario: the 2005\u20132024 window and restriction to S&P 500 survivals coincided with regimes (recoveries, falling rates, sector composition) that favored dividend growers; a different future regime (higher rates, sector rotation, persistent low growth) reverses the relationship and the strategy underperforms. If the strategy's edge was regime\u2011dependent, next 18 months of different macro conditions erode returns.",
+              "question": "How does the strategy perform in rolling, out\u2011of\u2011sample slices and in simulated adverse macro regimes (rising rates, stagflation, sector rotations)?"
+            },
+            {
+              "title": "Medium: Dividend data quirks\u2014specials, one\u2011offs, restatements and corporate actions\u2014could fake growth",
+              "severity": "medium",
+              "description": "Failure scenario: special dividends, one\u2011time payouts, spin\u2011offs, or restated histories inflate five\u2011year growth rates in backtest data but are hard to identify in real time, causing the live rule to pick names whose apparent growth was not repeatable. If these anomalies are common among top-ranked names, the subsequent dividend path disappoints and performance degrades.",
+              "question": "What real\u2011time filters and data\u2011cleaning rules will you implement to exclude special/one\u2011time payouts, spin\u2011offs, and restatements from the five\u2011year growth signal?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Mixed. The backtest shows historical outperformance on the authors' constructed universe, but key measurement and sourcing issues remain. The most important unresolved problems are the arithmetic contradiction in reported CAGR vs terminal wealth and survivorship/look-ahead and implementation assumptions that could materially change results.",
+          "flaws": [
+            {
+              "title": "Arithmetic contradiction between stated CAGR and terminal wealth",
+              "severity": "critical",
+              "description": "You report a 14.2% annual return for the screen and also say $100,000 in Jan 2005 would grow to just under $1.9M by end-2024. These cannot both be true: 100,000*(1.142)^20 \u2248 $1.42M, while 100,000*(1.1586)^20 \u2248 $1.9M, so $1.9M corresponds to \u224815.86% p.a., not 14.2%. The benchmark figure is internally consistent (100,000*(1.098)^20 \u2248 $650k), which isolates the contradiction to the screen numbers.",
+              "question": "Provide the exact annualized return you computed for the screen, the per-year return series or yearly ending values, and reconcile which of the two reported facts (14.2% p.a. or final wealth \u2248 $1.9M) is correct and how the other arose (rounding, typo, or different compounding convention)."
+            },
+            {
+              "title": "Universe construction causes survivorship bias (using 'today's S&P 500' tickers)",
+              "severity": "high",
+              "description": "You backtested on the 480 stocks in today's S&P 500 with complete price histories over 2005\u20132024, which excludes firms that were in the index earlier but delisted or replaced. That selection mechanically removes losers and firms with interrupted dividend histories and thus inflates historical returns. This is a load-bearing choice because it directly affects realized returns and drawdowns.",
+              "question": "Provide the exact ticker list used and rerun the backtest on the historical S&P 500 constituents (or a full investable universe including delistings/mergers) for 2005\u20132024 and report the same metrics so we can compare survivorship-free results."
+            },
+            {
+              "title": "Possible look-ahead or timing error in dividend-growth and payout-ratio inputs",
+              "severity": "high",
+              "description": "The rule uses 'five-year dividend growth' and current payout ratio < 60%. The backtest must ensure both metrics are computed only from information that would have been available at each January rebalance (e.g., trailing 5 years of declared dividends and the latest reported payout ratio as of that date). If you used revised/annualized trailing figures or end-of-sample restated financials, the result could leak future information into past dates and overstate performance.",
+              "question": "For each rebalance date provide the exact formulas and raw input fields (dividend per share by declaration date or record date, EPS used for payout ratio, source and timestamp), and confirm that only data available as of that rebalance date were used; if not, produce a version that enforces strict vintage/timestamped inputs."
+            },
+            {
+              "title": "Unspecified turnover and trading-cost methodology behind the '10 bps' assumption",
+              "severity": "high",
+              "description": "You state assumed trading costs of 10 basis points per rebalance but give no turnover, slippage, or how costs were applied (per side, per share, on full turnover). Trading-costs interact with turnover \u2014 e.g., assuming (not from document) 100% turnover at each annual rebalance: 0.001 \u00d7 20 rebalances = 2.0% cumulative cost; with partial turnover it differs. Without turnover and implementation rules the post-cost returns are not verifiable.",
+              "question": "Provide the average turnover (percent of portfolio traded) per rebalance over the backtest, and the exact formula you used to convert that and the 10 bps into a drag on annual return (including whether 10 bps is per side or round-trip and whether it was applied to pre- or post-dividend values)."
+            },
+            {
+              "title": "Sensitivity claims (50/60/70% cutoffs) lack supporting statistics",
+              "severity": "medium",
+              "description": "You assert results were 'similar' for payout-ratio cutoffs of 50, 60 and 70 percent but provide no outcome table. Sensitivity of returns, volatility, drawdown and annual win-count to that parameter is load-bearing for claims of robustness.",
+              "question": "Supply a table showing annualized return, volatility, max drawdown, and number of years beating the benchmark for payout cutoffs 50%, 60%, and 70% so we can judge the stated robustness."
+            },
+            {
+              "title": "No disclosure of dividend reinvestment, corporate actions, or treatment of delistings",
+              "severity": "medium",
+              "description": "The screen is dividend-focused but you do not state whether dividends were reinvested, how special dividends were handled, or how delisted companies were treated (cash-out at last price, zero recovery, etc.). Those choices materially change terminal wealth and drawdowns.",
+              "question": "Confirm whether dividends were reinvested and provide the rules used for special dividends, stock splits, spin-offs and for companies that were delisted (including recovery assumptions); if not already done, produce a version with standard investable assumptions (dividends reinvested at next-trade price and delistings treated conservatively)."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    },
+    {
+      "doc": "H10-checkout-redesign-test.md",
+      "seconds": 51.0,
+      "results": {
+        "pre_mortem": {
+          "lens": "pre_mortem",
+          "summary": "The likeliest failure is a false positive driven by stopping the experiment early during an atypical three-day-sale/email window; the p\u22480.02 from a standard two-proportion test is not reliable under daily peeking and an unusual traffic mix. Secondary failures include unmeasured heterogeneity by traffic source (email vs. organic/paid), small sample winner's-curse effects that shrink with scale, unjustified linear scaling to monthly/other pages, and process/incentive choices that remove replication safeguards.",
+          "flaws": [
+            {
+              "title": "Critical: Early stopping during a sale/email window produced a transient false positive",
+              "severity": "critical",
+              "description": "Failure scenario: the team checked results daily and stopped on day 9 while a three-day weekend sale email had been sent on day 6, so the observed lift could be a transient response to the sale rather than a durable design effect. The likeliest way this fails is that the sale-driven, high-intent visitors boosted conversion for a brief window and the apparent lift disappears or reverses when the redesign is exposed to normal traffic. Because the team explicitly decided not to run a follow-up, there is no guardrail to detect regression to baseline before widespread rollout and bonus allocation.",
+              "question": "How would the effect estimate change in a pre-registered, fully powered test that excludes the sale/email cohort or controls for it, run without interim peeking?"
+            },
+            {
+              "title": "High: Unsegmented traffic creates confounding by email/high-intent visitors",
+              "severity": "high",
+              "description": "Failure scenario: email recipients (or other high-intent channels) responded much better to the new checkout, and even a small imbalance or interaction produced the bulk of the lift despite the dashboard summary. The likeliest way this fails is that the design only helps a specific source (email during promotions) and provides little or no uplift for the majority of organic, paid, or returning visitors once rolled out. Because no per-source breakdown was pre-specified, the team may have misattributed a channel effect to a UI change.",
+              "question": "Can you show variant-level conversion broken down by traffic source with sufficient sample and confirm randomization held within each source?"
+            },
+            {
+              "title": "High: Sequential peeking invalidated the standard p-value",
+              "severity": "high",
+              "description": "Failure scenario: daily checks and stopping at an apparently low p-value introduced optional stopping bias, so the reported p\u22480.02 from a standard two-proportion test understates the true Type I error. The likeliest way this fails is that the statistical significance vanishes once the analysis accounts for multiple looks or uses a sequential testing framework, revealing the result was a false positive. The team's statement that 'it was already significant' relies on an analysis method that the experiment process did not support.",
+              "question": "Have you recomputed significance using an appropriate sequential testing correction or confidence sequence, and does the effect survive that correction?"
+            },
+            {
+              "title": "Medium: Small sample and winner\u2019s curse inflate the observed lift",
+              "severity": "medium",
+              "description": "Failure scenario: with only ~2,100 visitors per arm the observed 37% relative lift is an upward-biased estimate (winner's curse), and as the variant sees tens of thousands of users the measured effect regresses toward a much smaller true lift or zero. The likeliest way this fails is that projected monthly/annual revenue gains are based on an overestimate that collapses under larger, more stable samples. Without post-hoc uncertainty quantification of the true effect size range, the revenue extrapolation is fragile.",
+              "question": "What are the post-hoc confidence intervals for the true effect size and what sample would be required to obtain a stable estimate at the targeted MDE?"
+            },
+            {
+              "title": "Medium: Assumption that checkout lift scales linearly and transfers to product pages",
+              "severity": "medium",
+              "description": "Failure scenario: the team extrapolated a short-term checkout lift to monthly revenue and green-lit the same redesign for the product page without evidence that the mechanisms (purchase intent, urgency, funnel position) are the same. The likeliest way this fails is that product pages and steady-state traffic have different drivers, so applying the same change yields little benefit or negative interactions, while the monthly extrapolation magnifies any initial overestimate into a large mistaken forecast.",
+              "question": "What empirical or theoretical justification do you have that the checkout effect will scale linearly to the full monthly funnel and that the same design will produce comparable gains on product pages?"
+            },
+            {
+              "title": "Low: Incentives and decision rules removed replication and encouraged premature declaration",
+              "severity": "low",
+              "description": "Failure scenario: declaring the test a win, shipping immediately, and crediting the project in the bonus pool created incentives to stop early and avoid replication, making retraction politically costly if the effect vanishes. The likeliest way this fails is organizational \u2014 reversal or additional testing is delayed or resisted, so a transient result becomes entrenched as policy and budget allocation despite not replicating at scale.",
+              "question": "Who approved the stopping rule and bonus recognition, and will you require an independent, pre-registered replication before embedding the result in bonuses and cross-funnel rollouts?"
+            }
+          ]
+        },
+        "evidence_audit": {
+          "lens": "evidence_audit",
+          "summary": "Evidence base: Mixed. The team ran a live A/B test on their operating site and measured a conversion uplift, so real traction exists. However the experiment was stopped early during a sale period without pre-specified stopping rules, source-level breakdowns, or power/MDE planning, leaving the p-value and the annual revenue extrapolation unreliable.",
+          "flaws": [
+            {
+              "title": "Stopping the test early after daily peeking invalidates the reported p-value",
+              "severity": "critical",
+              "description": "You report checking results daily and stopping on day 9 once the new design \u201cpulled clearly ahead.\u201d Multiple interim looks inflate the Type I error: a nominal two-proportion test p\u22480.02 is not valid unless a sequential testing correction or pre-specified stopping rule was used. With n_old=2,150 and n_new=2,130 and the observed z\u22482.30 (two-sided p\u22480.02), an uncorrected p at a single look is misleading if you looked daily up to day 9.",
+              "question": "Provide either the pre-specified stopping rule/alpha-spending plan used before the test started, or recompute the test result with an appropriate sequential correction (e.g. O'Brien\u2013Fleming / alpha-spending or an exact adjustment for the number and timing of interim looks) \u2014 after that correction, does the effect remain statistically significant?"
+            },
+            {
+              "title": "A three-day sale email during the window is a plausible confound and was not quantified",
+              "severity": "high",
+              "description": "Day 9 includes a three-day weekend sale email sent on day 6; you did not segment by traffic source. Even if the dashboard says both versions received a 'similar share' of email traffic, without per-arm counts the sale could differentially inflate conversions. The test sample (2,130/2,150 visitors) is small and concentrated around the sale period, so traffic mix bias is material.",
+              "question": "Provide per-arm counts and conversions for visitors attributed to the sale email (and for other traffic sources) and the day-by-day visitor/conversion table for each arm so we can recompute the lift excluding email-driven traffic and check for day-level spikes."
+            },
+            {
+              "title": "Extrapolating the 9\u2011day result to monthly/annual revenue ignores sampling uncertainty",
+              "severity": "high",
+              "description": "You extrapolate the observed lift to 60,000 monthly visitors to claim +$57,600/month and ~$691k/year. The test used 4,280 visitors (\u22487.1% of monthly traffic) and the observed absolute lift is \u22481.493 percentage points. The 95% CI for the absolute lift from the test data is about 0.22% to 2.77% (0.01493 \u00b1 1.96\u00d70.006497 = [0.0022,0.02766]). That maps to monthly extra orders \u2248132 to 1,659 and monthly revenue uplift \u2248$8.4k to $106k, a very wide range that includes outcomes much smaller than your headline.",
+              "question": "Provide the 95% confidence interval for the absolute and relative lift and show the revenue-upside range when applying those bounds to 60,000 visitors (or provide the post-launch 30-day conversion data to validate the point estimate empirically)."
+            },
+            {
+              "title": "No power/MDE or planned-sample calculation was presented for the 28\u2011day test",
+              "severity": "medium",
+              "description": "You planned a 28-day test but do not state the planned sample size, minimum detectable effect (MDE), or target alpha/power. Without that, it's impossible to judge whether the stopped test was underpowered or whether the observed effect was larger than expected. This matters to interpreting both significance and business impact.",
+              "question": "Provide the pre-test power calculation (planned sample size, MDE at the chosen alpha and power) for the 28-day test, or if none was done, compute the MDE you would have powered to with full 28 days of typical traffic."
+            }
+          ]
+        }
+      },
+      "errors": {},
+      "done": {}
+    }
+  ]
+}

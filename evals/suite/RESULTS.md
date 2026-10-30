@@ -51,3 +51,22 @@ Regex flags were checked by hand.
   question (was 8/10). Remaining "founder admits" lines quote what the founder actually answered. T04's
   "internal contradiction" critical is gone. Routing 3/3, reuse 409 3/3. Still open: T05 Pre-Mortem
   "trials showed low conversion" (invented history, fix 3); T01 $5k rep-cost assumption.
+
+# Round 2 — 2026-10-30 (main 35dd855; suite-20261030-052942 + holdout r2-20261030-053209)
+
+Changes: Pre-Mortem writes failures as scenarios and may not assert unreported events; Evidence Audit's $5k example
+is labelled as an assumption; stage mode labels introduced figures and never adds a currency; stage-mode flaws carry
+a `basis` (contradiction / stated_fact / missing) and code caps critical+missing at high.
+
+| Required outcome | Result |
+| --- | --- |
+| Pre-Mortem fabrication | **Pass.** 0 asserted events in 93 suite Pre-Mortem flaws and 10 holdout plans (was confirmed in 3 earlier runs). 92/93 use scenario/conditional wording. (The runner's past-tense regex matched "revealed preference"; all false positives.) |
+| Model-supplied figures labelled | **Pass.** T01 no longer introduces $5k/$60k/$1,200; "assum…" appears 26 times in T01. |
+| Conditional scenarios still allowed | **Pass.** T10 $360,000 (15 × $24,000), T06 £40 vs £5. |
+| T09 currency | **Pass.** 0 currency symbols attached to 800 or 20. |
+| Severity | **Improved, partial.** First-critique criticals 31 → 16. In T01–T05 and T09: 13 → 2. Controls hold: T06 5 criticals (all contradiction/stated_fact), T10 4 (target vs resources). T07 4 → 1, and it still credits "real early traction". Caveat: the cap relies on the model's own `basis` label. T08 "95% accuracy contradicts conceptual status" and T09 "graduates won't buy 800/year" (stated_fact) are speculation labelled to stay critical. |
+| Rev 2 mechanics | 275→285 gap tags valid; routing 9/10; reuse 409 10/10. **T07 refinement returned HTTP 200 with an empty body in 0.2 s, yet the token was consumed** (reuse got 409). Not reproduced yet. |
+| Paste-a-plan route (holdout EA) | Main flag 10/10, planted math 6/6, false-alarm plans 5/10 firm (7 with borderlines), severity over 4/10, strength 5/10, jargon 1/8 (H02: "look-ahead" on a simulation). Same as shipped round 1 within noise, except the one jargon hit. |
+
+Open after round 2 (backlog): basis mislabelling can bypass the cap; T07 empty refinement + token consumed;
+H02 jargon; Evidence Audit false alarms (unchanged, long-standing).
