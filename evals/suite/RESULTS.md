@@ -70,3 +70,13 @@ a `basis` (contradiction / stated_fact / missing) and code caps critical+missing
 
 Open after round 2 (backlog): basis mislabelling can bypass the cap; T07 empty refinement + token consumed;
 H02 jargon; Evidence Audit false alarms (unchanged, long-standing).
+
+# Round 3 (tone) — 2026-10-30 (main eac3b20; suite-20261030-060024, T05/T06/T07)
+Every lens summary opens with a plain verdict (Most likely killer / Where the math breaks / How I would kill this /
+What breaks first / Weakest number) plus a concrete test; hedging filler banned. Facts and severity rules unchanged.
+- Verdicts present in 15/15 lens summaries, specific and grounded in the input (e.g. T05 competitor: "ship a free
+  'Beginner Mode' toggle…"; T06: "20 × £2 = £40 … you lose £35 per subscriber per month").
+- Banned phrases 0; invented-event verbs 0. T06 keeps 5 criticals (contradiction/stated_fact); critical+missing 0.
+- T07 refinement ran normally (2/2 lenses); the round-2 empty-response anomaly did not recur.
+- Minor over-correction: a few lines drop the founder's own currency ("price 5 vs cost 2", "12 per month").
+- Some verdicts still name a missing figure as the "killer" (T07 Unit Economics: no CAC data) rather than a mechanism.

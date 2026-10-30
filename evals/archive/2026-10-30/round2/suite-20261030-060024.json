@@ -1,0 +1,1646 @@
+[
+  {
+    "id": "T05",
+    "name": "T05-ai-coding-tool",
+    "stage": "idea",
+    "errors": [],
+    "timings": {
+      "first_s": 60.9,
+      "refine_s": 51.9
+    },
+    "first": {
+      "adversarial_competitor": {
+        "lens": "adversarial_competitor",
+        "summary": "How I would kill this: ship a free \"Beginner Mode — simple explanations\" toggle inside our existing coding assistant and publish dozens of SEO-first \"error → plain-English fix\" pages to own discovery — because that duplicates the product's only claimed differentiation and we can match or beat pricing and distribution with near-zero incremental cost. Survive it by: locking exclusive distribution with bootcamps/IDEs or embedding into an IDE by default so users can't discover or trial the feature elsewhere. With our engineering and content teams this is a two-week front-end + prompt engineering task and a one-month SEO/content push; we then bury their positioning behind our brand, app-store placement, and freemium funnel.",
+        "flaws": [
+          {
+            "title": "Single-claim defensibility: \"simpler explanations\" is not a moat",
+            "severity": "critical",
+            "description": "The founder's only stated differentiation is simpler explanations, which is trivially replicable by incumbents via a UI toggle, prompt templates, or a curated content feed. There is no proprietary model, dataset, pedagogy, or exclusive distribution that prevents others from matching the same output quality. If an incumbent ships a beginner toggle or adds a curated errors FAQ, the product's unique claim becomes meaningless and user acquisition collapses.",
+            "question": "What proprietary, hard-to-copy asset (data, partnership, credential, or integration) makes your \"simpler explanations\" defensible against incumbents who can ship the same feature quickly?",
+            "gap": "differentiation",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Price is irrelevant without distribution — incumbents can undercut or bundle",
+            "severity": "high",
+            "description": "Charging 12 per month is only meaningful if you reach users cheaply and prevent commoditization. Well-funded competitors can add a free beginner tier, bundle this feature into existing subscriptions, or give it away to acquire users, making a stand-alone 12/month offer uncompetitive. The founder gives no plan for resisting pricing pressure from products that already amortize customer acquisition across many features.",
+            "question": "Why will beginners pay 12 per month when incumbents can offer the same feature free or bundled into an existing plan?",
+            "gap": "pricing",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "No go-to-market; distribution advantages squarely favor incumbents",
+            "severity": "high",
+            "description": "The document contains no acquisition strategy. Incumbents control the high-leverage channels for code-help discovery (IDE integrations, app stores, plugin marketplaces, large existing user bases, and SEO). With our distribution we can push the same feature via an update, email, app-store placement, and organic search to millions instantly, blocking the founder's ability to gain traction.",
+            "question": "Which specific channels will you use to scale acquisition cheaply and how will you capture discovery that IDEs, search and app stores already own?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No evidence users will pay instead of using free docs/Stack Overflow",
+            "severity": "medium",
+            "description": "Beginners already use free resources (official docs, Q&A, tutorials). The founder provides no demand evidence that beginners will pay 12 per month for simpler explanations rather than continuing to use free sources. The cheapest way to test this is a low-cost landing page or $1 pilot to measure purchase intent before building.",
+            "question": "Can you demonstrate willingness-to-pay from your target beginners with a landing-page pre-sale, $1 pilot, or validated sign-up funnel?",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "Target buyer is too vague; 'beginner programmers' is a heterogeneous market",
+            "severity": "medium",
+            "description": "Beginners include bootcamp students, CS majors, hobbyists, and career-changers; their needs and willingness to pay vary widely. The plan doesn't specify which segment to prioritize first or how the product will adapt explanations for different learning contexts. Without a focused initial buyer, acquisition messaging and product requirements will be inconsistent and easy for incumbents to out-execute.",
+            "question": "Which exact beginner segment are you targeting first (e.g., bootcamp students, hobbyists, CS1 students) and why will that segment pay 12 per month?",
+            "gap": "buyer",
+            "basis": "missing"
+          }
+        ]
+      },
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "Where the math breaks: cost-to-serve per user — because you list a $12/month price but provide no itemized per-user costs (compute, storage, support, payment fees) so revenue and margin are pure hope. Prove otherwise by: supplying an itemized per-user cost estimate measured from a small pilot (for example, 1,000 sessions — assuming you can run that pilot) showing average compute tokens, model cost, storage, support time, and payment fees. Without those figures you cannot know if $12 covers variable costs, whether CAC can be paid back, or whether the business reaches positive gross margin at scale; the rest of the unit-economics questions (CAC, LTV, payback) depend on that baseline.",
+        "flaws": [
+          {
+            "title": "No per-user cost estimate (compute, storage, support, payments)",
+            "severity": "high",
+            "description": "You state a $12/month price but give zero breakdown of the variable costs that determine gross margin. For an AI coding assistant the dominant line item is model inference (tokens × model price), which can swamp a $12 price if not measured and optimized. Without an itemized per-user cost you cannot tell whether the product is profitable at any scale.",
+            "question": "What is your measured per-user cost broken down by compute (average tokens per session × model price), storage, support time, and payment processing fees?",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "Willingness-to-pay for $12/month is unvalidated",
+            "severity": "high",
+            "description": "You picked $12/month but provide no evidence that beginner programmers will pay that amount for simpler explanations. Free alternatives and integrated IDE tools are common; pricing must be supported by conversion or willingness-to-pay data. If customers won't pay $12, CAC and payback calculations are moot.",
+            "question": "What evidence (paid pilot conversions, pricing tests, or survey-to-purchase data) shows beginners will pay $12/month rather than use free competitors?",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "No acquisition plan or CAC estimates",
+            "severity": "high",
+            "description": "Your strategy lacks any acquisition channels or CAC estimates; at $12/mo CAC must be low or payback impossible. Channels that scale (ads, partnerships, content) have measurable costs and conversion rates — none are provided, so the claim of viable unit economics is unsupported. Viral or organic growth is asserted implicitly but not shown.",
+            "question": "Which acquisition channels will you use, what is the expected CAC per paid user for each, and how do you expect to achieve that CAC at a $12 price point?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No gross-margin model or forward scaling assumptions",
+            "severity": "medium",
+            "description": "You do not present a current gross-margin estimate or how margins improve (or worsen) as you scale. LLM inference costs, caching, and support overhead can change materially with scale; without a pro forma you cannot judge whether margins converge to acceptable levels. This prevents assessment of unit economics at target scale.",
+            "question": "Provide a unit-economics pro forma showing gross margin per user today and projected at a scale milestone (e.g., 10k or 100k paying users) with assumptions made explicit.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "No LTV / CAC / payback calculation",
+            "severity": "medium",
+            "description": "You give price but no LTV (average months of retention × ARPU) and no CAC, so payback period is unknown. Without LTV/CAC you cannot determine if acquisition spend is justified or what lifetime revenue supports initial marketing investment. Payback period determines runway needs and growth cadence, but it's not computed.",
+            "question": "What is your expected LTV (average lifetime in months × 12×$12 or ARPU) and how many months to recover CAC at your assumed CAC?",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "Operational/hidden costs (moderation, refunds, fraud) are unaccounted",
+            "severity": "medium",
+            "description": "You do not mention moderation, developer support, compliance, refunds/chargebacks, or fraud prevention — all can add significant per-user costs. Code advice can create liability or support load (e.g., debugging sessions), and payment refunds/chargebacks are common for subscription products. These hidden costs will reduce gross margin and can break payback assumptions.",
+            "question": "How will you quantify and budget for moderation, developer support time, refunds/chargebacks, and fraud prevention per user?",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      },
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "Most likely killer: pricing/demand mismatch — because the plan fixes a $12/month subscription for beginner programmers without any evidence that beginners will pay for 'simpler explanations'. Prove otherwise by: running a payment-commitment landing-page test at $12/month (real payment or card hold) and measuring whether target beginners convert at a rate that would justify continuing. Supporting synthesis: The idea rests on three untested assumptions at once — that beginners will pay a subscription, that an AI can reliably produce simpler and correct explanations, and that those explanations are worth switching away from free workflows. Any one of those failing stops this strategy; pricing is the most immediate gatekeeper because payment converts stated interest into revealed demand quickly and cheaply.",
+        "flaws": [
+          {
+            "title": "Pricing set without evidence — target users won't commit to $12/mo",
+            "severity": "high",
+            "description": "Failure scenario: the founder charges $12/month but target beginners sign up at negligibly low rates because they prefer free resources or one-off help. The document gives a price but no evidence that beginners are willing to pay a recurring subscription for explanations. If buyers won't commit to the price, the product never reaches traction regardless of feature quality.",
+            "question": "Will a representative sample of target beginner programmers commit payment when asked to subscribe at $12/month on a live landing page?",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "AI cannot reliably produce consistently simple, correct fixes for beginners",
+            "severity": "high",
+            "description": "Failure scenario: the assistant's explanations are either too technical, inconsistent in tone, or occasionally incorrect, and beginners cannot distinguish wrong guidance from right guidance. The plan assumes the AI can translate diverse error messages into concise, actionable, beginner-friendly steps, but the document gives no evidence or requirement about accuracy thresholds or guardrails. If explanations mislead learners, trust and retention will collapse even if initial interest exists.",
+            "question": "Can the system produce concise, correct, beginner-level explanations and fixes across a representative set of common beginner errors with an acceptably low error/harm rate in a blind evaluation?",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Stated preference likely differs from revealed preference",
+            "severity": "high",
+            "description": "Failure scenario: beginners say they want 'simpler explanations' in surveys but when faced with the actual decision choose free search, forum answers, or video tutorials over a paid subscription. The document assumes verbal demand implies willingness to pay and to change existing habits, but no demand evidence or prototype testing is provided. If revealed preferences favor existing free workflows, conversion will be too low to sustain a subscription model.",
+            "question": "When given the real choice between continuing with free search/community resources and paying for instant simpler explanations, which do target beginners pick?",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "No plan for how to reach beginner payers",
+            "severity": "medium",
+            "description": "Failure scenario: even if some beginners would pay, the team cannot find a repeatable, scalable acquisition channel and so only attracts non-paying users or a tiny niche. The document states who the product is for but says nothing about acquisition channels, distribution partnerships, or integrations (IDE/plugin, bootcamps, schools). Without a tested channel to get paying customers, the product can't scale from idea to revenue.",
+            "question": "What single, testable channel will deliver paying beginner users at an efficient and repeatable rate?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "Differentiation — 'simpler explanations' is vague and may not beat free alternatives",
+            "severity": "medium",
+            "description": "Failure scenario: 'simpler explanations' turns out to be insufficiently specific or reproducible to persuade users to switch from free tools that already give explanations (docs, search, community). The document claims differentiation but provides no specifics on format, integration, response time, or measurable benefits that would make the product clearly superior. If differentiation cannot be articulated and demonstrated, users have little reason to pay.",
+            "question": "What exact capability or output (format, turnaround, integration) will make a beginner choose this product over free documentation, search, and community answers?",
+            "gap": "differentiation",
+            "basis": "missing"
+          }
+        ]
+      },
+      "execution_risk": {
+        "lens": "execution_risk",
+        "summary": "What breaks first: user acquisition — because you priced a consumer product at 12 per month and promised to 'compete' with existing AI coding tools, but you have no channel or evidence that beginner programmers will discover or pay for this instead of free alternatives. Prevent it by: validating demand and willingness-to-pay immediately with a landing page, pre-orders or credit-card gated trials and a small paid acquisition test before building the product. If that test fails, don't build integrations; rework target, value prop, or pricing. Beyond acquisition, the core technical correctness of suggested fixes and data-handling rules are not addressed and will block adoption even if you drive traffic.",
+        "flaws": [
+          {
+            "title": "No acquisition plan — build it and no one shows up",
+            "severity": "high",
+            "description": "The document gives a price and a positioning claim but contains zero channel, funnel, or conversion plan. Concrete failure mode: the team spends months building an MVP and integrations only to find organic traffic is nil and paid conversion to 12 per month is far below break-even, leaving the product without users. This will consume runway and prevent any real learning about demand.",
+            "question": "How will you acquire your first cohort of paying beginner programmers and prove conversion at 12 per month before you build integrations?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "Price set without evidence against free alternatives",
+            "severity": "high",
+            "description": "Founder explicitly set 12 per month but provided no evidence that beginners will pay that rather than use free LLM chat, free student offers, or built-in IDE help. Concrete failure mode: conversion rates to a paid plan are near-zero because the perceived incremental value over free tools is insufficient, so subscriptions never scale. This pricing assertion is a stated fact with no validation.",
+            "question": "What evidence do you have that beginners will pay 12 per month for simpler explanations rather than using free alternatives?",
+            "gap": "pricing",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Core product risk: suggested fixes will be wrong or harmful",
+            "severity": "high",
+            "description": "The entire value proposition depends on reliably explaining errors and recommending correct fixes for novices; the doc has no plan to measure or ensure fix accuracy. Concrete failure mode: the assistant suggests incorrect fixes that teach bad habits or break users' code, causing churn, bad reviews, and potential safety/legal complaints from educators or employers. Without an accuracy threshold and a mitigation plan, you cannot charge or scale.",
+            "question": "How will you measure and guarantee the accuracy and safety of suggested fixes for beginners before taking money?",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Sequencing mistake: integrations before core validation",
+            "severity": "medium",
+            "description": "No minimum viable product or sequencing is defined; building VS Code/IDE plugins, authentication, and billing before validating the core explanatory model will waste time. Concrete failure mode: months spent on plugins and infrastructure lock you into product assumptions while the core model doesn't meet user needs. The cheapest test would be a web-based copy-paste flow or a demo bot to validate explanations first.",
+            "question": "What is your minimum testable product and why will you delay editor integrations until you validate core demand and model quality?",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Data handling and compliance are unspecified",
+            "severity": "medium",
+            "description": "You will be processing users' code, which can contain PII or proprietary IP, but there's no plan for storage, retention, consent, or third-party model provider TOS compliance. Concrete failure mode: schools, employers, or platform providers refuse to allow the product, or you face takedown/contract issues from model vendors, blocking distribution to meaningful channels. Early adopters will not attach sensitive code without clear guarantees.",
+            "question": "How will you store/process user code, what retention/consent controls will you implement, and how will you meet privacy and provider-TOS requirements?",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Team and timeline not stated — scope underestimated",
+            "severity": "medium",
+            "description": "No team, roles, or timeline are listed; building reliable explanations, model tuning, integrations, analytics, and support is multi-disciplinary work. Concrete failure mode: a single founder or tiny team splits attention across model, product, and marketing, leading to slow delivery and poor product quality. This underestimation will extend ship time well beyond expectations.",
+            "question": "Who will build and maintain the model, product, integrations, and customer support, and what is the realistic timeline to an MVP?",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. Weakest number: the claim that beginners will pay $12/month for 'simpler explanations' — because there is no willingness-to-pay or paid-conversion evidence. Prove it by running a paid pilot or priced landing page and report unique visitors, paid signups (≥20), and conversion rate. Currently nothing is proven: no validated demand, price, CAC, comparative preference, or correctness benchmarks.",
+        "flaws": [
+          {
+            "title": "No evidence beginners will buy simpler explanations",
+            "severity": "high",
+            "description": "The core claim is that beginner programmers will prefer and pay for 'simpler explanations', but there is no measured demand evidence (no survey, no landing page, no paid pilot). If beginners do not value simplicity over free/established tools, revenue never materializes. This is the load-bearing customer demand gap for the whole plan.",
+            "question": "Provide empirical demand evidence: run a landing page or paid pilot targeting beginner programmers and report the number of unique visitors (N), number who signed up for a paid $12/month trial, and the resulting paid-conversion rate (report raw counts).",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "Price ($12/month) is unsupported and untested",
+            "severity": "high",
+            "description": "The only revenue figure given is $12 per month; there is no willingness-to-pay data or conversion metrics. Annualized revenue per paying user is $12 × 12 = $144 per year, but that number is meaningless without showing users will actually pay. If $12 is above what beginners will accept, unit economics collapse.",
+            "question": "Show price-validation: either (a) results from a price-sensitivity survey or Van Westendorp test, or (b) a paid pilot reporting at least 20 paid conversions at $12/month (report counts and conversion rate).",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "No acquisition evidence or CAC estimate",
+            "severity": "medium",
+            "description": "The strategy lacks any plan or measured data for how you will reach beginner programmers or what it costs. Without a measured CAC, you cannot test whether acquisition cost is below customer lifetime value (which depends on the unvalidated $12 price). If CAC exceeds what a $12/month customer can support, the business is unviable.",
+            "question": "Provide measured acquisition test results: for at least one channel, report spend, unique users reached, signups and paid conversions so I can compute CAC (spend ÷ paid customers) from actual experiments.",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No evidence you can outcompete established tools on 'simpler explanations'",
+            "severity": "medium",
+            "description": "You assert differentiation via simpler explanations but provide no comparative evidence versus existing AI tools (e.g., readability, comprehension, successful fixes). If customers prefer diagnostic accuracy, speed, or editor integration over simplicity, the differentiator fails. The claim needs head-to-head measurement.",
+            "question": "Provide a comparative user test: present the same error to N beginner programmers with answers from an existing tool and your explanation, and report preference and comprehension metrics (N, preference counts, and time-to-fix).",
+            "gap": "differentiation",
+            "basis": "missing"
+          },
+          {
+            "title": "No examples or technical proof that the assistant can reliably produce simpler, correct fixes",
+            "severity": "low",
+            "description": "There are no sample outputs, benchmarks or correctness rates showing the assistant can both simplify explanations and suggest correct fixes. Simpler wording that is incorrect or misleading will harm adoption; you need samples and small-scale labeling to confirm quality.",
+            "question": "Provide 50 real beginner error instances and your assistant's proposed explanations/fixes for each, plus an expert or user-rated correctness/clarity score (report raw counts and average scores).",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      }
+    },
+    "lens_errors": [],
+    "first_shape": {
+      "adversarial_competitor": "CHHMM",
+      "unit_economics": "HHHMMM",
+      "pre_mortem": "HHHMM",
+      "execution_risk": "HHHMMM",
+      "evidence_audit": "HHMML"
+    },
+    "questions": [
+      {
+        "gap": "differentiation",
+        "text": "Why would customers choose this over the alternatives?",
+        "kind": "text",
+        "informs": [
+          "adversarial_competitor"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Differentiation — 'simpler explanations' is vague and may not beat free alternatives",
+            "severity": "medium"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Single-claim defensibility: \"simpler explanations\" is not a moat",
+            "severity": "critical"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No evidence you can outcompete established tools on 'simpler explanations'",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "gap": "pricing",
+        "text": "Who pays, and roughly how much?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Pricing set without evidence — target users won't commit to $12/mo",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Willingness-to-pay for $12/month is unvalidated",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Price is irrelevant without distribution — incumbents can undercut or bundle",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Price set without evidence against free alternatives",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Price ($12/month) is unsupported and untested",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "acquisition",
+        "text": "How will your first customers find you?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "execution_risk"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "No plan for how to reach beginner payers",
+            "severity": "medium"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "No acquisition plan or CAC estimates",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "No go-to-market; distribution advantages squarely favor incumbents",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "No acquisition plan — build it and no one shows up",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No acquisition evidence or CAC estimate",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "gap": "demand_evidence",
+        "text": "How do you know people want this? (people you've talked to, data, your own experience)",
+        "kind": "text",
+        "informs": [
+          "pre_mortem",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Stated preference likely differs from revealed preference",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "No evidence users will pay instead of using free docs/Stack Overflow",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No evidence beginners will buy simpler explanations",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "gap_tags_valid": "27/27",
+    "criticals": 1,
+    "answered": {
+      "gap": "demand_evidence",
+      "text": "I haven't asked any beginner programmers whether they would pay for this; it's based on my own experience learning to code."
+    },
+    "skipped_gaps": [
+      "differentiation",
+      "pricing",
+      "acquisition"
+    ],
+    "refined": {
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "Most likely killer: the paying customer doesn't exist — because the founder set a $12/month price and a single differentiator (“simpler explanations”) based only on personal experience without testing whether beginner coders will actually pay. Prove otherwise by selling real paid access at $12 to target beginner users (preorders or paid trials) before building the product. The founder has no customer interviews, no acquisition plan, and a vague value proposition; the likeliest failure is that stated desire for simpler explanations will not become revealed willingness-to-pay.",
+        "flaws": [
+          {
+            "title": "Paying customer / payer is undefined",
+            "severity": "high",
+            "description": "The plan assumes individual beginner programmers will be the customers who pay $12/month, but the founder never identified who will actually pay (students, hobbyists, educators, employers). If the actual payer is institutions or teachers, the product, pricing and go-to-market must be different. Without naming and testing the payer, the project can be built for a user who will never convert to revenue.",
+            "question": "Who exactly will pay $12/month for this product (individual beginners, parents, schools, employers), and what evidence shows that group will pay?",
+            "gap": "buyer",
+            "basis": "missing"
+          },
+          {
+            "title": "No evidence beginners will pay (stated vs revealed preference)",
+            "severity": "high",
+            "description": "The founder admits they haven't asked any beginner programmers and relies on personal learning experience. Beginners often state they want help but prefer free channels in practice; assuming they will subscribe is a direct leap from stated preference to revenue. If willingness-to-pay is absent, acquisition and retention cannot produce subscriptions.",
+            "question": "Can you get paid commitments from multiple representative beginner programmers at $12/month before you build the product?",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "Price ($12/month) is arbitrary and unsupported",
+            "severity": "high",
+            "description": "The document fixes a $12/month price with no justification, elasticity testing, or alternative pricing explored. That price might be above what beginners will pay for explanation-focused help or might require a different billing model (one-off, freemium, or institutional licensing). If the price point is wrong, conversions will fail even if the product is useful.",
+            "question": "Why $12/month specifically, and what evidence shows target beginners prefer that pricing model over free, lower, or institutional pricing?",
+            "gap": "pricing",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Differentiation 'simpler explanations' is vague and non-defensible",
+            "severity": "medium",
+            "description": "Claiming to compete by offering 'simpler explanations' is subjective and unscoped: simpler than what, measured how, for which errors, and for which languages/frameworks. If the feature cannot be operationalized into testable, repeatable outputs that demonstrably improve learning, users will not perceive enough unique value to switch or pay.",
+            "question": "What exactly makes your explanations distinct and demonstrably better than existing free resources and how will you measure that difference?",
+            "gap": "differentiation",
+            "basis": "missing"
+          },
+          {
+            "title": "No customer acquisition plan to reach paying beginners",
+            "severity": "medium",
+            "description": "There is no stated channel for finding and converting beginners into paying subscribers. Beginners are a broad group—some are students, others hobbyists—and their acquisition paths differ; without a tested channel and conversion mechanism the product cannot reach paying users. The absence of an acquisition hypothesis leaves the idea unable to scale even if demand exists.",
+            "question": "Which specific channels will you use to acquire paying beginner users and what cheap experiment will you run to validate one channel works?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "Current alternatives and switching costs are undocumented",
+            "severity": "low",
+            "description": "The founder has not mapped what beginners use today when they encounter errors (docs, Stack Overflow, instructors, free AI assistants) nor how entrenched those behaviors are. Without this map you can't assess how hard it is to convince users to try a paid assistant or what features overcome switching friction.",
+            "question": "What are the top three ways target beginners currently solve error/debugging problems, and why would they switch to your product?",
+            "gap": "alternatives",
+            "basis": "missing"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. Weakest number: $12/month price — because the founder explicitly admits they have not tested willingness-to-pay with beginner programmers. Prove it by a willingness-to-pay or landing-page pre-sell test among ≥100 beginners showing conversion to paid at $12. What is proven: only the idea and founder experience; no customer, pricing, or revenue evidence.",
+        "flaws": [
+          {
+            "title": "No evidence beginners will pay $12/month",
+            "severity": "high",
+            "description": "The founder explicitly states they have not asked any beginner programmers whether they would pay; the $12/month price is therefore unsupported. Willingness-to-pay is load-bearing: if beginners will not pay, the product cannot earn revenue at the stated price. This is an idea-stage gap that must be resolved before any revenue projections or build decisions.",
+            "question": "Provide results of a willingness-to-pay test among at least 100 beginner programmers (assuming 100 as a minimum sample): what % committed to a real or validated payment at $12/month?",
+            "gap": "demand_evidence",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "No unit-economics: CAC, churn, LTV, payback are missing",
+            "severity": "high",
+            "description": "Key load-bearing numbers (customer acquisition cost, expected churn, lifetime, and LTV) are not stated. Without these you cannot tell whether $12/month can cover acquisition and operating costs or what growth is viable. Any revenue or scaling claim is meaningless without at least empirically grounded or clearly sourced estimates for these metrics.",
+            "question": "Provide projected or measured CAC, monthly churn, average revenue per user, and resulting LTV and payback period — and state the data source or experiment for each figure.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "Paying buyer is underspecified beyond 'beginner programmers'",
+            "severity": "medium",
+            "description": "Saying the target is 'beginner programmers' does not identify who will actually pay (self-learners, students, bootcamps, parents, employers). Different buyers have different willingness-to-pay and acquisition paths; the plan depends on picking a paying segment and reaching them. This is an evidence gap not yet tested.",
+            "question": "Define the specific paying buyer segment (e.g., self-taught beginners vs bootcamp students) and provide any evidence you have that this segment can be reached and will pay.",
+            "gap": "buyer",
+            "basis": "missing"
+          },
+          {
+            "title": "No evidence simpler explanations will beat existing tools",
+            "severity": "medium",
+            "description": "The competitive differentiator is 'simpler explanations' but there is no user testing showing beginners prefer simpler explanations over alternatives (accuracy, speed, integrated tooling). If simpler explanations do not improve perceived value, the product loses its USP. This is an assumption that must be validated with users.",
+            "question": "Provide results of usability or preference tests showing beginners choose simpler explanations over alternatives (report metric, sample size, and test setup).",
+            "gap": "differentiation",
+            "basis": "missing"
+          },
+          {
+            "title": "No acquisition or channel evidence — how will beginners find and try it?",
+            "severity": "medium",
+            "description": "The document gives no acquisition plan or any measured channel performance; without at least one validated channel and a conversion benchmark you cannot estimate scale or CAC. Acquisition assumptions drive required spend and feasibility of $12/month economics.",
+            "question": "Show results from at least one acquisition test (e.g., landing page, ad, community post) with measured sign-up rate and cost per signup, or state the tested channel and measured conversion if available.",
+            "gap": "acquisition",
+            "basis": "missing"
+          }
+        ]
+      }
+    },
+    "refine_lens_errors": [],
+    "refinement_meta": {
+      "lenses": [
+        "pre_mortem",
+        "evidence_audit"
+      ],
+      "gaps_filled": [
+        "demand_evidence"
+      ],
+      "gaps_skipped": [
+        "differentiation",
+        "pricing",
+        "acquisition"
+      ]
+    },
+    "refined_shape": {
+      "pre_mortem": "HHHMML",
+      "evidence_audit": "HHMMM"
+    },
+    "expected_lenses": [
+      "pre_mortem",
+      "evidence_audit"
+    ],
+    "refine_ran": [
+      "pre_mortem",
+      "evidence_audit"
+    ],
+    "refine_lenses_ok": true,
+    "reuse_refused_409": true,
+    "reuse_status": 409,
+    "watch": [
+      "money not in input: '$1'",
+      "money not in input: '$144'",
+      "pre-mortem past-tense (check): 'per because payment converts stated interest into revealed demand quickly and cheaply. Pricing set without e'",
+      "pre-mortem past-tense (check): 'evaluation? Stated preference likely differs from revealed preference Failure scenario: beginners say they w'",
+      "pre-mortem past-tense (check): 'and evidence or prototype testing is provided. If revealed preferences favor existing free workflows, conver'",
+      "pre-mortem past-tense (check): 'd desire for simpler explanations will not become revealed willingness-to-pay. Paying customer / payer is un'",
+      "pre-mortem past-tense (check): \"ll pay? No evidence beginners will pay (stated vs revealed preference) The founder admits they haven't asked\""
+    ]
+  },
+  {
+    "id": "T06",
+    "name": "T06-video-economics",
+    "stage": "idea",
+    "errors": [],
+    "timings": {
+      "first_s": 68.1,
+      "refine_s": 46.3
+    },
+    "first": {
+      "adversarial_competitor": {
+        "lens": "adversarial_competitor",
+        "summary": "How I would kill this: Match the £5 \"unlimited\" plan immediately and subsidize it with our deeper pockets and distribution (free trials, onboarding credits, and prominent placement in app stores/SEO) — because their own numbers (≈£2 per generated video and 20 videos/month) make the product loss-leading and impossible to scale while we can out-spend and out-distribute them. Survive it by: publishing a clear fair-use policy and minimal throttles (or a small overage fee) so you can stop the bleeding and retain profitable users. Quick synthesis: we neutralize their headline differentiation (cheap unlimited) by offering the same promise briefly while leveraging existing users, app-store featuring, SEO, and partners to swamp their early traction; once they have no room to underprice us, we tighten usage controls or convert users to higher-margin plans.",
+        "flaws": [
+          {
+            "title": "Price + usage numbers guarantee unsustainable losses",
+            "severity": "critical",
+            "description": "You state a £5/month unlimited price, a per-video cost of approximately £2, and an expected 20 videos per subscriber. Those three claims cannot coexist: at your stated usage and cost you lose about £35 per subscriber per month before any overhead, so the plan is financially impossible to operate at scale. This is not a subtle optimization gap — it destroys the business model unless one of the three numbers changes immediately.",
+            "question": "Which of these three is false or will change: the £5 price, the £2 per-video cost, or the 20 videos/month usage assumption?",
+            "gap": "pricing",
+            "basis": "contradiction"
+          },
+          {
+            "title": "‘Unlimited’ video generation is not defensible technical differentiation",
+            "severity": "high",
+            "description": "Generative video model access and cloud rendering are commodity capabilities to any well-funded competitor or cloud provider. Nothing in the plan claims proprietary models, exclusive data, or a lock-in that prevents incumbents from copying a similarly marketed unlimited tier. Without a clear moat, any small marketing push from an incumbent makes your offering redundant instantly.",
+            "question": "What exclusive model IP, dataset, UX, or distribution lock prevents incumbents from replicating your 'unlimited' promise?",
+            "gap": "differentiation",
+            "basis": "missing"
+          },
+          {
+            "title": "No customer acquisition plan — incumbents can drown you in distribution",
+            "severity": "high",
+            "description": "You give a price and cost assumption but no acquisition channel, CPA target, or go-to-market. A competitor with a large user base, SEO authority, app-store relationships, and partner channel can promote a matching or better offer at near-zero incremental acquisition cost relative to your unknown plan. That advantage lets incumbents buy or give away early subscriptions to crush your growth runway.",
+            "question": "How will you acquire customers at a cost that survives your stated unit economics, and what channels will you use to compete against incumbent distribution?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No evidence users will generate 20 videos or accept 5 per month pricing",
+            "severity": "medium",
+            "description": "You assume high usage (20 videos/month) and that customers will pay £5 for unlimited generation, but provide no demand tests, willingness-to-pay studies, or MVP learnings. If actual usage is lower or willingness-to-pay is lower/higher, pricing and capacity planning change dramatically. You need simple demand signals before building.",
+            "question": "What experiments or survey data show users will both pay £5 and generate 20 videos per month?",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "Competition and substitutes are unspecified and easy to replicate",
+            "severity": "medium",
+            "description": "You do not list current alternatives—desktop editing, stock-video, short-form mobile apps, or existing AI tools—so you haven't shown why customers would switch. Incumbents with existing editing products can fold a priced plan into their UI faster than you can acquire meaningful share.",
+            "question": "Which current products do your target customers use today for short-form video, and why will they switch to your service?",
+            "gap": "alternatives",
+            "basis": "missing"
+          }
+        ]
+      },
+      "execution_risk": {
+        "lens": "execution_risk",
+        "summary": "What breaks first: unit economics — because at £5/month with ~£2 per video and an expected 20 videos per user you lose ~£35 per subscriber each month. Prevent it by: fix the unit economics before building anything (either raise price, add hard usage caps, or prove cost-per-video < £0.25) and show a reconciled per-subscriber P&L. The rest of the plan depends entirely on that fix: every technical, sequencing and distribution decision changes if price, cost or usage assumptions change.",
+        "flaws": [
+          {
+            "title": "Unit economics directly contradict the pricing model",
+            "severity": "critical",
+            "description": "You stated price = 5 and cost per video ≈ 2 with average 20 videos/month. That yields cost ≈ 40 per subscriber versus revenue 5, a negative 35 margin each month. This single numeric contradiction makes the stated business impossible to operate as written. Shipping under these numbers will immediately burn cash and collapse the service.",
+            "question": "Which number is wrong: price, cost per video, or expected usage? Provide a corrected per-subscriber P&L showing margin at the declared price.",
+            "gap": "key_numbers",
+            "basis": "contradiction"
+          },
+          {
+            "title": "Compute cost estimate (≈2 per video) is asserted without a line-item or sensitivity",
+            "severity": "high",
+            "description": "You claim ~2 per generated video but give no breakdown (inference GPU time, encoding, storage, retries, orchestration, CDN). Real costs vary by length, resolution, model, and load; spot/GPU price spikes will raise the true marginal cost. If the 2 figure is optimistic, the already-negative economics worsen rapidly.",
+            "question": "Show a line-item cost breakdown and sensitivity (low/typical/high) for a 1‑minute, 3‑minute and 10‑minute video so we can verify the 2 per-video claim.",
+            "gap": "key_numbers",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "No evidence users will pay 5 for 'unlimited' or generate only 20 videos",
+            "severity": "high",
+            "description": "You assume average usage of 20 videos/month at a 5 price point without market or behavioral evidence. If real users create more (or fewer) videos or reject the price, acquisition and retention metrics will change and economics will break. The product will be built to the wrong scale if this isn't tested first.",
+            "question": "What is your cheapest experiment to validate willingness-to-pay and actual monthly video generation (e.g., landing page + paid trial or concierge MVP) and the results you need to proceed?",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "No acquisition or distribution plan to reach paying users",
+            "severity": "medium",
+            "description": "The doc contains no channels, CAC estimates, or distribution sequence. Building unlimited backend and UX before proving you can acquire users will leave you with a product and no customers. Different acquisition channels will demand different product funnels and pricing tests.",
+            "question": "How will you acquire your first 1,000 paying users and what CAC and conversion rates do you assume for those channels?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "Sequencing: planning unlimited, scalable infra before validating demand or costs",
+            "severity": "medium",
+            "description": "You declare 'no usage limits' but haven't specified an MVP path that avoids building full-scale GPU infra. If you build unlimited generation first, you will incur massive costs before proving demand. The right sequence is to validate price and usage with a constrained, manual, or rate-limited MVP.",
+            "question": "What is your minimum viable implementation to validate product-market fit (manual generation, queueing, usage caps) that avoids committing to unlimited infra?",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Compliance and content-moderation/legal risks are unaddressed",
+            "severity": "medium",
+            "description": "AI video generation raises copyright, likeness, and moderation liabilities (DMCA, takedown, defamation, deepfakes). No takedown policy, rights ownership, or moderation plan is stated, which will block partnerships, app stores, or payment processors at scale and create legal exposure during shipping.",
+            "question": "How will you handle IP ownership, DMCA takedowns, likeness/consent issues, and moderation at launch and at scale?",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      },
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "Most likely killer: the plan's own numbers — price 5 vs stated cost 2 per video and 20 videos/user — produce an immediate, unsustainable loss per subscriber (5 revenue vs ~40 cost). Prove otherwise by selling a small number of paid subscriptions (or a landing-page pre-sale) and measuring real average videos per buyer and actual per-video compute cost. Supporting synthesis: beyond the arithmetic contradiction, the idea rests on several unsupported behavioral and supply assumptions (that users will accept an unlimited 5 price, that average usage is ~20, and that per-video compute costs remain or fall to ~2), and there is no identified buyer or acquisition channel to validate those assumptions cheaply.",
+        "flaws": [
+          {
+            "title": "Price vs stated usage/cost is a self-contradiction",
+            "severity": "critical",
+            "description": "Failure scenario: using the document's numbers, each subscriber generates 20 videos × 2 cost = 40 in monthly compute cost while paying 5, so the model loses ~35 per user every month and cannot be sustained at scale. If neither price nor per-video cost nor usage changes materially, the business model is dead on arrival. The plan depends on one of those three inputs being false, but the document gives no alternative.",
+            "question": "Which is wrong — the 5 price, the 2 per-video cost, or the 20 videos/month assumption — and can you show a credible, evidence-backed combination where price ≥ cost?",
+            "gap": "key_numbers",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Usage assumption (20 videos/month) is unsupported and decisive",
+            "severity": "high",
+            "description": "Failure scenario: average usage deviates materially from 20 videos/month. If real usage is much higher, compute costs explode and sink the product; if it's much lower, the unlimited product might not be valued and customers will prefer cheaper, usage-based alternatives. The document provides no rationale or evidence for the 20/video/month figure.",
+            "question": "How was 20 videos/month estimated and what is the cheapest experiment to observe actual user generation behavior?",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Pricing is likely misread — willingness to pay for 'unlimited' at 5 is unsupported",
+            "severity": "high",
+            "description": "Failure scenario: customers' revealed preferences differ from the assumed 5/month unlimited willingness to pay — users may only accept 5 for low-usage or basic functionality, not for a high-volume unlimited product, or they may prefer pay-per-video for heavy generation. If buyers won't pay 5 for the value delivered, acquisition and retention fail even if costs fall.",
+            "question": "What evidence shows target customers will choose and pay 5 for unlimited video generation rather than a usage-based option or incumbents' alternatives?",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "Implicit dependency on compute-cost declines or unlisted vendor discounts",
+            "severity": "high",
+            "description": "Failure scenario: the model assumes per-video compute cost can be ~2 or lower at scale, but that depends on future cost declines, special pricing, or proprietary efficiency gains. If those discounts or engineering improvements do not materialize, the 5 flat price cannot cover variable costs. The document lists 2 per video but gives no sourcing or plan to secure that cost at scale.",
+            "question": "What concrete levers (contracts, specialized hardware, algorithmic speedups) will guarantee per-video compute ≤2 at scale, and can you validate at least one within a month?",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Buyer is undefined — who will subscribe at 5?",
+            "severity": "medium",
+            "description": "Failure scenario: the product speaks of 'subscribers' without specifying consumer segment, professional creators, or businesses; mismatching buyer persona will break pricing, product features, and acquisition. If you target the wrong buyer, the product attracts either too-light users or too-heavy users relative to the economics.",
+            "question": "Who exactly is the paying customer (persona, use case, and why they'd choose unlimited at 5)?",
+            "gap": "buyer",
+            "basis": "missing"
+          },
+          {
+            "title": "No acquisition or demand-validation plan — may misread market signals",
+            "severity": "medium",
+            "description": "Failure scenario: even if pricing and costs could be made to work, there is no statement of how to reach customers who value unlimited video generation; misreading demand channels means the team wastes effort on a product no one finds. The document lacks any early tests or channels to surface true demand or preference for unlimited vs usage-based models.",
+            "question": "Which acquisition channels will reach the intended buyers, and what is the cheapest test to validate demand and conversion into paid subscriptions?",
+            "gap": "acquisition",
+            "basis": "missing"
+          }
+        ]
+      },
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "Where the math breaks: cost per user (20 × £2 = £40) — because revenue per user is £5, so you lose £35 per subscriber per month. Prove otherwise by: supplying a validated compute cost per generated video (or validated price/willingness-to-pay) that brings total cost per active user below £5 at your stated usage. The document omits CAC, churn, support, storage, egress, payment fees, refunds/chargebacks and other operating costs, any of which make the hole worse; you must show full per-user cost and an acquisition plan with CAC and payback to proceed.",
+        "flaws": [
+          {
+            "title": "Unit economics are immediately negative (20×£2 vs £5 price)",
+            "severity": "critical",
+            "description": "You state a subscriber generates 20 videos/month at ~£2 compute each, so compute alone is £40/month while you charge £5/month. That yields a -£35 contribution margin before any other costs (storage, support, payment fees) — mathematically impossible to scale or sustain. Either the £2 per video is wrong, the usage assumption is wrong, or the £5 price is far too low.",
+            "question": "Which of these three is incorrect: the £2 per-video compute cost, the 20 videos/month average, or the £5/month price — provide measured data or tests that show a combination that yields cost per user < £5/month?",
+            "gap": "pricing",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Compute cost figure (£2/video) lacks scope and breaks without other costs",
+            "severity": "high",
+            "description": "You report ~£2 compute per generated video but give no breakdown or method. That number ignores GPU reservation/idle costs, model licensing, retries, preview renders, encoding, CDN egress, and storage permanence — all of which increase per-video cost. Relying on a single compute line item understates true cost to serve each video.",
+            "question": "Provide a line-item cost breakdown that produced the £2/video figure (inference time, instance amortization, batch efficiency, licensing, encoding, CDN, storage, and estimated failure/retry overhead).",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "No evidence users will pay £5 for unlimited 20 videos/month",
+            "severity": "high",
+            "description": "You claim £5/month for unlimited generation but offer no validation of willingness-to-pay at that price or of the 20-video usage assumption. Pricing and usage drive LTV; without customer evidence this is pure speculation. If users value this differently (pay less or generate more), the economics collapse.",
+            "question": "What empirical validation (paid trials, pre-sales, survey+conjoint, or landing page conversion) supports £5/month for the stated usage pattern?",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "No acquisition plan or CAC; channels implied may be unaffordable",
+            "severity": "high",
+            "description": "You list no channels or CAC. At the stated price and per-user cost, any non-zero CAC destroys economics; even with razor-low CAC the negative contribution margin makes payback impossible. The strategy implicitly depends on viral or organic growth without evidence or a credible channel mix at this price point.",
+            "question": "Which acquisition channels will you use, what is the projected CAC by channel, and show the math for CAC vs LTV and payback months under your assumptions?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No payback, churn or LTV calculus presented",
+            "severity": "medium",
+            "description": "You provide neither CAC nor churn nor any lifetime value calculation. Given stated unit economics, payback is impossible — but even if compute costs fell, the business needs explicit LTV:CAC and months-to-payback targets to be viable. Missing these prevents evaluating sustainability or fundraising viability.",
+            "question": "Provide projected CAC, gross margin per user, monthly churn, resulting LTV and months-to-payback (or show how you can get these to acceptable levels).",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "Hidden operational costs (moderation, fraud, refunds, compliance) are ignored",
+            "severity": "medium",
+            "description": "No allowance is made for content moderation, abuse prevention, KYC/regulatory costs, chargebacks/refunds, customer support, or fraud losses — each can add material per-user cost or operational headcount. These are common in user-generated content and payments businesses and will further worsen margins and increase CAC.",
+            "question": "How will you handle moderation, abuse, refunds/chargebacks, and compliance, and what per-user/month cost have you budgeted for these functions?",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. Weakest number: '£5/month unlimited vs £2/video × 20 videos/month' — because the three numbers arithmetically contradict (£40 cost vs £5 price). Prove it by: run a paid 30-day pilot (≥100 users) collecting per-user video counts and attach cloud/GPU invoices to compute actual cost/video and realized videos/user. What is proven: none of price, cost-per-video or usage is empirically supported.",
+        "flaws": [
+          {
+            "title": "Fatal unit-economics contradiction: price vs cost × usage",
+            "severity": "critical",
+            "description": "The three stated figures cannot all be true: 20 videos/month × £2/video = £40 monthly cost per user versus a £5 monthly price, implying a £35 loss per user each month. This arithmetic kills the business model unless at least one of those numbers is wrong. The document provides no reconciliation or alternative scenario.",
+            "question": "Which of the three numbers (price £5/month; cost ≈ £2 per generated video; average 20 videos/month) is incorrect? Provide measured evidence that replaces it (either a paid pilot showing actual videos/month, cloud invoices showing true cost/video, or a validated price that covers costs) and show the corrected unit economics.",
+            "gap": "key_numbers",
+            "basis": "contradiction"
+          },
+          {
+            "title": "Per-video cost (£2) is unsourced and likely incomplete",
+            "severity": "high",
+            "description": "The document asserts ≈£2 per generated video with no breakdown. It may omit major components (GPU hours at scale, model inference vs training, input/output encoding, storage, egress, orchestration, retries, overhead). If any of these are missing, the true cost could be substantially higher and make losses worse.",
+            "question": "Provide a detailed cost model and evidence (cloud/GPU invoices or benchmark runs) that show £2 per generated video at the expected video length/quality and at the intended scale, including GPU instance type, hours per video, storage, encoding, egress and orchestration overhead.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "No evidence customers will pay £5 for unlimited video",
+            "severity": "high",
+            "description": "There is no demand evidence that buyers will accept an unlimited £5/month subscription or that that price attracts the volume patterns assumed. Price and purchase intent drive both revenue and usage; without tests this is a guess, not a plan.",
+            "question": "Run a demand test: a paid 30-day pilot with at least 100 users at £5 (or a prepayment landing-page test with ≥200 signups) and report conversion rate, churn, and average videos/month for paying users.",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "No usage distribution or tail-risk analysis for unlimited plan",
+            "severity": "medium",
+            "description": "An 'unlimited' product requires a usage distribution to estimate tail costs. An average of 20 videos/mo hides whether a small share of users produce hundreds or thousands of costly videos. Without percentiles (50/75/90/95) the average is meaningless for provisioning and pricing.",
+            "question": "Provide either pilot-measured percentiles (50th/75th/90th/95th) of videos per user for n≥100, or a modeled usage distribution with explicit assumptions that shows per-user cost at each percentile and aggregated expected cost.",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Target buyer and use-case are not specified",
+            "severity": "medium",
+            "description": "Who the £5 subscriber is (consumer hobbyist, social creator, SMB marketing team) matters for realistic usage and willingness to pay. The same price produces very different economics across segments; the document gives no buyer definition or evidence the chosen buyer would create 20 videos/month.",
+            "question": "Specify the target customer segment(s) and provide evidence (surveys, interviews, or pilot user demographics and behavior) that this segment both values unlimited video at £5 and would plausibly create the assumed 20 videos/month.",
+            "gap": "buyer",
+            "basis": "missing"
+          }
+        ]
+      }
+    },
+    "lens_errors": [],
+    "first_shape": {
+      "adversarial_competitor": "CHHMM",
+      "execution_risk": "CHHMMM",
+      "pre_mortem": "CHHHMM",
+      "unit_economics": "CHHHMM",
+      "evidence_audit": "CHHMM"
+    },
+    "questions": [
+      {
+        "gap": "key_numbers",
+        "text": "Which numbers is this plan relying on? Give each one's value and whether it is measured, an estimate, or unknown.",
+        "kind": "numbers",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Price vs stated usage/cost is a self-contradiction",
+            "severity": "critical"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Compute cost figure (£2/video) lacks scope and breaks without other costs",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "No payback, churn or LTV calculus presented",
+            "severity": "medium"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Unit economics directly contradict the pricing model",
+            "severity": "critical"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Compute cost estimate (≈2 per video) is asserted without a line-item or sensitivity",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Fatal unit-economics contradiction: price vs cost × usage",
+            "severity": "critical"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Per-video cost (£2) is unsourced and likely incomplete",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "pricing",
+        "text": "Who pays, and roughly how much?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Pricing is likely misread — willingness to pay for 'unlimited' at 5 is unsupported",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Unit economics are immediately negative (20×£2 vs £5 price)",
+            "severity": "critical"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Price + usage numbers guarantee unsustainable losses",
+            "severity": "critical"
+          }
+        ]
+      },
+      {
+        "gap": "demand_evidence",
+        "text": "How do you know people want this? (people you've talked to, data, your own experience)",
+        "kind": "text",
+        "informs": [
+          "pre_mortem",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "unit_economics",
+            "title": "No evidence users will pay £5 for unlimited 20 videos/month",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "No evidence users will generate 20 videos or accept 5 per month pricing",
+            "severity": "medium"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "No evidence users will pay 5 for 'unlimited' or generate only 20 videos",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No evidence customers will pay £5 for unlimited video",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "acquisition",
+        "text": "How will your first customers find you?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "execution_risk"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "No acquisition or demand-validation plan — may misread market signals",
+            "severity": "medium"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "No acquisition plan or CAC; channels implied may be unaffordable",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "No customer acquisition plan — incumbents can drown you in distribution",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "No acquisition or distribution plan to reach paying users",
+            "severity": "medium"
+          }
+        ]
+      }
+    ],
+    "gap_tags_valid": "28/28",
+    "criticals": 5,
+    "answered": {
+      "gap": "pricing",
+      "text": "The £5 per month is our current plan and we have not tested it with any customers."
+    },
+    "skipped_gaps": [
+      "key_numbers",
+      "demand_evidence",
+      "acquisition"
+    ],
+    "refined": {
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "Where the math breaks: cost-per-user (20 videos × £2 = £40 monthly) — because revenue is £5/month so each subscriber loses £35 before any other costs. Prove otherwise by: measuring and publishing the full all-in cost per generated video (compute + storage + support + payments + refunds/chargebacks/fraud) and showing it is ≤ 5/20 = 0.25. The founder provided only price and a per-video compute cost; every other unit input is missing (CAC, support, payment fees, churn, moderation). Until you supply those figures or raise price by an order of magnitude, the plan is mathematically impossible.",
+        "flaws": [
+          {
+            "title": "Per-user compute cost exceeds price (fatal contradiction)",
+            "severity": "critical",
+            "description": "Founder states £2 compute cost per generated video and expects 20 videos per subscriber, which equals £40 compute cost per user per month against a £5/month price. That single arithmetic contradiction makes the business loss-making by a factor of eight on compute alone, before any other costs. This is a direct internal contradiction between the stated price and the stated usage/cost assumptions.",
+            "question": "Which of these three numbers is wrong: £2 per video, 20 videos per month, or £5/month — and provide measured evidence (billing/invoice or infra run) to support the correct number?",
+            "gap": "pricing",
+            "basis": "contradiction"
+          },
+          {
+            "title": "No CAC or go-to-market channels at a low price point",
+            "severity": "high",
+            "description": "The document contains no customer acquisition cost, channels, or conversion funnel despite a sub-£5 price where CAC must be extremely low. At £5/month the business needs very cheap or organic acquisition (viral, referral, or huge organic scale) — none of which are evidenced or quantified. Without CAC by channel you cannot compute payback, unit economics, or judge feasibility.",
+            "question": "What is your CAC by channel (paid ads, organic, partnerships, viral) and how was each estimated or tested?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "Willingness-to-pay and pricing not validated",
+            "severity": "high",
+            "description": "Price is presented as £5/month but explicitly not tested with customers; no evidence of willingness-to-pay or demand at that price is provided. If customers will not accept a much higher price (which your cost structure requires), the product cannot be viable. Pricing must be experimentally validated before any further modelling.",
+            "question": "Provide results of price experiments or validated customer commitments showing users will pay £5/month for unlimited generation (or show acceptable higher price points).",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "Major hidden variable costs omitted (support, moderation, payments, refunds)",
+            "severity": "high",
+            "description": "The plan counts only compute cost per video; it omits storage of generated videos, CDN costs, customer support, content moderation, payment processing fees, chargebacks/refunds, and fraud detection. Those items are material for a user-facing media product and will further increase the true unit cost. Not including them hides additional guaranteed losses.",
+            "question": "Provide per-user estimates for storage/CDN, support/moderation, payment fees, refunds/chargebacks and estimated fraud costs (or state how you will absorb them).",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "No plan or evidence for reducing compute cost at scale",
+            "severity": "medium",
+            "description": "To bridge the £35/month deficit you will need orders-of-magnitude lower per-video cost or a much higher price — neither is supported. There is no roadmap showing how £2 per video will fall with optimization, model selection, batching, or custom infra. Assuming dramatic cost reductions without engineering or supplier detail is unsupported.",
+            "question": "Show a credible cost curve: how compute cost per video falls as you scale, including vendor/instance assumptions and milestones when unit cost hits breakeven.",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Payback period, LTV and churn are not provided so CAC payback is unknowable",
+            "severity": "medium",
+            "description": "Founder gives no churn, lifetime, LTV, or payback calculations. Without LTV (driven by validated ARPU and churn) and CAC you cannot compute months-to-payback or cash needs. This prevents investment sizing and hides the leverage impact of any acquisition spend.",
+            "question": "Provide projected churn, LTV (based on validated ARPU), and CAC so months-to-payback can be calculated.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Weak. Weakest number: average subscriber will generate 20 videos/month — because that single assumption makes the stated unit economics impossible given the stated £2/video cost. Prove it by: provide measured usage logs from a paid or unpaid pilot (n, period) showing mean videos/subscriber/month ≤2.5, or cloud invoices/line-item cost model showing cost/video ≤£0.25. What is proven: pre-launch claim with no revenue, pilot, or invoices; key volume and cost inputs are unverified.",
+        "flaws": [
+          {
+            "title": "Unit economics impossible at stated numbers",
+            "severity": "critical",
+            "description": "You state price = 5 per month, cost per video = 2, and average usage = 20 videos/month. That yields cost per subscriber = 20 × 2 = 40 per month versus revenue 5, i.e. −35 per subscriber per month. Break-even usage at 2 per-video cost is 5 ÷ 2 = 2.5 videos/month. Either the average usage or the cost-per-video must change by an order of magnitude for the plan to work; both are currently asserted with no evidence.",
+            "question": "Provide measured pilot data (n and time period) showing average monthly videos per subscriber ≤2.5, OR provide cloud invoices/breakdown validating a cost-per-generated-video ≤0.25 such that 20 videos × cost ≤5; include the raw usage data or bills as proof.",
+            "gap": "key_numbers",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Declared £2 per-video cost is unsourced and underspecified",
+            "severity": "high",
+            "description": "You assert \"each generated video costs us approximately 2\" without a supporting cost model or invoices. Cost-per-video depends on video length, resolution, model choice, batching, GPU instance types, and post-processing; none of these are provided. Without the breakdown the £2 figure is not trustworthy and is load-bearing for profitability.",
+            "question": "Supply the cloud provider invoice(s) or a line-item cost model showing how you computed 2 per generated video, including video specs (seconds), model/encoder used, GPU hours per video, and the batching/concurrency assumptions.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "No evidence people will create 20 videos/month at this price",
+            "severity": "high",
+            "description": "The claim that an average subscriber will generate 20 videos/month is the demand assumption that makes the unit economics disastrous. You have not run surveys, paid pilots, landing-page tests, or any usage experiments to justify that frequency at a £5 price point. This is a load-bearing behavioral assumption.",
+            "question": "Provide empirical demand evidence: either pilot usage logs (n, period) showing mean and variance of videos/month per user, or a pricing/usage test (landing page, paid beta) that demonstrates users will create ~20 videos/month at a 5 price.",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          },
+          {
+            "title": "Missing customer lifetime / churn and CAC — LTV unknown",
+            "severity": "medium",
+            "description": "You provide no churn, average customer lifetime, or CAC. Even if per-month margins were small, LTV and CAC determine sustainability and growth decisions. With the current numbers revenue << cost, but without churn/CAC we cannot quantify how quickly losses would accumulate or how much acquisition could be tolerated.",
+            "question": "State your assumed or measured monthly churn (or average customer lifetime in months) and expected CAC, and show the calculations producing LTV and payback period using those inputs.",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Price point (£5/month) untested with buyers",
+            "severity": "medium",
+            "description": "You list 5 per month as the plan but explicitly say it has not been tested. Willingness to pay is central: either users accept unlimited generation at 5 or they don't. Without conversion or willingness-to-pay evidence you cannot rely on that price to cover costs or attract the projected usage profile.",
+            "question": "Provide results from a pricing test (e.g., paid signup page, A/B test, or discrete-choice survey) showing conversion or stated willingness to pay at 5, with sample size and conversion metrics.",
+            "gap": "pricing",
+            "basis": "missing"
+          }
+        ]
+      }
+    },
+    "refine_lens_errors": [],
+    "refinement_meta": {
+      "lenses": [
+        "unit_economics",
+        "evidence_audit"
+      ],
+      "gaps_filled": [
+        "pricing"
+      ],
+      "gaps_skipped": [
+        "key_numbers",
+        "demand_evidence",
+        "acquisition"
+      ]
+    },
+    "refined_shape": {
+      "unit_economics": "CHHHMM",
+      "evidence_audit": "CHHMM"
+    },
+    "expected_lenses": [
+      "unit_economics",
+      "evidence_audit"
+    ],
+    "refine_ran": [
+      "unit_economics",
+      "evidence_audit"
+    ],
+    "refine_lenses_ok": true,
+    "reuse_refused_409": true,
+    "reuse_status": 409,
+    "watch": [
+      "money not in input: '£0.25'",
+      "money not in input: '£2,'",
+      "money not in input: '£35'",
+      "money not in input: '£40'",
+      "money not in input: '£5,'",
+      "pre-mortem past-tense (check): \" at 5 is unsupported Failure scenario: customers' revealed preferences differ from the assumed 5/month unlim\""
+    ]
+  },
+  {
+    "id": "T07",
+    "name": "T07-fitness-saas",
+    "stage": "traction",
+    "errors": [],
+    "timings": {
+      "first_s": 95.6,
+      "refine_s": 43.8
+    },
+    "first": {
+      "pre_mortem": {
+        "lens": "pre_mortem",
+        "summary": "Most likely killer: the single-channel growth bet on referrals and partnerships with fitness instructors — because the strategy document names that as the expansion plan but provides no evidence it will deliver the volume or conversion needed beyond the current 24 studios. Prove otherwise by running a bounded, measurable instructor-referral experiment that targets meaningful lead volume and demonstrates repeatable conversion and activation rates. Secondary risks: the stated £89 price and the small-sample retention signal may not scale to the broader market, which would leave the growth channel irrelevant.",
+        "flaws": [
+          {
+            "title": "Single-channel growth bet: referrals/instructor partnerships must scale",
+            "severity": "critical",
+            "description": "Failure scenario: growth stalls because instructor referrals and partnership deals do not produce a reliable, scalable funnel — the plan names referrals/partnerships as the expansion route but gives no required conversion assumptions or fallback channels. If those partners either generate low-quality leads or do not actively onboard studios, acquisition volume never reaches a growth inflection. Without a second acquisition channel or hard conversion targets, the business cannot scale beyond the founder's existing network.",
+            "question": "What exact conversion, activation and lead-volume metrics from instructor referrals do you assume, and what is the minimum 90-day experiment that would prove the channel can scale?",
+            "gap": "acquisition",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Price point (£89/month) may only fit early adopters, not the broader market",
+            "severity": "high",
+            "description": "Failure scenario: the 24 paying studios represent early adopters willing to pay £89, but most independent studios will not pay that price when presented with trade-offs (lower-cost rivals, free manual scheduling, or bundled tools). The document gives no evidence of price sensitivity testing, segmentation by studio size, or willingness-to-pay across a representative sample. If revealed preference shows studios prefer cheaper or bundled solutions, new sales will fall and referrals will not convert at target rates.",
+            "question": "What evidence do you have that a representative cross-section of independent studios will choose to pay £89/month rather than use lower-cost or bundled alternatives?",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "Retention signal is weak — churn could be materially higher than assumed",
+            "severity": "high",
+            "description": "Failure scenario: the report of '3 cancellations over six months' masks an unfavorable churn profile when normalized by cohort or month; if monthly churn is higher than assumed, net MRR will plateau or decline despite new sales. The document does not provide monthly churn, cohort retention curves, or the causes of cancellations. If retention does not improve, revenue growth from any acquisition channel (even one that scales) will not produce sustained expansion.",
+            "question": "What is your current monthly churn rate by cohort and what retention threshold must you hit for growth to be positive?",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "Buyer / decision-maker is underspecified — wrong person targeted by referrals",
+            "severity": "high",
+            "description": "Failure scenario: the individuals an instructor refers (or the people reached through partnerships) are not the actual payers or decision-makers in studios, so referrals fail to convert. The document says you 'sell scheduling software to independent fitness studios' but does not define who signs, budgets, or runs procurement in those studios. If the referral channel reaches instructors or staff without budget authority, conversion will be low even if awareness rises.",
+            "question": "Exactly who in a studio signs the contract and pays monthly (owner, manager, franchisee), and does the instructor-referral model reliably reach that person?",
+            "gap": "buyer",
+            "basis": "missing"
+          },
+          {
+            "title": "Alternatives and differentiation are unspecified — customers' revealed preferences unknown",
+            "severity": "medium",
+            "description": "Failure scenario: studios prefer entrenched alternatives (free tools, social-booking, or all-in-one platforms) and will not switch because the product's unique advantage is not stated or proven. The document provides no mapping of what studios currently use and why those choices persist. If the product does not replace a clear incumbent or remove a painful cost, stated interest will not translate into paid switches at scale.",
+            "question": "Which specific incumbent solutions do target studios currently use, what exact pain are you replacing, and why will those studios move to a paid £89 product?",
+            "gap": "alternatives",
+            "basis": "missing"
+          }
+        ]
+      },
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "Where the math breaks: CAC and per-user cost-to-serve — because you report price (£89/mo), MRR (£2,136) and 3 cancellations but give no customer acquisition costs, no per-studio hosting/support/payment fees and no LTV/churn calculation. Prove otherwise by: supplying CAC by channel and a per-studio monthly cost breakdown (hosting, storage, support labor, payment fees) so payback and gross margin can be computed. You have real early revenue (24 studios, £2,136 MRR, 3 cancellations in six months), but those facts alone don't let anyone assess unit economics, scale margins or whether referrals/partnerships can return acceptable CAC and payback.",
+        "flaws": [
+          {
+            "title": "No CAC or channel economics provided",
+            "severity": "high",
+            "description": "The plan relies on referrals and partnerships but gives no CAC, conversion rates or historical channel performance. Without CAC by channel you cannot calculate payback or decide whether to invest in paid or partnership acquisition. This single gap prevents any judgment on scalability or whether £89/mo can be profitably bought.",
+            "question": "What is your CAC by channel (referral, partnership, any paid channels) including all marketing, partnership commissions and onboarding costs?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No per-studio cost-to-serve (hosting, support, payments)",
+            "severity": "high",
+            "description": "You do not state monthly per-customer costs: compute, storage, backups, third-party APIs, payment processing fees, customer support FTE time or onboarding costs. Gross margin cannot be computed without these unit costs, so you cannot know whether £89/mo yields positive contribution per studio. Many SaaS margins crumble once real support and payment fees are included.",
+            "question": "Provide a per-studio monthly cost breakdown for hosting/storage, third-party services, payment processing fees, and averaged support/onboarding labor minutes converted to cost.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "Churn/LTV is unspecified despite '3 cancellations' — LTV unknown",
+            "severity": "high",
+            "description": "You report 3 cancellations in six months but give no cohort sizes, acquisition timing, or monthly churn rate. LTV requires churn (or retention curve) and gross margin; without it you cannot compare LTV to CAC or estimate payback. The cancellation count alone is not enough to claim sustainable unit economics.",
+            "question": "What are your monthly churn rate, ARPU (average revenue per active studio), gross margin, and the resulting LTV (with calculation period)?",
+            "gap": "key_numbers",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Pricing validation is minimal (24 customers only)",
+            "severity": "medium",
+            "description": "Having 24 customers at £89/mo shows initial demand from early adopters but does not validate willingness-to-pay across the broader market or price elasticity. You need conversion curves and experiments by segment to know if the £89 price holds when scaling or when sold via partnerships versus direct sales.",
+            "question": "Share pricing experiments, conversion rates at different price points or evidence that the broader target market will pay £89/mo beyond the early 24 studios.",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "Hidden operational costs (refunds, chargebacks, fraud, compliance) are omitted",
+            "severity": "medium",
+            "description": "No estimate for refunds/chargebacks, fraud losses, PCI/compliance costs, or moderation/support escalations is provided. These costs can meaningfully reduce contribution margin, especially with low average revenue per customer. Ignoring them biases any gross margin or payback calculation upward.",
+            "question": "Estimate monthly costs or rates for refunds/chargebacks, fraud, compliance (PCI, data protection) and any moderation/support escalation labor per 100 customers.",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      },
+      "adversarial_competitor": {
+        "lens": "adversarial_competitor",
+        "summary": "How I would kill this: bundle a free, no‑friction core scheduling module into our incumbent product (with a one‑click import/migration tool) — because that removes the startup's only visible product hook and they cannot match our distribution or ability to absorb margin. Survive it by: owning a deep, niche sales motion and product features that genuinely lock a subsegment (for example, studios with complex class-pack accounting or franchise chains). The play: ship a free/basic scheduling tier, make migration trivial, promote it through our existing channels (app store, SEO, reseller partners, email lists) and use paid acquisition to push studios onto our platform before the startup scales; follow up by converting a small % to premium features the startup doesn't have.",
+        "flaws": [
+          {
+            "title": "Reliance on referrals/partnerships as sole growth plan",
+            "severity": "critical",
+            "description": "The document states expansion will come through referrals and partnerships and provides no other acquisition channels or CAC estimates. With only 24 customers, that single-channel plan is easily neutralized by a competitor who can buy growth, bundle the feature into a platform, or sign distribution deals; the startup lacks the reach to outspend or out-distribute a well-funded incumbent. If referrals stall, growth stops dead.",
+            "question": "What is your repeatable acquisition funnel (channels, CAC, conversion rates) beyond referrals and partnerships?",
+            "gap": "acquisition",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "No defensible product differentiation",
+            "severity": "high",
+            "description": "The doc contains no specific features, integrations, or IP that prevent incumbents from replicating the scheduling capability quickly. Scheduling is a low‑moat horizontal feature; a dominant competitor can ship parity (free core product + premium extensions) and eliminate the startup's value proposition. Without a unique workflow or integration that only they can provide, the product is commoditized.",
+            "question": "Which exact feature, integration or workflow prevents a platform competitor from bundling and offering your core scheduling capability for free?",
+            "gap": "differentiation",
+            "basis": "missing"
+          },
+          {
+            "title": "Price point unsupported by evidence",
+            "severity": "high",
+            "description": "They charge £89/month but present no segmentation or evidence that independent studios will pay that rather than use free alternatives or incumbents' bundled options. A competitor can undercut with a freemium or include scheduling inside an existing paid product, making £89 an obvious target to compete with. The startup hasn't justified why studios choose this paid standalone.",
+            "question": "Which studio segments will reliably pay £89/month, and what conversion rate from free alternatives have you measured?",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "Early churn signal unexplained (3 cancellations)",
+            "severity": "medium",
+            "description": "Three cancellations in six months is a stated fact but there's no context (customer count over time, cohort churn, reason for churn). That could indicate product/fit issues or seasonal churn common in fitness — either way it raises doubt about retention and LTV. A competitor converting a small % of new signups will outpace a business with weak retention.",
+            "question": "What is your monthly churn rate and reasons for the 3 cancellations?",
+            "gap": "key_numbers",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Demand beyond 24 studios not demonstrated",
+            "severity": "medium",
+            "description": "The plan declares 'early traction' yet only shows 24 paying studios without pipeline, conversion metrics, or proof of broader market pull. That small sample doesn't prove repeatable demand across the >thousands of independent studios needed for scale. Incumbents can exploit this by offering a free bundled alternative and capturing the long tail.",
+            "question": "What evidence (pipeline, lead volume, conversion funnel) shows demand is repeatable beyond these 24 studios?",
+            "gap": "demand_evidence",
+            "basis": "missing"
+          }
+        ]
+      },
+      "execution_risk": {
+        "lens": "execution_risk",
+        "summary": "What breaks first: the referral/partnership acquisition engine — because there is no defined funnel, incentive structure, tracking or capacity to execute, so referrals will not convert or scale. Prevent it by: run an instrumented partner pilot (tracked referral codes, explicit partner incentive, partner onboarding flow) owned by a single partnerships lead before committing to scale. You have real traction (24 studios, £2,136 MRR) and 3 cancellations in six months; the plan extrapolates from these numbers directly into a channel that requires product hooks, contracts and Ops to work at scale, none of which are specified.",
+        "flaws": [
+          {
+            "title": "Referral/partnership channel is not a repeatable acquisition engine",
+            "severity": "high",
+            "description": "The document says growth will come from referrals and partnerships with instructors but lists no funnel metrics, conversion targets, partner archetypes or pilot outcomes. Without a tested funnel (recruit → onboard → refer → close) you will get sporadic leads and no scalable pipeline; relying on goodwill from instructors will stall once initial contacts are exhausted. Building broad partnerships before proving conversion will burn time and misallocate scarce founder attention.",
+            "question": "What exact funnel steps, conversion rates and pilot results prove an instructor partner will sign paying studios at scale?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No partner incentive or compensation model — instructors won't refer reliably",
+            "severity": "high",
+            "description": "The plan assumes instructors will refer studios but does not state what, if anything, instructors get in return. Instructors will not act as a repeatable sales channel without a clear incentive (cash, credit, discount or product access) and a mechanism to capture and pay that incentive. Absent this, partnership outreach will produce conversations, not closed customers.",
+            "question": "What specific incentive will you offer partners, who pays it, and how will you measure and attribute referral credit?",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "Retention/onboarding issues will swamp growth before scaling succeeds",
+            "severity": "high",
+            "description": "You report 24 paying studios and 3 cancellations over six months but provide no churn rate, onboarding time, or cancellation reasons. If onboarding is manual or churn drivers unresolved, adding more signups via partners will just increase support load and churn, converting acquisition spend into churned revenue. Scaling partnerships without fixing onboarding and retention will make MRR growth illusionary.",
+            "question": "What is your monthly churn rate, average onboarding time per studio, and the documented reasons for the 3 cancellations?",
+            "gap": "key_numbers",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Payments and data compliance (PCI / GDPR) are unaddressed and will block scaling",
+            "severity": "medium",
+            "description": "You price in GBP and serve studios, which implies processing card payments and holding customer/pupil data subject to GDPR. There is no plan stating who handles payments, where data is hosted, or what contracts and controls exist. Scaling partnership and referrals increases data flows and liability; regulators or processors will stop onboarding unless controls are defined.",
+            "question": "Who processes customer payments, where is customer data stored, and what PCI/GDPR controls and contracts do you currently have?",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "No partner onboarding, legal terms, or tracking infrastructure",
+            "severity": "medium",
+            "description": "Partnerships require signed agreements (referral terms), an onboarding playbook, referral tracking (codes or links), and a payments/commission plumbing. The plan lists 'partnerships' as a channel but omits these operational elements, so early partners will operate ad hoc, causing attribution disputes and poor experience. That operational gap will slow partner recruitment and make scaling chaotic.",
+            "question": "What exact legal terms, onboarding materials and referral-tracking tools will you deploy to sign and operate partners?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "Team and capacity to run partnerships and support studios is unspecified",
+            "severity": "medium",
+            "description": "No team, roles, or time allocation are listed. Running partnerships, onboarding studios, and providing support requires at least one dedicated partnerships/success owner; without it the founder becomes the bottleneck and execution grinds to a halt. The plan assumes scale without identifying who will execute day-to-day tasks.",
+            "question": "Who will own partnerships, onboarding and support operations, and how many dedicated hires or hours will be allocated?",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      },
+      "evidence_audit": {
+        "lens": "evidence_audit",
+        "summary": "Evidence base: Mixed. Weakest number: '3 cancellations over six months' — because that figure is uninterpretable without starting customer counts or cohort churn, so LTV and retention cannot be calculated. Prove it by: provide a monthly cohort table (customers and MRR) for the last 12 months. Proven: current MRR and customer count reconcile (24 × £89 = £2,136).",
+        "flaws": [
+          {
+            "title": "No churn/retention metric — '3 cancellations' is uninterpretable",
+            "severity": "high",
+            "description": "The document reports 3 cancellations over six months but gives no starting customer count, monthly active counts, or MRR by cohort. Without gross and net churn (monthly and annualized), you cannot compute customer lifetime or LTV, which is the single most important number for whether acquisition pays back. This gap makes any revenue or scaling claim unsupported because retention determines sustainable growth.",
+            "question": "Provide the customer count at the start of the 6-month window, the date of each of the three cancellations, and a monthly cohort table (customers and MRR) for the last 12 months so gross/net churn and LTV can be calculated.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "No CAC or acquisition performance data to justify referral/partnership scaling",
+            "severity": "high",
+            "description": "You propose expanding via referrals and partnerships but give no acquisition spend, channel counts, or historical conversion rates. Without CAC (or number of customers won by referrals and their conversion rates) you cannot judge payback period or whether referrals alone can scale. Growth plans hinge on acquisition economics that are entirely absent.",
+            "question": "Supply total acquisition spend (marketing + sales) and number of customers acquired in the last 6 and 12 months, and break out how many of the 24 came from referrals or partnerships so we can compute CAC and channel-specific conversion rates.",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No measured evidence that referrals/partnerships convert at scale",
+            "severity": "medium",
+            "description": "The strategy names referrals and instructor partnerships as the growth channel but reports no referral conversion rate, average referrals per partner, or any partner commitments/pilot results. A claim that growth will come from this channel is an assumption until you show measured conversion and funnel volume. If referral conversion is low or partner reach is small, the stated channel will not deliver the required customers.",
+            "question": "Show the measured referral funnel: referrals sent → trial/signups → paid for the last 6–12 months (n and %), and provide any partner pilot metrics or signed partner outreach commitments with expected referral volume.",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "Pricing validity at scale is not evidenced (£89 may not generalize)",
+            "severity": "medium",
+            "description": "Price and MRR reconcile for current customers (24 × 89 = 2136) but there is no evidence that this price will be accepted across the broader target market or across partner-referred leads. Pricing is load-bearing for LTV and acquisition payback; if price cannot be maintained at scale the economics collapse. You also provide no segmentation or willingness-to-pay checks.",
+            "question": "Provide any price-sensitivity data: A/B price tests, survey or sales win rates at £89 versus other tiers, or churn split by customer segment that shows £89 is sustainable across your target studio population.",
+            "gap": "pricing",
+            "basis": "missing"
+          }
+        ]
+      }
+    },
+    "lens_errors": [],
+    "first_shape": {
+      "pre_mortem": "CHHHM",
+      "unit_economics": "HHHMM",
+      "adversarial_competitor": "CHHMM",
+      "execution_risk": "HHHMMM",
+      "evidence_audit": "HHMM"
+    },
+    "questions": [
+      {
+        "gap": "acquisition",
+        "text": "How will your first customers find you?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "execution_risk"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Single-channel growth bet: referrals/instructor partnerships must scale",
+            "severity": "critical"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "No CAC or channel economics provided",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Reliance on referrals/partnerships as sole growth plan",
+            "severity": "critical"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Referral/partnership channel is not a repeatable acquisition engine",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "No partner onboarding, legal terms, or tracking infrastructure",
+            "severity": "medium"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No CAC or acquisition performance data to justify referral/partnership scaling",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No measured evidence that referrals/partnerships convert at scale",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "gap": "key_numbers",
+        "text": "Which numbers is this plan relying on? Give each one's value and whether it is measured, an estimate, or unknown.",
+        "kind": "numbers",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Retention signal is weak — churn could be materially higher than assumed",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "No per-studio cost-to-serve (hosting, support, payments)",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Churn/LTV is unspecified despite '3 cancellations' — LTV unknown",
+            "severity": "high"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Early churn signal unexplained (3 cancellations)",
+            "severity": "medium"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "Retention/onboarding issues will swamp growth before scaling succeeds",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "No churn/retention metric — '3 cancellations' is uninterpretable",
+            "severity": "high"
+          }
+        ]
+      },
+      {
+        "gap": "pricing",
+        "text": "Who pays, and roughly how much?",
+        "kind": "text",
+        "informs": [
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Price point (£89/month) may only fit early adopters, not the broader market",
+            "severity": "high"
+          },
+          {
+            "lens": "unit_economics",
+            "title": "Pricing validation is minimal (24 customers only)",
+            "severity": "medium"
+          },
+          {
+            "lens": "adversarial_competitor",
+            "title": "Price point unsupported by evidence",
+            "severity": "high"
+          },
+          {
+            "lens": "execution_risk",
+            "title": "No partner incentive or compensation model — instructors won't refer reliably",
+            "severity": "high"
+          },
+          {
+            "lens": "evidence_audit",
+            "title": "Pricing validity at scale is not evidenced (£89 may not generalize)",
+            "severity": "medium"
+          }
+        ]
+      },
+      {
+        "gap": "buyer",
+        "text": "Who has this problem? Be specific.",
+        "kind": "text",
+        "informs": [
+          "pre_mortem",
+          "unit_economics",
+          "evidence_audit"
+        ],
+        "prompted_by": [
+          {
+            "lens": "pre_mortem",
+            "title": "Buyer / decision-maker is underspecified — wrong person targeted by referrals",
+            "severity": "high"
+          }
+        ]
+      }
+    ],
+    "gap_tags_valid": "25/25",
+    "criticals": 2,
+    "answered": {
+      "gap": "acquisition",
+      "text": "We plan to grow through referrals and partnerships with fitness instructors; we haven't measured how well either works yet."
+    },
+    "skipped_gaps": [
+      "key_numbers",
+      "pricing",
+      "buyer"
+    ],
+    "refined": {
+      "unit_economics": {
+        "lens": "unit_economics",
+        "summary": "Where the math breaks: CAC and cost-to-serve — because you have a price (£89/mo) and 24 customers (MRR £2,136) but no measured CAC, no per-customer operating costs, and no LTV or payback calculation to show acquisition pays back. Prove otherwise by: reporting measured CAC by channel (referral, partnership), per-customer variable costs (hosting, payments, support) and a resulting LTV:CAC or payback period. Currently the numbers stated (24 studios, £2,136 MRR, 3 cancellations in six months) are real but insufficient — without CAC and unit costs you cannot know if scaling by the proposed channels is financially viable.",
+        "flaws": [
+          {
+            "title": "No measured CAC despite relying entirely on referrals/partnerships",
+            "severity": "critical",
+            "description": "You state growth will come from referrals and partnerships but also explicitly say you haven't measured how well either works. CAC is the single place where growth assumptions meet finance; without a measured CAC by channel you cannot show payback or LTV:CAC. This is fatal to any revenue projection that assumes scaling.",
+            "question": "What is the measured CAC (including all channel costs, incentives and onboarding) for referrals and for partnership-sourced customers?",
+            "gap": "acquisition",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "No cost-to-serve (unit cost) provided — compute, storage, support, payments missing",
+            "severity": "high",
+            "description": "The document gives price and MRR but no breakdown of per-customer variable costs: hosting, storage, API/third-party fees, payment processing fees, and support time. You cannot compute gross margin or per-customer contribution without these. At SaaS price points, variable costs and required support can make or break unit economics.",
+            "question": "Provide a per-customer monthly variable cost breakdown (hosting/compute, storage, payment fees, support FTE minutes and cost, third-party integrations) and the resulting gross margin per customer.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "Willingness-to-pay and pricing validation not documented",
+            "severity": "high",
+            "description": "Price is set at £89/mo with 24 paying studios but there is no evidence this price is market-validated or that segments will convert at scale at £89. Current customers could be early adopters willing to pay more than the broader market. If widespread conversion at £89 fails, the whole CAC math and payback falls apart.",
+            "question": "Show pricing validation: cohort conversion rates, any price testing, or willingness-to-pay evidence across a representative sample of target studios.",
+            "gap": "pricing",
+            "basis": "missing"
+          },
+          {
+            "title": "LTV, churn, and payback period not calculated despite churn signal",
+            "severity": "medium",
+            "description": "You reported 3 cancellations in six months but did not provide cohort churn rate, average lifetime, or LTV. Without LTV you cannot compare to CAC or compute payback. The single churn datapoint is insufficient to determine if CAC will ever pay back within an acceptable timeframe.",
+            "question": "Provide monthly churn rate (by cohort if possible), average customer lifetime, resulting LTV (using your gross margin), and the payback period on CAC.",
+            "gap": "key_numbers",
+            "basis": "missing"
+          },
+          {
+            "title": "Gross margin at scale is undefined — unknown fixed vs variable cost allocation",
+            "severity": "medium",
+            "description": "There is no projection of how gross margin changes as you scale. Fixed costs (platform, support headcount, compliance) and variable costs (payment fees, hosting) must be separated to model margin at 100s–1000s of studios. Without this you cannot predict unit economics at scale or when break-even on operating expenses occurs.",
+            "question": "Provide fixed and variable cost assumptions and a model showing gross margin at current scale and at target scale (e.g., 500 studios).",
+            "gap": "assumptions",
+            "basis": "missing"
+          },
+          {
+            "title": "Hidden operational costs (refunds, chargebacks, fraud, compliance, moderation) are unaccounted",
+            "severity": "low",
+            "description": "No line items or risk allowances are shown for refunds, chargebacks, fraud, tax/compliance, or content moderation. These can be meaningful for payments-based B2B products and will reduce effective revenue and increase support burden. They are often nonlinear as you scale or enter new regions.",
+            "question": "Estimate expected refund/chargeback rates, fraud loss, and any compliance or payment-onboarding costs per customer (or state why they are immaterial).",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      },
+      "execution_risk": {
+        "lens": "execution_risk",
+        "summary": "What breaks first: channel–buyer mismatch — because the plan relies on fitness instructors to drive signups for a product sold and billed to independent studios, and the document contains no evidence instructors can or will close studio purchases. Prevent it by: running a tight pilot that requires instructors to deliver warm intros that convert into signed studio contracts (or at least meetings with decision-makers) before you invest in partner programs. The rest of the plan extrapolates growth from that single, unmeasured channel, while ignoring retention, partner operations, and compliance needs that will block scaling once acquisition starts.",
+        "flaws": [
+          {
+            "title": "Channel–buyer mismatch: instructors aren't the paying decision-makers",
+            "severity": "critical",
+            "description": "You plan to expand through partnerships with fitness instructors while explicitly selling to independent fitness studios. Instructors typically lack procurement authority and budget control at studios; relying on them shifts the burden to introduce and close studio owners without demonstrating that instructors can influence purchase decisions. If instructors cannot reliably generate qualified, studio-level signups the growth channel collapses before CAC or product-market fit can be meaningfully measured.",
+            "question": "Can you produce documented examples where an instructor referral directly resulted in a signed studio subscription (not just an intro), and who at the studio signed and paid?",
+            "gap": "buyer",
+            "basis": "contradiction"
+          },
+          {
+            "title": "Acquisition channels are untested and assumed scalable",
+            "severity": "high",
+            "description": "You state growth will come from referrals and instructor partnerships but explicitly note these haven't been measured. Scaling requires measured CAC, funnel conversion rates, and predictable lead velocity; none are provided. Without those metrics you will either burn cash on ineffective channels or under-invest in the right channel and stall growth.",
+            "question": "What is the measured conversion rate and CAC from any referral or instructor partnership you've run so far?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "No partner ops, tracking, or payout flows — partnerships will stall in execution",
+            "severity": "high",
+            "description": "Turning instructors into a channel requires partner onboarding, tracking links, attribution, contract templates, and commission or incentive payouts. The document contains no sequencing or product work to support partner-facing flows, so onboarding will become manual, error-prone and non-scalable the moment you recruit more than a few partners. Manual partner handling will consume founder time and kill velocity.",
+            "question": "What partner onboarding, attribution, legal, and payout processes will you ship in the next 90 days to make instructor partnerships repeatable?",
+            "gap": "acquisition",
+            "basis": "missing"
+          },
+          {
+            "title": "Retention/churn hidden by a single cancellation stat",
+            "severity": "high",
+            "description": "You report 3 cancellations over six months but provide no cohort churn rate, monthly churn, or LTV estimate. Sequencing is backwards: you plan to scale acquisition before proving studios retain the product. If churn is materially above a sustainable rate, any scaled acquisition will be wasted and MRR will not compound.",
+            "question": "What is your monthly and cohort churn rate and the current LTV:CAC based on the 24 paying studios and the 3 cancellations?",
+            "gap": "key_numbers",
+            "basis": "stated_fact"
+          },
+          {
+            "title": "Compliance, payments and data-handling are unaddressed",
+            "severity": "medium",
+            "description": "At scale you'll need clear answers for payments processing, VAT/tax on SaaS for studios, and data protection (client health data, GDPR) — plus contracts for partner payouts. None of these operational and regulatory items are mentioned, so legal or payment blockers will appear as you expand across regions or add partner commissions. These blockers will delay launches in new territories and complicate customer onboarding.",
+            "question": "How will you handle payments, tax (VAT), data protection (GDPR), and partner commission contracts as you onboard more studios and partners?",
+            "gap": "assumptions",
+            "basis": "missing"
+          }
+        ]
+      }
+    },
+    "refine_lens_errors": [],
+    "refinement_meta": {
+      "lenses": [
+        "unit_economics",
+        "execution_risk"
+      ],
+      "gaps_filled": [
+        "acquisition"
+      ],
+      "gaps_skipped": [
+        "key_numbers",
+        "pricing",
+        "buyer"
+      ]
+    },
+    "refined_shape": {
+      "unit_economics": "CHHMML",
+      "execution_risk": "CHHHM"
+    },
+    "expected_lenses": [
+      "unit_economics",
+      "execution_risk"
+    ],
+    "refine_ran": [
+      "unit_economics",
+      "execution_risk"
+    ],
+    "refine_lenses_ok": true,
+    "reuse_refused_409": true,
+    "reuse_status": 409,
+    "watch": [
+      "money not in input: '£89,'",
+      "pre-mortem past-tense (check): 'ingness-to-pay across a representative sample. If revealed preference shows studios prefer cheaper or bundle'",
+      "pre-mortem past-tense (check): \" and differentiation are unspecified — customers' revealed preferences unknown Failure scenario: studios pre\""
+    ]
+  }
+]
