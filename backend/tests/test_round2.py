@@ -117,3 +117,13 @@ def test_plain_mode_keeps_critical(stub):
     for res in _completed(r.text):
         assert any(f["severity"] == "critical" for f in res["flaws"])
         assert all("basis" not in f for f in res["flaws"])
+
+
+def test_red_team_verdict_and_voice_in_every_lens():
+    from app.services import critics as c
+    for lens in c._LENS_PROMPTS:
+        for stage in (None, "idea"):
+            p = c._build_prompt(lens, "doc", stage=stage)
+            assert "VOICE" in p and c._VERDICT_FORM[lens] in p
+            assert "$12" not in p  # no example figures that could leak into critiques
+    assert "Weakest number" in c._VERDICT_FORM["evidence_audit"]

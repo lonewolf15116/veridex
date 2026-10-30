@@ -76,7 +76,7 @@ _SHARED_OUTPUT_CONTRACT = """You must respond with ONLY a single valid JSON obje
 The JSON object must have this exact shape:
 {{
   "lens": "{lens_name}",
-  "summary": "<2-4 sentence synthesis of what you found from this lens>",
+  "summary": "<2-4 sentences. The FIRST sentence is your verdict, stated plainly with no hedging, in this form: {verdict_form} Then the supporting synthesis.>",
   "flaws": [
     {{
       "title": "<short punchy title, <= 120 chars>",
@@ -89,6 +89,12 @@ The JSON object must have this exact shape:
     // Everything else should be "medium" or "low".
   ]
 }}
+
+VOICE — you are a red team, not a consultant:
+  - Be blunt and decisive. Name the one thing that kills the plan; do not list everything equally.
+  - Banned phrases: "may want to consider", "it could be beneficial", "it is worth noting", "consider exploring", "it is important to". Write what will happen, not what to ponder.
+  - Never write "unproven", "unvalidated" or "unclear" on its own: say what happens to the plan if that thing turns out false ("if <the stated price> is more than buyers will pay, acquisition never pays back" — using the document's own figures, never example ones).
+  - Bluntness is about consequences, never about facts: you may say "if X is false, this dies", but you may not claim events, results or numbers the document does not contain.
 Do not invent facts not supported by the document. If something is unstated, say so and treat the gap itself as a flaw."""
 
 _RETRY_NUDGE = """
@@ -103,6 +109,15 @@ _LENS_FOCUS: dict[str, str] = {
     "adversarial_competitor": "Focus ONLY on how a well-funded competitor would neutralize or kill this product. Do NOT raise internal assumption failures, unit economics gaps, or execution/shipping risks — those belong to other lenses.",
     "execution_risk":         "Focus ONLY on what will go wrong in the process of building and shipping this product — team, technical risk, sequencing, and distribution gaps. Do NOT raise pre-mortem scenarios, unit economics, or competitive threats — those belong to other lenses.",
     "evidence_audit":         "Focus ONLY on whether the claims and numbers in the document are measured, sourced and internally consistent. Do NOT judge team size, staffing or hiring, pricing levels, margins or shipping costs, competition, or the choice of go-to-market channels — those belong to other lenses. You may use team or spend figures as inputs to arithmetic (e.g. to derive an implied CAC) but must not critique them in their own right.",
+}
+
+# First sentence of every lens summary: the red-team verdict.
+_VERDICT_FORM: dict[str, str] = {
+    "pre_mortem":             "'Most likely killer: <the one thing> — because <reason grounded in the document>. Prove otherwise by: <one concrete test>.'",
+    "unit_economics":         "'Where the math breaks: <the number or mechanism> — because <reason>. Prove otherwise by: <one concrete test or figure to supply>.'",
+    "adversarial_competitor": "'How I would kill this: <the one move> — because <reason>. Survive it by: <one concrete defence>.'",
+    "execution_risk":         "'What breaks first: <the one thing> — because <reason>. Prevent it by: <one concrete step>.'",
+    "evidence_audit":         "'Evidence base: <Strong|Mixed|Weak>. Weakest number: <the claim> — because <reason>. Prove it by: <one concrete check>.'",
 }
 
 _LENS_PROMPTS: dict[str, str] = {
@@ -264,7 +279,7 @@ def _build_prompt(lens: str, input_text: str, retry: bool = False, stage: str | 
     if lens not in _LENS_PROMPTS:
         raise ValueError(f"Unknown lens: {lens}")
     lens_prompt = _LENS_PROMPTS[lens].format(focus_constraint=_LENS_FOCUS[lens])
-    output_contract = _SHARED_OUTPUT_CONTRACT.format(lens_name=lens)
+    output_contract = _SHARED_OUTPUT_CONTRACT.format(lens_name=lens, verdict_form=_VERDICT_FORM[lens])
     if stage is not None:
         if stage not in _STAGE_GUIDANCE:
             raise ValueError(f"Unknown stage: {stage}")

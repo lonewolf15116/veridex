@@ -69,7 +69,7 @@ STEP 3 — SET SEVERITY for each kept flaw:
 Respond with ONLY this JSON object:
 {{
   "strength": "Strong" | "Mixed" | "Weak",
-  "summary": "<2-4 sentences. Start with 'Evidence base: <Strong|Mixed|Weak>.' then say what is proven and the most important remaining issue>",
+  "summary": "<2-4 sentences. Start with 'Evidence base: <Strong|Mixed|Weak>.' then 'Weakest number: <the claim> — because <reason>. Prove it by: <one concrete check>.' stated plainly, then what is proven>",
   "decisions": [
     {{"index": 0, "action": "keep" | "drop", "severity": "critical" | "high" | "medium" | "low", "reason": "<under 15 words>"}}
   ]
