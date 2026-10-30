@@ -60,3 +60,13 @@ Adjudicated examples (keep as fixed reference cases):
 Screening rules (regex for past-tense verbs, money not in input, currency symbols) only flag candidates. A human or
 a checker must confirm each one against the input: hypotheticals like "if clinics refused…" are legitimate, and
 fabrication can happen without the listed verbs.
+
+## Round 3 closed 2026-10-30 (tone): accepted, stays deployed
+Next round must not reopen tone, factuality, severity or refinement routing. Open items:
+| Issue | Priority | Acceptance criterion |
+| --- | --- | --- |
+| Verdicts that only name missing data | Medium | A verdict must state the failure mechanism and its consequence; naming an unknown is not enough (e.g. not "no CAC data" but how acquisition spend could exceed the margin available to recover it). |
+| Founder-supplied currency dropped ("price 5 vs cost 2") | Low | Keep the founder's own currency exactly as written; add none they did not write. |
+| Long-term factuality | High | Keep the 0-invented-events check in every suite run. |
+| Severity calibration | Medium | Keep critical+missing = 0 and the T06/T07 controls; watch basis mislabelling. |
+| T07 empty refinement (once, round 2) | Low | Monitor; if it recurs, fix token redemption so a failed stream does not consume the free refinement. |
